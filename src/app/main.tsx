@@ -20,10 +20,10 @@ library.add(fas, far, fab);
 createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
     <Routes>
-      <Route index element={<Login />} />
+      <Route path="/auth" element={<Login />} />
       <Route element={<ProtectedRouteLayout />}>
         <Route element={<ContentLayout />}>
-          <Route path="/home" element={<Home />} />
+          <Route index element={<Home />} />
         </Route>
       </Route>
     </Routes>

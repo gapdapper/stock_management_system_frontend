@@ -1,4 +1,4 @@
-import axios, { AxiosError, type AxiosRequestConfig } from 'axios';
+import { AxiosError, type AxiosRequestConfig } from 'axios';
 import { useAuthStore } from '@/stores/authSlice';
 import { axiosInstance } from './api-client';
 
@@ -10,11 +10,7 @@ export const refreshToken = async () => {
   if (!refreshPromise) {
     refreshPromise = (async () => {
       try {
-        const res = await axios.post(
-          '<http://localhost:4000/auth/refresh>',
-          {},
-          { withCredentials: true },
-        );
+        const res = await axiosInstance.post('/auth/refresh', {}, { withCredentials: true });
         const newToken = res.data.accessToken;
         setToken(newToken);
         return newToken;

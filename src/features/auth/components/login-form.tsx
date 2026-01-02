@@ -1,21 +1,33 @@
+import axiosInstance from "@/lib/auth";
+import { useAuthStore } from "@/stores/authSlice";
 import { useState } from "react";
 
 type LoginFormProps = {
   onLoginSuccess: () => void;
 };
 
-function LoginForm({onLoginSuccess}: LoginFormProps) {
+function LoginForm({ onLoginSuccess }: LoginFormProps) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const setToken = useAuthStore((state) => state.setToken);
 
-  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log({
-      username,
-      password,
-    });
+    try {
+      const res = await axiosInstance.post(
+        "/auth/login",
+        { username, password },
+        { withCredentials: true }
+      );
 
-    onLoginSuccess();
+      const accessToken = res.data.accessToken;
+
+      setToken(accessToken);
+      onLoginSuccess();
+    } catch (err) {
+      console.error("Login failed", err);
+      alert("Invalid username or password");
+    }
   };
 
   return (

@@ -1,32 +1,23 @@
-import axiosInstance from "@/lib/auth";
-import { useAuthStore } from "@/stores/authSlice";
 import { useState } from "react";
+import { login } from "@/features/auth/api/login";
+import { useAuthStore } from "@/stores/authSlice";
 
-type LoginFormProps = {
-  onLoginSuccess: () => void;
-};
-
-function LoginForm({ onLoginSuccess }: LoginFormProps) {
+function LoginForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const setToken = useAuthStore((state) => state.setToken);
+  const [loading, setLoading] = useState(false);
+  const setToken = useAuthStore((s) => s.setToken);
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
     try {
-      const res = await axiosInstance.post(
-        "/auth/login",
-        { username, password },
-        { withCredentials: true }
-      );
-
-      const accessToken = res.data.accessToken;
-
+      const accessToken = await login(username, password);
       setToken(accessToken);
-      onLoginSuccess();
     } catch (err) {
-      console.error("Login failed", err);
       alert("Invalid username or password");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -59,12 +50,8 @@ function LoginForm({ onLoginSuccess }: LoginFormProps) {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button
-          type="submit"
-          className="btn btn-primary"
-          disabled={!username || !password}
-        >
-          Login
+        <button className="btn btn-primary" disabled={loading || !username || !password}>
+          {loading ? "Logging in..." : "Login"}
         </button>
       </form>
     </div>

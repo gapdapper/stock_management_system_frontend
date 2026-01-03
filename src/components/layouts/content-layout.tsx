@@ -2,8 +2,16 @@ import { Outlet } from "react-router";
 import { NavLink } from "react-router";
 import "./content-layout.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { logout } from "@/features/auth/api/logout";
 
 function ContentLayout() {
+  const handleLogout = () => {
+    try {
+      logout();
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  }
   return (
     <>
       <nav className="float-start position-fixed sidebar">
@@ -12,7 +20,7 @@ function ContentLayout() {
         </div>
         <div className="import-status">
           <p>
-            Daily Import Status:
+            File Import:
             <span className="badge warning">0/1</span>
           </p>
         </div>
@@ -38,6 +46,9 @@ function ContentLayout() {
         </NavLink>
         <div className="user-info">
           <p>User</p>
+          <button onClick={handleLogout} title="Logout">
+          <FontAwesomeIcon icon={["fas", "right-from-bracket"]} />
+          </button>
         </div>
       </nav>
       <div className="container">

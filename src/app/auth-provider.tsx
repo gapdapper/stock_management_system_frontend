@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useAuthStore } from "@/stores/authSlice";
-import { refreshToken, setProfile } from "@/lib/auth";
+import { refreshToken } from "@/lib/auth";
 
 type Props = {
   children: React.ReactNode;
@@ -12,12 +12,8 @@ export default function AuthProvider({ children }: Props) {
   useEffect(() => {
     const initAuth = async () => {
       try {
-        const token = await refreshToken();
-        if (token) {
-          await setProfile();
-        }
+        await refreshToken();
       } finally {
-        console.log("Auth initialization complete");
         setLoading(false);
       }
     };

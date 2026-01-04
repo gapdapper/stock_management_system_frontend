@@ -1,4 +1,4 @@
-import { getMe } from "@/features/auth/api/me";
+import { setProfile } from "@/lib/auth";
 import { useAuthStore } from "@/stores/authSlice";
 import { useEffect } from "react";
 
@@ -13,8 +13,7 @@ function AuthSync() {
 
     const syncProfile = async () => {
       try {
-        const me = await getMe();
-        setUser(me);
+        await setProfile();
       } catch {
         clearToken();
       }

@@ -3,10 +3,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { logout } from "@/features/auth/api/logout";
 import { useAuthStore } from "@/stores/authSlice";
 import "./navbar.scss";
+import { useImportStatusStore } from "@/stores/importStatus";
 
 
 function Navbar() {
  const user = useAuthStore((s) => s.user);
+ const hasImportedToday = useImportStatusStore(
+  (s) => s.hasImportedToday
+); 
 
   const handleLogout = () => {
     try {
@@ -24,7 +28,9 @@ function Navbar() {
         <div className="import-status">
           <p>
             Today's Import:
-            <span className="badge warning">0/1</span>
+            <span className={`badge ${hasImportedToday ? "success" : "warning"}`}>
+              {hasImportedToday ? "1/1" : "0/1"}
+            </span>
           </p>
         </div>
         <NavLink to="/">

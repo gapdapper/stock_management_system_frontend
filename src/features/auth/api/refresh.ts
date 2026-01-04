@@ -14,8 +14,6 @@ export const requestRefreshToken = (): Promise<string> => {
         if (!res.data?.accessToken) {
           throw new Error('No access token in refresh response');
         }
-
-        console.log('Token refreshed successfully');
         return res.data.accessToken;
       } catch (err) {
         throw err;

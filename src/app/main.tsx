@@ -4,8 +4,8 @@
   import "./index.scss";
   import Home from "./routes/Home.tsx";
   import Login from "./routes/auth/login.tsx";
-
   import { library } from "@fortawesome/fontawesome-svg-core";
+  import * as bootstrap from 'bootstrap'
 
   /* import all the icons in Free Solid, Free Regular, and Brands styles */
   import { fas } from "@fortawesome/free-solid-svg-icons";

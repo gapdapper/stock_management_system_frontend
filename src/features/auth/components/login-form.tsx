@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { login } from "@/features/auth/api/login";
 import { useAuthStore } from "@/stores/authSlice";
+import "./login-form.scss";
 
 function LoginForm() {
   const [username, setUsername] = useState("");

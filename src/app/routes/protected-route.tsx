@@ -1,7 +1,7 @@
 import { Navigate, Outlet } from 'react-router';
 import { useAuthStore } from '@/stores/authSlice';
 
-export function ProtectedRoute() {
+export default function ProtectedRoute() {
   const { isAuthenticated, loading } = useAuthStore();
 
   if (loading) {

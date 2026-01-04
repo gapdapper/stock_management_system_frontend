@@ -11,15 +11,17 @@
   import { fas } from "@fortawesome/free-solid-svg-icons";
   import { far } from "@fortawesome/free-regular-svg-icons";
   import { fab } from "@fortawesome/free-brands-svg-icons";
-  import { ProtectedRoute } from "@/app/routes/protected-route.tsx";
-  import { PublicRoute } from "@/app/routes/public-route.tsx";
+  import ProtectedRoute from "@/app/routes/protected-route.tsx";
+  import PublicRoute from "@/app/routes/public-route.tsx";
   import ContentLayout from "@/components/layouts/content-layout.tsx";
-  import { AuthProvider } from "./auth-provider.tsx";
+  import AuthProvider from "./auth-provider.tsx";
+  import AuthSync from "./routes/auth/AuthSync.tsx";
 
   library.add(fas, far, fab);
 
   createRoot(document.getElementById("root")!).render(
     <AuthProvider>
+      <AuthSync />
     <BrowserRouter>
       <Routes>
 

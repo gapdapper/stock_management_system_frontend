@@ -12,7 +12,7 @@ function LoginForm() {
     e.preventDefault();
     setLoading(true);
     try {
-      const accessToken = await login(username, password);
+      const accessToken = await login(username.trim(), password.trim());
       setToken(accessToken);
     } catch (err) {
       alert("Invalid username or password");

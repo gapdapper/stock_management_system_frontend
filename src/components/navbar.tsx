@@ -1,5 +1,6 @@
 import { NavLink } from "react-router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCubes, faChartLine, faBookBookmark, faArrowUpFromBracket, faGear, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { logout } from "@/features/auth/api/logout";
 import { useAuthStore } from "@/stores/authSlice";
 import "./navbar.scss";
@@ -34,23 +35,23 @@ function Navbar() {
           </p>
         </div>
         <NavLink to="/">
-          <FontAwesomeIcon icon={["fas", "cubes"]} />
+          <FontAwesomeIcon icon={faCubes} />
           <span>Stock</span>
         </NavLink>
         <NavLink to="/dashboard">
-          <FontAwesomeIcon icon={["fas", "chart-line"]} />
+          <FontAwesomeIcon icon={faChartLine} />
           <span>Dashboard</span>
         </NavLink>
         <NavLink to="/sales">
-          <FontAwesomeIcon icon={["fas", "book-bookmark"]} />
+          <FontAwesomeIcon icon={faBookBookmark} />
           <span>Sales</span>
         </NavLink>
         <NavLink to="/import">
-          <FontAwesomeIcon icon={["fas", "arrow-up-from-bracket"]} />
+          <FontAwesomeIcon icon={faArrowUpFromBracket} />
           <span>File Import</span>
         </NavLink>
         <NavLink to="/setting">
-          <FontAwesomeIcon icon={["fas", "gear"]} />
+          <FontAwesomeIcon icon={faGear} />
           <span>Settings</span>
         </NavLink>
         <div className="user-info">
@@ -61,7 +62,7 @@ function Navbar() {
             data-bs-toggle="modal"
             data-bs-target="#logoutModal"
           >
-            <FontAwesomeIcon icon={["fas", "right-from-bracket"]} />
+            <FontAwesomeIcon icon={faRightFromBracket} />
           </button>
         </div>
       </nav>

@@ -1,0 +1,16 @@
+button {
+    background-color: transparent;
+    border: none;
+}
+
+.image-cell {
+  width: 120px;
+  margin: 20px 105px;
+  display: flex;
+  justify-content: center;
+
+  svg {
+    width: 100px;
+    height: auto;
+  }
+}

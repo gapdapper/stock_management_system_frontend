@@ -2,7 +2,7 @@
   import { BrowserRouter, Routes, Route } from "react-router";
   import { createRoot } from "react-dom/client";
   import "./index.scss";
-  import Home from "./routes/Home.tsx";
+  import StockManagement from "./routes/StockManagement.tsx";
   import Login from "./routes/auth/login.tsx";
   import { library } from "@fortawesome/fontawesome-svg-core";
   import * as bootstrap from 'bootstrap'
@@ -33,7 +33,7 @@
         {/* Protected */}
         <Route element={<ProtectedRoute />}>
           <Route element={<ContentLayout />}>
-            <Route index element={<Home />} />
+            <Route index element={<StockManagement />} />
           </Route>
         </Route>
 

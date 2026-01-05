@@ -8,10 +8,10 @@ export default function Table() {
   const data = [
     {
       id: 1,
-      productName: "A",
+      productName: "Jenga",
       stock: 99,
-      DOH: "XXX",
-      status: "Available",
+      DOH: 19,
+      status: "In-stock",
       variant: [
         {
           size: "S",
@@ -37,17 +37,17 @@ export default function Table() {
     },
     {
       id: 2,
-      productName: "A",
+      productName: "Domino",
       stock: 99,
-      DOH: "XXX",
-      status: "Available",
+      DOH: 15,
+      status: "In-stock",
     },
     {
       id: 3,
-      productName: "C",
+      productName: "Jackpot",
       stock: 99,
-      DOH: "XXX",
-      status: "Available",
+      DOH: 2,
+      status: "Low-stock",
     },
   ];
 
@@ -70,8 +70,8 @@ export default function Table() {
               <tr>
                 <td>{item.productName}</td>
                 <td>{item.stock}</td>
-                <td>{item.DOH}</td>
-                <td>{item.status}</td>
+                <td>{item.DOH + " Days"}</td>
+                <td><span className={item.status === 'In-stock' ? 'badge rounded-pill text-bg-success' : 'badge rounded-pill text-bg-danger'}>{item.status}</span></td>
                 <td>
                   {item.variant && (
                     <button
@@ -91,7 +91,7 @@ export default function Table() {
               {/* collapsable row */}
               {item.variant && (
                 <tr className="collapse-row">
-                  <td colSpan={5} className="p-0 border-0">
+                  <td colSpan={6} className="p-0 border-0">
                     <div className="collapse" id={`collapse-${item.id}`}>
                       <div className="d-flex">
                         {/* image cell */}
@@ -108,17 +108,19 @@ export default function Table() {
                                 <th>Color</th>
                                 <th>Stock</th>
                                 <th>Min Stock</th>
+                                <th>Status</th>
                                 <th>Action</th>
                               </tr>
                             </thead>
-                            <tbody>
+                            <tbody className="table-group-divider">
                               {item.variant.map((v) =>
                                 v.sub.map((s, idx) => (
                                   <tr key={idx}>
-                                    <td>{v.size}</td>
+                                    <td>{idx == 0 ? v.size : ""}</td>
                                     <td>{s.color}</td>
                                     <td>{s.stock}</td>
                                     <td>{s.minStock}</td>
+                                    <td><span className={s.stock >= s.minStock ? 'badge rounded-pill text-bg-success' : 'badge rounded-pill text-bg-danger'}>{item.status}</span></td>
                                     <td><button><FontAwesomeIcon icon={faEllipsis} /></button></td>
                                   </tr>
                                 ))

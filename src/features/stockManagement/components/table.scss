@@ -14,3 +14,11 @@ button {
     height: auto;
   }
 }
+
+.row-collapse-btn {
+rotate: z 180deg;
+}
+
+.row-collapse-btn.collapsed {
+rotate: z 0deg;
+}

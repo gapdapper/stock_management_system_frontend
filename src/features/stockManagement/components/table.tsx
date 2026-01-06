@@ -76,7 +76,7 @@ export default function Table() {
                   {item.variant && (
                     <button
                       type="button"
-                      className="btn btn-sm"
+                      className="btn btn-sm row-collapse-btn"
                       data-bs-toggle="collapse"
                       data-bs-target={`#collapse-${item.id}`}
                       aria-expanded="false"

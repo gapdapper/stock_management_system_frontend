@@ -1,25 +1,52 @@
 button {
-    background-color: transparent;
-    border: none;
+  background-color: transparent;
+  border: none;
 }
 
 .image-cell {
   width: 120px;
-  margin: 20px 105px;
-  display: flex;
-  justify-content: center;
-
+  margin: 20px 105px 0 105px;
+  display: block;
   svg {
-    width: 100px;
+    width: 150px;
     height: auto;
+  }
+  p {
+    font-size: 18px;
+    font-weight: 600;
+    text-align: center;
+    width: 150px;
+    padding-top: 15px;
+    margin: 0;
   }
 }
 
-.row-collapse-btn {
+.row-collapse-btn svg {
   transition: transform 0.2s ease;
   transform: rotate(0deg);
 }
 
-.row-collapse-btn:not(.collapsed) {
+.row-collapse-btn[aria-expanded="true"] svg {
   transform: rotate(180deg);
+}
+
+.collapse {
+  display: block !important;
+  max-height: 0;
+  overflow: hidden;
+}
+
+.collapse-inner {
+  padding: 0 16px;
+  opacity: 0;
+  transition: padding 0.1s ease, opacity 0.25s ease;
+}
+
+.collapse.show {
+  max-height: 1000px;
+}
+
+.collapse.show .collapse-inner {
+  padding: 16px;
+  opacity: 1;
 }

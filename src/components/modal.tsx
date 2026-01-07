@@ -5,6 +5,7 @@ type ModalProps = {
   confirmText?: string;
   cancelText?: string;
   onConfirm?: () => void;
+  size?: string;
 };
 
 export default function Modal({
@@ -14,10 +15,11 @@ export default function Modal({
   confirmText = "Confirm",
   cancelText = "Cancel",
   onConfirm,
+  size = "",
 }: ModalProps) {
 
   return (
-<div className="modal fade" id={`modal-${id}`} tabIndex={-1} aria-labelledby={`${id}ModalLabel`} aria-hidden="true">
+<div className={`modal ${size} fade`} id={`modal-${id}`} tabIndex={-1} aria-labelledby={`${id}ModalLabel`} aria-hidden="true">
   <div className="modal-dialog">
     <div className="modal-content">
       <div className="modal-header">

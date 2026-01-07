@@ -50,3 +50,54 @@ button {
   padding: 16px;
   opacity: 1;
 }
+
+.product-color-badge {
+  .color-badge {
+    padding: 9px 13px;
+    color: #fff;
+  }
+
+  .color-red {
+    background-color: #dc3545;
+  }
+
+  .color-new-red {
+    background-color: #df0b20;
+  }
+
+  .color-green {
+    background-color: #198754;
+  }
+
+  .color-new-green {
+    background-color: #057c45;
+  }
+
+  .color-blue {
+    background-color: #0d6efd;
+  }
+
+  .color-yellow {
+    background-color: #ffc107;
+    color: #000;
+  }
+
+  .color-no-color,
+  .color-6-point,
+  .color-9-point,
+  .color-12-point {
+    background-color: #6c757d;
+  }
+
+  .color-colorful {
+    background: linear-gradient(
+      135deg,
+      #ff4d4f,
+      #ffa940,
+      #52c41a,
+      #1890ff,
+      #722ed1
+    );
+    color: #fff;
+  }
+}

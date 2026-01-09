@@ -49,6 +49,7 @@ function StockManagement() {
       <Table
         data={sortedData}
         onRefresh={fetchProductData}
+        currentSortDirection={sortDirection}
         onSort={(payload) => {
           setSortField(payload.field);
           setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));

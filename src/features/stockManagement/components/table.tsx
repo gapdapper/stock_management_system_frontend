@@ -24,12 +24,12 @@ type TableProps = {
   data?: IProductData[];
   onRefresh: () => void;
   onSort: (payload: SortPayload) => void;
+  currentSortDirection: string;
 };
 
-export default function Table({ data, onRefresh, onSort }: TableProps) {
+export default function Table({ data, onRefresh, onSort, currentSortDirection }: TableProps) {
   const [isDirty, setIsDirty] = useState(false);
   const [sortedCol, setSortedCol] = useState<keyof IProductData>("productName");
-  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
 
   const [selectedProduct, setSelectedProduct] = useState<{
     id: number;
@@ -85,20 +85,14 @@ export default function Table({ data, onRefresh, onSort }: TableProps) {
                   sortedCol === "productName" ? "head-active" : ""
                 }`}
                 onClick={() => {
-                  if (sortedCol === "productName") {
-                    setSortDir((d) => (d === "asc" ? "desc" : "asc"));
-                  } else {
-                    setSortedCol("productName");
-                    setSortDir("asc");
-                  }
-
+                  setSortedCol("productName");
                   onSort({ field: "productName" });
                 }}
               >
                 Product Name
                 {sortedCol !== "productName" ? (
                   <FontAwesomeIcon icon={faSort} className="ms-2" />
-                ) : sortDir === "asc" ? (
+                ) : currentSortDirection === "asc" ? (
                   <FontAwesomeIcon icon={faArrowDownAZ} className="ms-2" />
                 ) : (
                   <FontAwesomeIcon icon={faArrowDownZA} className="ms-2" />
@@ -109,22 +103,17 @@ export default function Table({ data, onRefresh, onSort }: TableProps) {
                   sortedCol === "totalStock" ? "head-active" : ""
                 }`}
                 onClick={() => {
-                  if (sortedCol === "totalStock") {
-                    setSortDir((d) => (d === "asc" ? "desc" : "asc"));
-                  } else {
-                    setSortedCol("totalStock");
-                    setSortDir("asc");
-                  }
+                  setSortedCol("totalStock");
                   onSort({ field: "totalStock" });
                 }}
               >
                 Total Stock
                 {sortedCol !== "totalStock" ? (
                   <FontAwesomeIcon icon={faSort} className="ms-2" />
-                ) : sortDir === "asc" ? (
-                  <FontAwesomeIcon icon={faArrowDown91} className="ms-2" />
-                ) : (
+                ) : currentSortDirection === "asc" ? (
                   <FontAwesomeIcon icon={faArrowDown19} className="ms-2" />
+                ) : (
+                  <FontAwesomeIcon icon={faArrowDown91} className="ms-2" />
                 )}
               </th>
               <th
@@ -132,19 +121,14 @@ export default function Table({ data, onRefresh, onSort }: TableProps) {
                   sortedCol === "lastUpdated" ? "head-active" : ""
                 }`}
                 onClick={() => {
-                  if (sortedCol === "lastUpdated") {
-                    setSortDir((d) => (d === "asc" ? "desc" : "asc"));
-                  } else {
-                    setSortedCol("lastUpdated");
-                    setSortDir("asc");
-                  }
+                  setSortedCol("lastUpdated");
                   onSort({ field: "lastUpdated" });
                 }}
               >
                 Last Updated
                 {sortedCol !== "lastUpdated" ? (
                   <FontAwesomeIcon icon={faSort} className="ms-2" />
-                ) : sortDir === "asc" ? (
+                ) : currentSortDirection === "asc" ? (
                   <FontAwesomeIcon icon={faArrowDownAZ} className="ms-2" />
                 ) : (
                   <FontAwesomeIcon icon={faArrowDownZA} className="ms-2" />
@@ -155,19 +139,14 @@ export default function Table({ data, onRefresh, onSort }: TableProps) {
                   sortedCol === "status" ? "head-active" : ""
                 }`}
                 onClick={() => {
-                  if (sortedCol === "status") {
-                    setSortDir((d) => (d === "asc" ? "desc" : "asc"));
-                  } else {
-                    setSortedCol("status");
-                    setSortDir("asc");
-                  }
+                  setSortedCol("status");
                   onSort({ field: "status" });
                 }}
               >
                 Status
                 {sortedCol !== "status" ? (
                   <FontAwesomeIcon icon={faSort} className="ms-2" />
-                ) : sortDir === "asc" ? (
+                ) : currentSortDirection === "asc" ? (
                   <FontAwesomeIcon icon={faArrowDownAZ} className="ms-2" />
                 ) : (
                   <FontAwesomeIcon icon={faArrowDownZA} className="ms-2" />

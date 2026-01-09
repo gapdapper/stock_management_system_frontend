@@ -103,3 +103,7 @@ button {
     color: #fff;
   }
 }
+
+tr:has(.row-collapse-btn[aria-expanded="true"]) {
+  border-bottom: transparent;
+}

@@ -7,34 +7,58 @@ import Modal from "@/components/modal";
 import ProductDetail from "./productDetail";
 import type { IProductData } from "@/app/types/product";
 import { getProductStatus } from "@/utils/product";
+import { editProductVariant } from "../api/editProductVariant";
 
 type TableProps = {
   data?: IProductData[];
+  onRefresh: () => void;
 };
 
-export default function Table({ data }: TableProps) {
+export default function Table({ data, onRefresh }: TableProps) {
+  const [isDirty, setIsDirty] = useState(false);
+
   const [selectedProduct, setSelectedProduct] = useState<{
+    id: number;
     name: string;
     size: string;
     color: string;
-    stock: number;
+    qty: number;
     minStock: number;
   } | null>(null);
 
-  const handleEdit = (
+  const handleEditModal = (
+    variantId: number,
     productName: string,
     size: string,
     color: string,
-    stock: number,
+    qty: number,
     minStock: number
   ) => {
     setSelectedProduct({
+      id: variantId,
       name: productName,
       size,
       color,
-      stock,
+      qty,
       minStock,
     });
+  };
+
+  const handleEdit = async () => {
+    if (!selectedProduct) return;
+
+    try {
+      await editProductVariant({
+        id: selectedProduct.id,
+        qty: selectedProduct.qty,
+        minStock: selectedProduct.minStock,
+      });
+
+      onRefresh();
+      
+    } catch (error) {
+      console.error("Edit product variant failed", error);
+    }
   };
 
   return (
@@ -119,7 +143,9 @@ export default function Table({ data }: TableProps) {
                                           <td>{idx == 0 ? v.size : ""}</td>
                                           <td className="product-color-badge">
                                             <span
-                                              className={`badge color-badge color-${s.color.toLowerCase().replace(' ', '-')}`}
+                                              className={`badge color-badge color-${s.color
+                                                .toLowerCase()
+                                                .replace(" ", "-")}`}
                                             >
                                               {s.color}
                                             </span>
@@ -145,7 +171,8 @@ export default function Table({ data }: TableProps) {
                                               data-bs-toggle="modal"
                                               data-bs-target="#modal-product-detail"
                                               onClick={() =>
-                                                handleEdit(
+                                                handleEditModal(
+                                                  s.variantId,
                                                   item.productName,
                                                   v.size,
                                                   s.color,
@@ -181,16 +208,15 @@ export default function Table({ data }: TableProps) {
         title="Product Details"
         confirmText="Edit"
         cancelText="Cancel"
-        onConfirm={() => {}}
+        onConfirm={handleEdit}
+        confirmDisabled={!isDirty}
         size="modal-lg"
       >
         {selectedProduct && (
           <ProductDetail
-            name={selectedProduct.name}
-            size={selectedProduct.size}
-            color={selectedProduct.color}
-            stock={selectedProduct.stock}
-            minStock={selectedProduct.minStock}
+            data={selectedProduct}
+            formHandler={setSelectedProduct}
+            onDirtyChange={setIsDirty}
           />
         )}
       </Modal>

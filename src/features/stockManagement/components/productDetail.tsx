@@ -2,22 +2,36 @@ import "./productDetail.scss";
 import PlaceHolder from "../../../assets/placeholder.svg?react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleQuestion } from "@fortawesome/free-solid-svg-icons";
+import { useEffect, useMemo, useRef } from "react";
 
 type ProductDetailProp = {
-  name: string;
-  size: string;
-  color: string;
-  stock: number;
-  minStock: number;
+  data: any
+  formHandler: (data: any) => void;
+  onDirtyChange: (data: any) => void;
 };
 
 export default function ProductDetail({
-  name,
-  size,
-  color,
-  stock,
-  minStock,
+  data,
+  formHandler,
+  onDirtyChange
 }: ProductDetailProp) {
+
+  const initialRef = useRef({
+    qty: data.qty,
+    minStock: data.minStock,
+  });
+
+    const isDirty = useMemo(() => {
+    return (
+      data.qty !== initialRef.current.qty ||
+      data.minStock !== initialRef.current.minStock
+    );
+  }, [data.qty, data.minStock]);
+
+    useEffect(() => {
+    onDirtyChange(isDirty);
+  }, [isDirty, onDirtyChange]);
+
   return (
     <>
       <div className="product-detail row">
@@ -29,37 +43,38 @@ export default function ProductDetail({
           <div className="status-badge col-12">
             <span
               className={
-                stock >= minStock
+                data.qty >= data.minStock
                   ? "badge rounded-pill text-bg-success"
                   : "badge rounded-pill text-bg-danger"
               }
             >
-              {stock >= minStock ? "In-stock" : "Low stock"}
+              {data.qty >= data.minStock ? "In-stock" : "Low stock"}
             </span>
           </div>
         </div>
         <div className="col-7">
           <p>
-            <strong>Product:</strong> {name}
+            <strong>Product:</strong> {data.name}
           </p>
           <p>
-            <strong>Size:</strong> {size}
+            <strong>Size:</strong> {data.size}
           </p>
           <p>
-            <strong>Color:</strong> {color}
+            <strong>Color:</strong> {data.color}
           </p>
           <div className="input-form">
             <label htmlFor="stock-input">
               <strong>Stock</strong>
             </label>
             <input
-              type="text"
+              type="number"
               id="stock-input"
               className="form-control"
               placeholder="xx"
               aria-label="Stock"
               aria-describedby="basic-addon1"
-              value={stock}
+              value={data.qty}
+              onChange={(e) => {formHandler({...data, qty: Number(e.target.value)})}}
             ></input>
             <label htmlFor="minimum-stock-input">
               <strong>Minimum Stock</strong>
@@ -71,13 +86,14 @@ export default function ProductDetail({
               </span>
             </div>
             <input
-              type="text"
+              type="number"
               id="minimum-stock-input"
               className="form-control"
               placeholder="xx"
               aria-label="Minimum Stock"
               aria-describedby="basic-addon1"
-              value={minStock}
+              value={data.minStock}
+              onChange={(e) => {formHandler({...data, minStock: Number(e.target.value)})}}
             ></input>
           </div>
         </div>

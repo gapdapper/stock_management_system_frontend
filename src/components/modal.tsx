@@ -5,6 +5,7 @@ type ModalProps = {
   confirmText?: string;
   cancelText?: string;
   onConfirm?: () => void;
+  confirmDisabled: boolean;
   size?: string;
 };
 
@@ -15,11 +16,12 @@ export default function Modal({
   confirmText = "Confirm",
   cancelText = "Cancel",
   onConfirm,
+  confirmDisabled,
   size = "",
 }: ModalProps) {
 
   return (
-<div className={`modal ${size} fade`} id={`modal-${id}`} tabIndex={-1} aria-labelledby={`${id}ModalLabel`} aria-hidden="true">
+<div className={`modal ${size} fade`} id={`modal-${id}`} tabIndex={-1} aria-labelledby={`${id}ModalLabel`} aria-hidden="true" aria-modal="true">
   <div className="modal-dialog">
     <div className="modal-content">
       <div className="modal-header">
@@ -31,7 +33,7 @@ export default function Modal({
       </div>
       <div className="modal-footer">
         <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">{cancelText}</button>
-        <button type="button" className="btn btn-primary" onClick={onConfirm}>{confirmText}</button>
+        <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={onConfirm} disabled={confirmDisabled}>{confirmText}</button>
       </div>
     </div>
   </div>

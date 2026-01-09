@@ -7,25 +7,24 @@ import type { IProductData } from "../types/product";
 function StockManagement() {
   const [productData, setProductData] = useState<IProductData[]>([]);
 
+  const fetchProductData = async () => {
+    try {
+      const data = await getProductsWithVariant()
+      setProductData(data.products)
+    } catch (error) {
+      console.error('Failed to fetch product data')
+    }
+  }
   // fetch actual data
   useEffect(() => {
-    const getProductData = async () => {
-      try {
-        const data = await getProductsWithVariant()
-        console.log(data.products)
-        setProductData(data.products)
-      } catch (error) {
-        console.error('Failed to fetch product data')
-      }
-    }
 
-    getProductData()
+    fetchProductData()
   }, [])
 
   return (
     <>
       <Headers />
-      <Table data={productData}/>
+      <Table data={productData} onRefresh={fetchProductData}/>
     </>
   );
 }

@@ -4,6 +4,7 @@ button {
 }
 
 .image-cell {
+  align-self: center;
   width: 120px;
   margin: 20px 105px 0 105px;
   display: block;
@@ -49,6 +50,7 @@ button {
 .collapse.show .collapse-inner {
   padding: 16px;
   opacity: 1;
+  border-bottom: 1px solid #dee2e6;
 }
 
 .product-color-badge {

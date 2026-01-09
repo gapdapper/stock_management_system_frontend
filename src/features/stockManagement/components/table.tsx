@@ -77,7 +77,7 @@ export default function Table({ data, onRefresh, onSort }: TableProps) {
   return (
     <>
       <div className="table-responsive-xxl">
-        <table className="table table-hover">
+        <table className="table">
           <thead>
             <tr>
               <th

@@ -1,21 +1,35 @@
-import React, { useState, type ReactNode } from "react";
+import React, { useState } from "react";
 import "./table.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEllipsis, faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEllipsis,
+  faChevronDown,
+  faSort,
+  faArrowDownAZ,
+  faArrowDownZA,
+  faArrowDown19,
+  faArrowDown91,
+} from "@fortawesome/free-solid-svg-icons";
 import PlaceHolder from "../../../assets/placeholder.svg?react";
 import Modal from "@/components/modal";
 import ProductDetail from "./productDetail";
 import type { IProductData } from "@/app/types/product";
-import { getProductStatus } from "@/utils/product";
 import { editProductVariant } from "../api/editProductVariant";
+
+type SortPayload = {
+  field: keyof IProductData;
+};
 
 type TableProps = {
   data?: IProductData[];
   onRefresh: () => void;
+  onSort: (payload: SortPayload) => void;
 };
 
-export default function Table({ data, onRefresh }: TableProps) {
+export default function Table({ data, onRefresh, onSort }: TableProps) {
   const [isDirty, setIsDirty] = useState(false);
+  const [sortedCol, setSortedCol] = useState<keyof IProductData>("productName");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
 
   const [selectedProduct, setSelectedProduct] = useState<{
     id: number;
@@ -55,7 +69,6 @@ export default function Table({ data, onRefresh }: TableProps) {
       });
 
       onRefresh();
-      
     } catch (error) {
       console.error("Edit product variant failed", error);
     }
@@ -64,13 +77,102 @@ export default function Table({ data, onRefresh }: TableProps) {
   return (
     <>
       <div className="table-responsive-xxl">
-        <table className="table">
+        <table className="table table-hover">
           <thead>
             <tr>
-              <th>Product Name</th>
-              <th>Total Stock</th>
-              <th>Last Updated</th>
-              <th>Status</th>
+              <th
+                className={`head-col ${
+                  sortedCol === "productName" ? "head-active" : ""
+                }`}
+                onClick={() => {
+                  if (sortedCol === "productName") {
+                    setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+                  } else {
+                    setSortedCol("productName");
+                    setSortDir("asc");
+                  }
+
+                  onSort({ field: "productName" });
+                }}
+              >
+                Product Name
+                {sortedCol !== "productName" ? (
+                  <FontAwesomeIcon icon={faSort} className="ms-2" />
+                ) : sortDir === "asc" ? (
+                  <FontAwesomeIcon icon={faArrowDownAZ} className="ms-2" />
+                ) : (
+                  <FontAwesomeIcon icon={faArrowDownZA} className="ms-2" />
+                )}
+              </th>
+              <th
+                className={`head-col ${
+                  sortedCol === "totalStock" ? "head-active" : ""
+                }`}
+                onClick={() => {
+                  if (sortedCol === "totalStock") {
+                    setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+                  } else {
+                    setSortedCol("totalStock");
+                    setSortDir("asc");
+                  }
+                  onSort({ field: "totalStock" });
+                }}
+              >
+                Total Stock
+                {sortedCol !== "totalStock" ? (
+                  <FontAwesomeIcon icon={faSort} className="ms-2" />
+                ) : sortDir === "asc" ? (
+                  <FontAwesomeIcon icon={faArrowDown91} className="ms-2" />
+                ) : (
+                  <FontAwesomeIcon icon={faArrowDown19} className="ms-2" />
+                )}
+              </th>
+              <th
+                className={`head-col ${
+                  sortedCol === "lastUpdated" ? "head-active" : ""
+                }`}
+                onClick={() => {
+                  if (sortedCol === "lastUpdated") {
+                    setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+                  } else {
+                    setSortedCol("lastUpdated");
+                    setSortDir("asc");
+                  }
+                  onSort({ field: "lastUpdated" });
+                }}
+              >
+                Last Updated
+                {sortedCol !== "lastUpdated" ? (
+                  <FontAwesomeIcon icon={faSort} className="ms-2" />
+                ) : sortDir === "asc" ? (
+                  <FontAwesomeIcon icon={faArrowDownAZ} className="ms-2" />
+                ) : (
+                  <FontAwesomeIcon icon={faArrowDownZA} className="ms-2" />
+                )}
+              </th>
+              <th
+                className={`head-col ${
+                  sortedCol === "status" ? "head-active" : ""
+                }`}
+                onClick={() => {
+                  if (sortedCol === "status") {
+                    setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+                  } else {
+                    setSortedCol("status");
+                    setSortDir("asc");
+                  }
+                  onSort({ field: "status" });
+                }}
+              >
+                Status
+                {sortedCol !== "status" ? (
+                  <FontAwesomeIcon icon={faSort} className="ms-2" />
+                ) : sortDir === "asc" ? (
+                  <FontAwesomeIcon icon={faArrowDownAZ} className="ms-2" />
+                ) : (
+                  <FontAwesomeIcon icon={faArrowDownZA} className="ms-2" />
+                )}
+              </th>
               <th></th>
             </tr>
           </thead>
@@ -86,12 +188,12 @@ export default function Table({ data, onRefresh }: TableProps) {
                     <td>
                       <span
                         className={
-                          getProductStatus(item.variants) === "In-stock"
+                          item.status === "In-stock"
                             ? "badge rounded-pill text-bg-success"
                             : "badge rounded-pill text-bg-danger"
                         }
                       >
-                        {getProductStatus(item.variants)}
+                        {item.status}
                       </span>
                     </td>
                     <td>
@@ -131,7 +233,7 @@ export default function Table({ data, onRefresh }: TableProps) {
                                       <th>Size</th>
                                       <th>Color</th>
                                       <th>Stock</th>
-                                      <th>Min Stock</th>
+                                      <th>Min. Stock</th>
                                       <th>Status</th>
                                       <th>Action</th>
                                     </tr>

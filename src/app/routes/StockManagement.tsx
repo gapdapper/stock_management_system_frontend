@@ -1,30 +1,59 @@
 import Headers from "@/features/stockManagement/components/headers";
 import Table from "@/features/stockManagement/components/table";
 import { getProductsWithVariant } from "@/features/stockManagement/api/getProductWithVariant";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { IProductData } from "../types/product";
+import { getProductStatus } from "@/utils/product";
 
 function StockManagement() {
-  const [productData, setProductData] = useState<IProductData[]>([]);
+  const [rawData, setRawData] = useState<IProductData[]>([]);
+  const [sortField, setSortField] = useState<keyof IProductData>("productName");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
 
   const fetchProductData = async () => {
     try {
-      const data = await getProductsWithVariant()
-      setProductData(data.products)
+      const data = await getProductsWithVariant();
+      const mappedData = data.products.map((product) => {
+        return { ...product, status: getProductStatus(product.variants) };
+      });
+      setRawData(mappedData);
     } catch (error) {
-      console.error('Failed to fetch product data')
+      console.error("Failed to fetch product data");
     }
-  }
-  // fetch actual data
-  useEffect(() => {
+  };
 
-    fetchProductData()
-  }, [])
+  useEffect(() => {
+    fetchProductData();
+  }, []);
+
+  const sortedData = useMemo(() => {
+    return [...rawData].sort((a, b) => {
+      const aVal = a[sortField];
+      const bVal = b[sortField];
+
+      if (typeof aVal === "string" && typeof bVal === "string") {
+        return sortDirection === "asc"
+          ? aVal.localeCompare(bVal)
+          : bVal.localeCompare(aVal);
+      } else if (typeof aVal === "number" && typeof bVal === "number") {
+        return sortDirection === "asc" ? aVal - bVal : bVal - aVal;
+      }
+
+      return 0;
+    });
+  }, [rawData, sortField, sortDirection]);
 
   return (
     <>
       <Headers />
-      <Table data={productData} onRefresh={fetchProductData}/>
+      <Table
+        data={sortedData}
+        onRefresh={fetchProductData}
+        onSort={(payload) => {
+          setSortField(payload.field);
+          setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
+        }}
+      />
     </>
   );
 }

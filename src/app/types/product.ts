@@ -3,6 +3,7 @@ export interface IProductData {
   productName: string;
   totalStock: number;
   lastUpdated: Date;
+  status?: string;
   variants: {
     size: string;
     sub: {

@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 type ModalProps = {
   title: string;
   id: string;
@@ -7,6 +9,7 @@ type ModalProps = {
   onConfirm?: () => void;
   confirmDisabled: boolean;
   size?: string;
+  onClose?: () => void;
 };
 
 export default function Modal({
@@ -18,7 +21,18 @@ export default function Modal({
   onConfirm,
   confirmDisabled,
   size = "",
+  onClose
 }: ModalProps) {
+
+  useEffect(() => {
+  const el = document.getElementById(`modal-${id}`);
+  if (!el) return;
+
+  const handler = () => onClose?.();
+
+  el.addEventListener("hidden.bs.modal", handler);
+  return () => el.removeEventListener("hidden.bs.modal", handler);
+}, [id, onClose]);
 
   return (
 <div className={`modal ${size} fade`} id={`modal-${id}`} tabIndex={-1} aria-labelledby={`${id}ModalLabel`} aria-hidden="true" aria-modal="true">

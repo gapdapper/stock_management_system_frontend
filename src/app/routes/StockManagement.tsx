@@ -53,7 +53,7 @@ function StockManagement() {
 
   return (
     <>
-      <Headers filterVal={filter} setFilterVal={setFilter} />
+      <Headers filterVal={filter} setFilterVal={setFilter} data={rawData} onRefresh={fetchProductData}/>
       <Table
         data={sortedData}
         onRefresh={fetchProductData}

@@ -9,6 +9,7 @@ function StockManagement() {
   const [rawData, setRawData] = useState<IProductData[]>([]);
   const [sortField, setSortField] = useState<keyof IProductData>("productName");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+  const [filter, setFilter] = useState<string>("");
 
   const fetchProductData = async () => {
     try {
@@ -27,7 +28,14 @@ function StockManagement() {
   }, []);
 
   const sortedData = useMemo(() => {
-    return [...rawData].sort((a, b) => {
+    let data = [...rawData];
+    if (filter.trim()) {
+      const keyword = filter.trim().toLowerCase();
+      data = data.filter((item) =>
+        item.productName.toLowerCase().includes(keyword)
+      );
+    }
+    return data.sort((a, b) => {
       const aVal = a[sortField];
       const bVal = b[sortField];
 
@@ -41,11 +49,11 @@ function StockManagement() {
 
       return 0;
     });
-  }, [rawData, sortField, sortDirection]);
+  }, [rawData, sortField, sortDirection, filter]);
 
   return (
     <>
-      <Headers />
+      <Headers filterVal={filter} setFilterVal={setFilter} />
       <Table
         data={sortedData}
         onRefresh={fetchProductData}

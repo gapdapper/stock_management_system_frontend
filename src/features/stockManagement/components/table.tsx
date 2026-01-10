@@ -9,6 +9,7 @@ import {
   faArrowDownZA,
   faArrowDown19,
   faArrowDown91,
+  faMagnifyingGlass
 } from "@fortawesome/free-solid-svg-icons";
 import PlaceHolder from "../../../assets/placeholder.svg?react";
 import Modal from "@/components/modal";
@@ -27,7 +28,12 @@ type TableProps = {
   currentSortDirection: string;
 };
 
-export default function Table({ data, onRefresh, onSort, currentSortDirection }: TableProps) {
+export default function Table({
+  data,
+  onRefresh,
+  onSort,
+  currentSortDirection,
+}: TableProps) {
   const [isDirty, setIsDirty] = useState(false);
   const [sortedCol, setSortedCol] = useState<keyof IProductData>("productName");
 
@@ -281,8 +287,15 @@ export default function Table({ data, onRefresh, onSort, currentSortDirection }:
                   )}
                 </React.Fragment>
               ))}
+
           </tbody>
         </table>
+            {!data?.length && (
+              <div className="empty-state">
+                <FontAwesomeIcon icon={faMagnifyingGlass} />
+                <p>No result found</p>
+              </div>
+            )}
       </div>
       <Modal
         id="product-detail"

@@ -5,7 +5,7 @@ import { faCircleQuestion } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useMemo, useRef } from "react";
 
 type ProductDetailProp = {
-  data: any
+  data: any;
   formHandler: (data: any) => void;
   onDirtyChange: (data: any) => void;
 };
@@ -13,24 +13,30 @@ type ProductDetailProp = {
 export default function ProductDetail({
   data,
   formHandler,
-  onDirtyChange
+  onDirtyChange,
 }: ProductDetailProp) {
-
   const initialRef = useRef({
     qty: data.qty,
     minStock: data.minStock,
   });
 
-    const isDirty = useMemo(() => {
+  const isDirty = useMemo(() => {
     return (
       data.qty !== initialRef.current.qty ||
       data.minStock !== initialRef.current.minStock
     );
-  }, [data.qty, data.minStock]);
+  }, [data]);
 
-    useEffect(() => {
+  useEffect(() => {
     onDirtyChange(isDirty);
   }, [isDirty, onDirtyChange]);
+
+  useEffect(() => {
+    initialRef.current = {
+      qty: data.qty,
+      minStock: data.minStock,
+    };
+  }, [data]);
 
   return (
     <>
@@ -74,7 +80,9 @@ export default function ProductDetail({
               aria-label="Stock"
               aria-describedby="basic-addon1"
               value={data.qty}
-              onChange={(e) => {formHandler({...data, qty: Number(e.target.value)})}}
+              onChange={(e) => {
+                formHandler({ ...data, qty: Number(e.target.value) });
+              }}
             ></input>
             <label htmlFor="minimum-stock-input">
               <strong>Minimum Stock</strong>
@@ -93,7 +101,9 @@ export default function ProductDetail({
               aria-label="Minimum Stock"
               aria-describedby="basic-addon1"
               value={data.minStock}
-              onChange={(e) => {formHandler({...data, minStock: Number(e.target.value)})}}
+              onChange={(e) => {
+                formHandler({ ...data, minStock: Number(e.target.value) });
+              }}
             ></input>
           </div>
         </div>

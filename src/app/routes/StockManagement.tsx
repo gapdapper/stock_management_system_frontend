@@ -4,12 +4,14 @@ import { getProductsWithVariant } from "@/features/stockManagement/api/getProduc
 import { useEffect, useMemo, useState } from "react";
 import type { IProductData } from "../types/product";
 import { getProductStatus } from "@/utils/product";
+import LoadingSpinner from "@/components/loadingSpinner";
 
 function StockManagement() {
   const [rawData, setRawData] = useState<IProductData[]>([]);
   const [sortField, setSortField] = useState<keyof IProductData>("productName");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const [filter, setFilter] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const fetchProductData = async () => {
     try {
@@ -20,6 +22,8 @@ function StockManagement() {
       setRawData(mappedData);
     } catch (error) {
       console.error("Failed to fetch product data");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -51,20 +55,33 @@ function StockManagement() {
     });
   }, [rawData, sortField, sortDirection, filter]);
 
-  return (
-    <>
-      <Headers filterVal={filter} setFilterVal={setFilter} data={rawData} onRefresh={fetchProductData}/>
-      <Table
-        data={sortedData}
-        onRefresh={fetchProductData}
-        currentSortDirection={sortDirection}
-        onSort={(payload) => {
-          setSortField(payload.field);
-          setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
-        }}
-      />
-    </>
-  );
+  if (isLoading) {
+    return (
+      <div className="d-flex justify-content-center mt-5 pt-5">
+        <LoadingSpinner />
+      </div>
+    );
+  } else {
+    return (
+      <>
+        <Headers
+          filterVal={filter}
+          setFilterVal={setFilter}
+          data={rawData}
+          onRefresh={fetchProductData}
+        />
+        <Table
+          data={sortedData}
+          onRefresh={fetchProductData}
+          currentSortDirection={sortDirection}
+          onSort={(payload) => {
+            setSortField(payload.field);
+            setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
+          }}
+        />
+      </>
+    );
+  }
 }
 
 export default StockManagement;

@@ -299,7 +299,7 @@ export default function Table({
       </div>
       <Modal
         id="product-detail"
-        title="Product Details"
+        title={`${selectedProduct?.name} ${selectedProduct?.size} ${selectedProduct?.color}`}
         confirmText="Edit"
         cancelText="Cancel"
         onConfirm={handleEdit}

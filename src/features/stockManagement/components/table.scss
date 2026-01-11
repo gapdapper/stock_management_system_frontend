@@ -1,0 +1,147 @@
+button {
+  background-color: transparent;
+  border: none;
+}
+
+.image-cell {
+  align-self: center;
+  width: 120px;
+  margin: 20px 105px 0 105px;
+  display: block;
+  svg {
+    width: 150px;
+    height: auto;
+  }
+  p {
+    font-size: 18px;
+    font-weight: 600;
+    text-align: center;
+    width: 150px;
+    padding-top: 15px;
+    margin: 0;
+  }
+}
+
+.row-collapse-btn svg {
+  transition: transform 0.2s ease;
+  transform: rotate(0deg);
+}
+
+.row-collapse-btn[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+
+.collapse {
+  display: block !important;
+  max-height: 0;
+  overflow: hidden;
+}
+
+.collapse-inner {
+  padding: 0 16px;
+  opacity: 0;
+  transition: padding 0.1s ease, opacity 0.25s ease;
+}
+
+.collapse.show {
+  max-height: 1000px;
+}
+
+.collapse.show .collapse-inner {
+  padding: 16px;
+  opacity: 1;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.product-color-badge {
+  .color-badge {
+    padding: 9px 13px;
+    color: #fff;
+  }
+
+  .color-red {
+    background-color: #dc3545;
+  }
+
+  .color-new-red {
+    background-color: #df0b20;
+  }
+
+  .color-green {
+    background-color: #198754;
+  }
+
+  .color-new-green {
+    background-color: #057c45;
+  }
+
+  .color-blue {
+    background-color: #0d6efd;
+  }
+
+  .color-yellow {
+    background-color: #ffc107;
+    color: #000;
+  }
+
+  .color-no-color,
+  .color-6-point,
+  .color-9-point,
+  .color-12-point {
+    background-color: #6c757d;
+  }
+
+  .color-colorful {
+    background: linear-gradient(
+      135deg,
+      #ff4d4f,
+      #ffa940,
+      #52c41a,
+      #1890ff,
+      #722ed1
+    );
+    color: #fff;
+  }
+}
+
+tr:has(.row-collapse-btn[aria-expanded="true"]) {
+  border-bottom: transparent;
+}
+
+.head-col {
+  user-select: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  font-weight: 600;
+
+  &:hover {
+    background-color: #fafafa;
+  }
+
+  &.head-active {
+    font-weight: 700;
+    color: #000;
+  }
+}
+
+.empty-state {
+  padding: 3rem 1rem;
+  text-align: center;
+  color: #999;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+
+  svg {
+    font-size: 4.25rem;
+    color: #ccc;
+  }
+
+  p {
+    margin: 0;
+    font-size: 1.95rem;
+    letter-spacing: 0.02em;
+  }
+}

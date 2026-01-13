@@ -17,6 +17,8 @@ import ContentLayout from "@/components/layouts/content-layout.tsx";
 import AuthProvider from "./auth-provider.tsx";
 import AuthSync from "./routes/auth/AuthSync.tsx";
 import Dashboard from "./routes/Dashboard.tsx";
+import SalesRecord from "./routes/SalesRecord.tsx";
+import SalesDetail from "@/features/salesDetail/components/SalesDetail.tsx";
 
 library.add(fas, far, fab);
 
@@ -35,6 +37,8 @@ createRoot(document.getElementById("root")!).render(
           <Route element={<ContentLayout />}>
             <Route index element={<StockManagement />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/sales" element={<SalesRecord />} />
+            <Route path="/sales/:id" element={<SalesDetail />} />
           </Route>
         </Route>
       </Routes>

@@ -1,6 +1,11 @@
+import type { ITransactionItem } from "@/app/types/transaction";
 import "./ItemTable.scss"
 
-export default function Itemtable({ data }: any) {
+type Prop = {
+  data: ITransactionItem[]
+}
+
+export default function ItemTable({ data }: Prop) {
   return (
     <div className="item-table-wrapper">
       <table className=" item-table">
@@ -13,13 +18,13 @@ export default function Itemtable({ data }: any) {
           </tr>
         </thead>
         <tbody>
-          {data.map((item) => {
+          {data && data?.map((item) => {
             return (
-              <tr>
-                <td>{item.name}</td>
+              <tr key={item.variantId}>
+                <td>{item.productName}</td>
                 <td>{item.size}</td>
                 <td>{item.color}</td>
-                <td>{item.qty}</td>
+                <td>{item.quantity}</td>
               </tr>
             );
           })}

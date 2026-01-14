@@ -13,7 +13,7 @@
   font-weight: 600;
   text-transform: capitalize;
 
-  &.order\ placed {
+  &.order.placed {
     background: #e5e7eb;
     color: #374151;
   }
@@ -22,6 +22,11 @@
     background: #dbeafe;
     color: #1d4ed8;
   }
+
+  &.delivered {
+  background: #ccfbf1; 
+  color: #0f766e;      
+}
 
   &.completed {
     background: #dcfce7;

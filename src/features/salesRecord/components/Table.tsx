@@ -1,29 +1,13 @@
 import { useNavigate } from "react-router";
 import "./Table.scss";
+import type { ITransactions } from "@/app/types/transaction";
 
-export default function Table() {
+type Prop = {
+  data: ITransactions[];
+};
+
+export default function Table({ data }: Prop) {
   let navigate = useNavigate();
-
-  const data = [
-    {
-      id: 1,
-      orderId: "ORD-001",
-      buyer: "John",
-      platformId: "Shopee",
-      paymentTypeId: "Credit Card",
-      status: "shipped",
-      createdAt: new Date(),
-    },
-    {
-      id: 2,
-      orderId: "ORD-002",
-      buyer: "Jack",
-      platformId: "Lazada",
-      paymentTypeId: "PromptPay",
-      status: "completed",
-      createdAt: new Date(),
-    },
-  ];
 
   return (
     <div className="table-wrapper">
@@ -43,18 +27,20 @@ export default function Table() {
             <tr
               key={item.id}
               className="data-row"
-              onClick={() => navigate(`/sales/${item.id}`)}
+              onClick={() =>
+                navigate(`/sales/${item.orderId.replace(" ", "")}`)
+              }
             >
               <td className="order-id">{item.orderId}</td>
               <td>{item.buyer}</td>
-              <td>{item.platformId}</td>
-              <td>{item.paymentTypeId}</td>
+              <td>{item.platform}</td>
+              <td>{item.paymentType}</td>
               <td>
                 <span className={`status-badge ${item.status}`}>
                   {item.status}
                 </span>
               </td>
-              <td>{item.createdAt.toLocaleString()}</td>
+              <td>{new Date(item.createdAt).toLocaleString()}</td>
             </tr>
           ))}
         </tbody>

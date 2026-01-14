@@ -2,20 +2,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleLeft } from "@fortawesome/free-solid-svg-icons";
 import "./SummaryCard.scss";
 import { useNavigate } from "react-router";
+import type { ITransactions } from "@/app/types/transaction";
 
-export default function SummaryCard() {
+type Prop = {
+  data: ITransactions;
+};
+
+export default function SummaryCard({ data }: Prop) {
   let navigate = useNavigate();
-
-  const data = {
-    id: 1,
-    orderId: "ORD-001",
-    buyer: "John",
-    platformId: "Shopee",
-    paymentTypeId: "Credit Card",
-    status: "shipped",
-    createdAt: new Date(),
-    note: "-",
-  };
 
   return (
     <section className="summary-card">
@@ -41,12 +35,12 @@ export default function SummaryCard() {
 
         <div className="summary-item">
           <span className="label">Platform</span>
-          <span className="value">{data.platformId}</span>
+          <span className="value">{data.platform}</span>
         </div>
 
         <div className="summary-item">
           <span className="label">Payment</span>
-          <span className="value">{data.paymentTypeId}</span>
+          <span className="value">{data.paymentType}</span>
         </div>
 
         <div className="summary-item">

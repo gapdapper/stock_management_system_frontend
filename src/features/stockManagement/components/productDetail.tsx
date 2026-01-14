@@ -50,8 +50,8 @@ export default function ProductDetail({
             <span
               className={
                 data.qty >= data.minStock
-                  ? "badge rounded-pill text-bg-success"
-                  : "badge rounded-pill text-bg-danger"
+                  ? "status-badge in-stock"
+                  : "status-badge low-stock"
               }
             >
               {data.qty >= data.minStock ? "In-stock" : "Low stock"}

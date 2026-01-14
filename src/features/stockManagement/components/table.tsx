@@ -82,8 +82,8 @@ export default function Table({
 
   return (
     <>
-      <div className="table-responsive-xxl">
-        <table className="table">
+      <div className="stock-table-wrapper">
+        <table>
           <thead>
             <tr>
               <th
@@ -166,17 +166,13 @@ export default function Table({
               data.map((item) => (
                 <React.Fragment key={item.id}>
                   {/* normal row */}
-                  <tr>
+                  <tr className="hoverable">
                     <td>{item.productName}</td>
                     <td>{item.totalStock}</td>
                     <td>{new Date(item.lastUpdated).toLocaleString()}</td>
                     <td>
                       <span
-                        className={
-                          item.status === "In-stock"
-                            ? "badge rounded-pill text-bg-success"
-                            : "badge rounded-pill text-bg-danger"
-                        }
+                        className={`status-badge ${item.status?.replace(" ", "-")}`}
                       >
                         {item.status}
                       </span>
@@ -230,7 +226,7 @@ export default function Table({
                                           <td>{idx == 0 ? v.size : ""}</td>
                                           <td className="product-color-badge">
                                             <span
-                                              className={`badge color-badge color-${s.color
+                                              className={`status-badge color-${s.color
                                                 .toLowerCase()
                                                 .replace(" ", "-")}`}
                                             >
@@ -241,11 +237,7 @@ export default function Table({
                                           <td>{s.minStock}</td>
                                           <td>
                                             <span
-                                              className={
-                                                s.stock >= s.minStock
-                                                  ? "badge rounded-pill text-bg-success"
-                                                  : "badge rounded-pill text-bg-danger"
-                                              }
+                                              className={`status-badge ${item.status?.replace(" ", "-")}`}
                                             >
                                               {s.stock >= s.minStock
                                                 ? "In-stock"

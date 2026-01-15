@@ -2,11 +2,13 @@ import Toast, { showToast } from "@/components/toast";
 import { importFile } from "@/features/importFile/api/importFile";
 import Headers from "@/features/importFile/components/Headers";
 import ImportSection from "@/features/importFile/components/ImportSection";
+import { useImportStatusStore } from "@/stores/importStatus";
 
 export default function FileImport() {
   const ALLOWED_EXTENSIONS = ["csv", "xlsx"];
   const MAX_FILE_SIZE_MB = 5;
-  
+  const fetchImportStatus = useImportStatusStore((s) => s.fetchImportStatus);
+
   const handleFilesSelected = async (files: File[]) => {
     const invalidFiles = files.filter((file) => {
       const ext = file.name.split(".").pop()?.toLowerCase();
@@ -28,6 +30,7 @@ export default function FileImport() {
       });
 
       await importFile(formData);
+      await fetchImportStatus();
       showToast("Import completed", "success");
     } catch (error) {
       showToast("Import failed", "error");

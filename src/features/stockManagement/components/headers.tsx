@@ -4,6 +4,7 @@ import ReStockItem from "./reStockItem";
 import type { IProductData, IWaitingProduct } from "@/app/types/product";
 import { useState } from "react";
 import { restockProduct } from "../api/restockProduct";
+import Toast, { showToast } from "@/components/toast";
 
 type HeadersProps = {
   filterVal?: string;
@@ -29,6 +30,7 @@ export default function Headers({
       })),
     };
     try {
+      showToast("Restock Success!", "success");
       await restockProduct(payload);
       onRefresh();
     } catch (error) {
@@ -78,6 +80,7 @@ export default function Headers({
           onCloseConditon={setwaitingList}
         />
       </Modal>
+      <Toast />
     </>
   );
 }

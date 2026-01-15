@@ -9,13 +9,14 @@ import {
   faArrowDownZA,
   faArrowDown19,
   faArrowDown91,
-  faMagnifyingGlass
+  faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
 import PlaceHolder from "../../../assets/placeholder.svg?react";
 import Modal from "@/components/modal";
 import ProductDetail from "./productDetail";
 import type { IProductData } from "@/app/types/product";
 import { editProductVariant } from "../api/editProductVariant";
+import Toast, { showToast } from "@/components/toast";
 
 type SortPayload = {
   field: keyof IProductData;
@@ -73,7 +74,7 @@ export default function Table({
         qty: selectedProduct.qty,
         minStock: selectedProduct.minStock,
       });
-
+      showToast("Edit Success!", "success");
       onRefresh();
     } catch (error) {
       console.error("Edit product variant failed", error);
@@ -172,7 +173,10 @@ export default function Table({
                     <td>{new Date(item.lastUpdated).toLocaleString()}</td>
                     <td>
                       <span
-                        className={`status-badge ${item.status?.replace(" ", "-")}`}
+                        className={`status-badge ${item.status?.replace(
+                          " ",
+                          "-"
+                        )}`}
                       >
                         {item.status}
                       </span>
@@ -237,7 +241,10 @@ export default function Table({
                                           <td>{s.minStock}</td>
                                           <td>
                                             <span
-                                              className={`status-badge ${item.status?.replace(" ", "-")}`}
+                                              className={`status-badge ${item.status?.replace(
+                                                " ",
+                                                "-"
+                                              )}`}
                                             >
                                               {s.stock >= s.minStock
                                                 ? "In-stock"
@@ -279,15 +286,14 @@ export default function Table({
                   )}
                 </React.Fragment>
               ))}
-
           </tbody>
         </table>
-            {!data?.length && (
-              <div className="empty-state">
-                <FontAwesomeIcon icon={faMagnifyingGlass} />
-                <p>No result found</p>
-              </div>
-            )}
+        {!data?.length && (
+          <div className="empty-state">
+            <FontAwesomeIcon icon={faMagnifyingGlass} />
+            <p>No result found</p>
+          </div>
+        )}
       </div>
       <Modal
         id="product-detail"
@@ -306,6 +312,7 @@ export default function Table({
           />
         )}
       </Modal>
+      <Toast />
     </>
   );
 }

@@ -7,12 +7,22 @@ import { getTransactions } from "@/features/salesRecord/api/getTransactions";
 
 export default function SalesRecord() {
   const [rawData, setRawData] = useState<ITransactions[]>([]);
+  const [filteredData, setFilteredData] = useState<ITransactions[]>([]);
   const [filter, setFilter] = useState<IFilter>({
     platform: "all",
     status: "all",
     period: "all",
   });
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const ITEMS_PER_PAGE = 20;
+
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const paginatedData = filteredData.slice(
+    startIndex,
+    startIndex + ITEMS_PER_PAGE
+  );
 
   const fetchProductData = async () => {
     try {
@@ -22,12 +32,69 @@ export default function SalesRecord() {
       console.error("Failed to fetch product data");
     } finally {
       setIsLoading(false);
+      setCurrentPage(1);
     }
   };
 
   useEffect(() => {
     fetchProductData();
   }, []);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filter]);
+
+  useEffect(() => {
+    let result = [...rawData];
+
+    // Status filter
+    if (filter.status !== "all") {
+      result = result.filter((item) => item.status === filter.status);
+    }
+
+    // Platform filter
+    if (filter.platform !== "all") {
+      result = result.filter((item) => item.platform === filter.platform);
+    }
+
+    // Date range filter
+    if (filter.period !== "all") {
+      const now = new Date();
+
+      result = result.filter((item) => {
+        const createdAt = new Date(item.createdAt);
+
+        switch (filter.period) {
+          case "today":
+            return createdAt.toDateString() === now.toDateString();
+
+          case "last-7-days":
+            const sevenDaysAgo = new Date();
+            sevenDaysAgo.setDate(now.getDate() - 7);
+            return createdAt >= sevenDaysAgo;
+
+          case "this-month":
+            return (
+              createdAt.getMonth() === now.getMonth() &&
+              createdAt.getFullYear() === now.getFullYear()
+            );
+
+          default:
+            return true;
+        }
+      });
+    }
+    setFilteredData(result);
+    setTotalPages(Math.ceil(result.length / ITEMS_PER_PAGE));
+  }, [rawData, filter]);
+
+  const goToPage = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
 
   if (isLoading) {
     return (
@@ -39,7 +106,41 @@ export default function SalesRecord() {
     return (
       <>
         <Headers filterSetter={setFilter} />
-        <Table data={rawData} filter={filter}/>
+        <Table data={paginatedData} />
+        <div className="pagination-minimal d-flex justify-content-start align-items-center gap-2 mt-4 mb-4">
+          <button
+            className="btn btn-sm btn-outline-secondary"
+            disabled={currentPage === 1}
+            onClick={() => goToPage(currentPage - 1)}
+          >
+            ← Prev
+          </button>
+
+          {Array.from({ length: totalPages }).map((_, idx) => {
+            const page = idx + 1;
+            const isActive = page === currentPage;
+
+            return (
+              <button
+                key={page}
+                className={`btn btn-sm ${
+                  isActive ? "btn-dark" : "btn-outline-secondary"
+                }`}
+                onClick={() => goToPage(page)}
+              >
+                {page}
+              </button>
+            );
+          })}
+
+          <button
+            className="btn btn-sm btn-outline-secondary"
+            disabled={currentPage === totalPages}
+            onClick={() => goToPage(currentPage + 1)}
+          >
+            Next →
+          </button>
+        </div>
       </>
     );
   }

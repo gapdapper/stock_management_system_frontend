@@ -5,57 +5,56 @@ import { useEffect, useState } from "react";
 
 type Prop = {
   data: ITransactions[];
-  filter: IFilter;
 };
 
-export default function Table({ data, filter }: Prop) {
+export default function Table({ data }: Prop) {
   let navigate = useNavigate();
-  const [tableData, setTableData] = useState<ITransactions[]>([]);
+  // const [tableData, setTableData] = useState<ITransactions[]>([]);
 
-  useEffect(() => {
-    let result = [...data];
-    console.log(data);
-    console.log(filter);
+  // useEffect(() => {
+  //   let result = [...data];
+  //   console.log(data);
+  //   console.log(filter);
 
-    // Status filter
-    if (filter.status !== "all") {
-      result = result.filter((item) => item.status === filter.status);
-    }
+  //   // Status filter
+  //   if (filter.status !== "all") {
+  //     result = result.filter((item) => item.status === filter.status);
+  //   }
 
-    // Platform filter
-    if (filter.platform !== "all") {
-      result = result.filter((item) => item.platform === filter.platform);
-    }
+  //   // Platform filter
+  //   if (filter.platform !== "all") {
+  //     result = result.filter((item) => item.platform === filter.platform);
+  //   }
 
-    // Date range filter
-    if (filter.period !== "all") {
-      const now = new Date();
+  //   // Date range filter
+  //   if (filter.period !== "all") {
+  //     const now = new Date();
 
-      result = result.filter((item) => {
-        const createdAt = new Date(item.createdAt);
+  //     result = result.filter((item) => {
+  //       const createdAt = new Date(item.createdAt);
 
-        switch (filter.period) {
-          case "today":
-            return createdAt.toDateString() === now.toDateString();
+  //       switch (filter.period) {
+  //         case "today":
+  //           return createdAt.toDateString() === now.toDateString();
 
-          case "last-7-days":
-            const sevenDaysAgo = new Date();
-            sevenDaysAgo.setDate(now.getDate() - 7);
-            return createdAt >= sevenDaysAgo;
+  //         case "last-7-days":
+  //           const sevenDaysAgo = new Date();
+  //           sevenDaysAgo.setDate(now.getDate() - 7);
+  //           return createdAt >= sevenDaysAgo;
 
-          case "this-month":
-            return (
-              createdAt.getMonth() === now.getMonth() &&
-              createdAt.getFullYear() === now.getFullYear()
-            );
+  //         case "this-month":
+  //           return (
+  //             createdAt.getMonth() === now.getMonth() &&
+  //             createdAt.getFullYear() === now.getFullYear()
+  //           );
 
-          default:
-            return true;
-        }
-      });
-    }
-    setTableData(result);
-  }, [data, filter]);
+  //         default:
+  //           return true;
+  //       }
+  //     });
+  //   }
+  //   setTableData(result);
+  // }, [data, filter]);
 
   return (
     <div className="table-wrapper">
@@ -71,7 +70,7 @@ export default function Table({ data, filter }: Prop) {
           </tr>
         </thead>
         <tbody>
-          {tableData.map((item) => (
+          {data.map((item) => (
             <tr
               key={item.id}
               className="data-row"

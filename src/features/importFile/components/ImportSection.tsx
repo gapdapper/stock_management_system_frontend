@@ -18,7 +18,7 @@ export default function ImportSection({ onFilesSelected }: Props) {
           <div className="drop-content">
             <div className="icon">📄</div>
 
-            <h6 className="mb-1">Import sales report</h6>
+            <h6 className="mb-1">Import sales data</h6>
 
             <p className="text-muted small mb-2">
               Drag & drop your exported sales file here (CSV/XLXS)

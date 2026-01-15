@@ -17,3 +17,9 @@ export interface ITransactionItem {
   color: string;
   quantity: number;
 }
+
+export interface IFilter {
+  status: string;
+  period: string;
+  platform: string;
+}

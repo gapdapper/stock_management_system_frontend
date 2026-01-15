@@ -1,13 +1,61 @@
 import { useNavigate } from "react-router";
 import "./Table.scss";
-import type { ITransactions } from "@/app/types/transaction";
+import type { IFilter, ITransactions } from "@/app/types/transaction";
+import { useEffect, useState } from "react";
 
 type Prop = {
   data: ITransactions[];
+  filter: IFilter;
 };
 
-export default function Table({ data }: Prop) {
+export default function Table({ data, filter }: Prop) {
   let navigate = useNavigate();
+  const [tableData, setTableData] = useState<ITransactions[]>([]);
+
+  useEffect(() => {
+    let result = [...data];
+    console.log(data);
+    console.log(filter);
+
+    // Status filter
+    if (filter.status !== "all") {
+      result = result.filter((item) => item.status === filter.status);
+    }
+
+    // Platform filter
+    if (filter.platform !== "all") {
+      result = result.filter((item) => item.platform === filter.platform);
+    }
+
+    // Date range filter
+    if (filter.period !== "all") {
+      const now = new Date();
+
+      result = result.filter((item) => {
+        const createdAt = new Date(item.createdAt);
+
+        switch (filter.period) {
+          case "today":
+            return createdAt.toDateString() === now.toDateString();
+
+          case "last-7-days":
+            const sevenDaysAgo = new Date();
+            sevenDaysAgo.setDate(now.getDate() - 7);
+            return createdAt >= sevenDaysAgo;
+
+          case "this-month":
+            return (
+              createdAt.getMonth() === now.getMonth() &&
+              createdAt.getFullYear() === now.getFullYear()
+            );
+
+          default:
+            return true;
+        }
+      });
+    }
+    setTableData(result);
+  }, [data, filter]);
 
   return (
     <div className="table-wrapper">
@@ -23,7 +71,7 @@ export default function Table({ data }: Prop) {
           </tr>
         </thead>
         <tbody>
-          {data.map((item) => (
+          {tableData.map((item) => (
             <tr
               key={item.id}
               className="data-row"

@@ -19,6 +19,7 @@ import AuthSync from "./routes/auth/AuthSync.tsx";
 import Dashboard from "./routes/Dashboard.tsx";
 import SalesRecord from "./routes/SalesRecord.tsx";
 import SalesDetail from "@/features/salesDetail/components/SalesDetail.tsx";
+import FileImport from "./routes/FileImport.tsx";
 
 library.add(fas, far, fab);
 
@@ -39,6 +40,7 @@ createRoot(document.getElementById("root")!).render(
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/sales" element={<SalesRecord />} />
             <Route path="/sales/:id" element={<SalesDetail />} />
+            <Route path="/import" element={<FileImport />} />
           </Route>
         </Route>
       </Routes>

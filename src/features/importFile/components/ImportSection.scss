@@ -1,0 +1,33 @@
+.drop-zone {
+  display: block;
+  width: 100%;
+  border: 2px dashed #dee2e6;
+  border-radius: 8px;
+  padding: 40px 20px;
+  text-align: center;
+  cursor: pointer;
+  background-color: #fafafa;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #f8f9fa;
+    border-color: #adb5bd;
+  }
+}
+
+.drop-content {
+  .icon {
+    font-size: 32px;
+    margin-bottom: 8px;
+  }
+
+  h6 {
+    font-weight: 500;
+  }
+
+  .hint {
+    font-size: 0.85rem;
+    color: #6c757d;
+    text-decoration: underline;
+  }
+}

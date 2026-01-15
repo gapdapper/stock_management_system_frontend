@@ -50,10 +50,10 @@ function Navbar() {
           <FontAwesomeIcon icon={faArrowUpFromBracket} />
           <span>File Import</span>
         </NavLink>
-        <NavLink to="/setting">
+        {/* <NavLink to="/setting">
           <FontAwesomeIcon icon={faGear} />
           <span>Settings</span>
-        </NavLink>
+        </NavLink> */}
         <div className="user-info">
           <p>{user?.username ?? "Loading..."}</p>
           <button

@@ -1,7 +1,7 @@
 import "./productDetail.scss";
 import PlaceHolder from "../../../assets/placeholder.svg?react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleQuestion } from "@fortawesome/free-solid-svg-icons";
+import { faCircleQuestion, faWrench } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useMemo, useRef } from "react";
 
 type ProductDetailProp = {
@@ -43,8 +43,33 @@ export default function ProductDetail({
       <div className="product-detail">
         <div className="row g-4">
           <div className="col-6">
-            <div className="product-image col-12">
-              <PlaceHolder />
+            <div className=" col-12">
+              <div className="product-image">
+                {data.VariantImageUrl ? (
+                  <img
+                    src={data.VariantImageUrl}
+                    alt="Product"
+                    className="product-img"
+                  />
+                ) : (
+                  <PlaceHolder />
+                )}
+                <div className="image-overlay">
+                  <FontAwesomeIcon icon={faWrench} size="xs" />
+                </div>
+
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="image-input"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      // handle upload
+                    }
+                  }}
+                />
+              </div>
             </div>
 
             <div className="status-badge col-12 mt-0">
@@ -85,14 +110,16 @@ export default function ProductDetail({
                   formHandler({ ...data, qty: Number(e.target.value) });
                 }}
               ></input>
-              <label htmlFor="minimum-stock-input">
-                <strong>Minimum Stock</strong>
-              </label>
-              <div className="custom-tooltip">
-                <FontAwesomeIcon icon={faCircleQuestion} />
-                <span className="custom-tooltiptext">
-                  Triggers Low stock when stock falls below this value.
-                </span>
+              <div className="d-flex">
+                <label htmlFor="minimum-stock-input">
+                  <strong>Minimum Stock</strong>
+                </label>
+                <div className="custom-tooltip">
+                  <FontAwesomeIcon icon={faCircleQuestion} />
+                  <span className="custom-tooltiptext">
+                    Triggers Low stock when stock falls below this value.
+                  </span>
+                </div>
               </div>
               <input
                 type="number"

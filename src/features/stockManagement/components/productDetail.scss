@@ -12,10 +12,36 @@
       font-weight: 600;
     }
   }
+
+  .status-badge {
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+
+    span {
+      padding: 6px 20px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      text-transform: capitalize;
+    }
+
+    .in-stock {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .low-stock {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+  }
 }
 
 /* LEFT PANEL */
 .product-image {
+  position: relative;
   background: #f9fafb;
   border: 1px dashed #e5e7eb;
   border-radius: 12px;
@@ -29,30 +55,28 @@
     height: auto;
     opacity: 0.85;
   }
-}
 
-.status-badge {
+  .image-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+
   display: flex;
+  align-items: center;
   justify-content: center;
-  margin-top: 16px;
 
-  span {
-    padding: 6px 20px;
-    border-radius: 999px;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.3px;
-    text-transform: capitalize;
+  opacity: 0;
+  transition: opacity 0.25s ease-in-out;
+  }
+  &:hover .image-overlay {
+    opacity: 1;
   }
 
-  .in-stock {
-    background: #dcfce7;
-    color: #166534;
-  }
-
-  .low-stock {
-    background: #fee2e2;
-    color: #991b1b;
+  .image-input {
+    opacity: 0;
+    inset: 0;
+    position: absolute;
+    cursor: pointer;
   }
 }
 
@@ -76,7 +100,9 @@
     font-size: 14px;
     border-radius: 8px;
     border: 1px solid #d1d5db;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition:
+      border-color 0.2s,
+      box-shadow 0.2s;
 
     &:focus {
       outline: none;
@@ -92,6 +118,7 @@
   display: inline-flex;
   align-items: center;
   margin-left: 6px;
+  padding-top: 10px;
   color: #6b7280;
   cursor: pointer;
 

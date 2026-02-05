@@ -88,9 +88,7 @@ export default function Table({
           <thead>
             <tr>
               <th
-                className={`head-col ${
-                  sortedCol === "productName" ? "head-active" : ""
-                }`}
+                className={`head-col`}
                 onClick={() => {
                   setSortedCol("productName");
                   onSort({ field: "productName" });
@@ -106,9 +104,7 @@ export default function Table({
                 )}
               </th>
               <th
-                className={`head-col ${
-                  sortedCol === "totalStock" ? "head-active" : ""
-                }`}
+                className={`head-col`}
                 onClick={() => {
                   setSortedCol("totalStock");
                   onSort({ field: "totalStock" });
@@ -124,9 +120,7 @@ export default function Table({
                 )}
               </th>
               <th
-                className={`head-col ${
-                  sortedCol === "lastUpdated" ? "head-active" : ""
-                }`}
+                className={`head-col`}
                 onClick={() => {
                   setSortedCol("lastUpdated");
                   onSort({ field: "lastUpdated" });
@@ -142,9 +136,7 @@ export default function Table({
                 )}
               </th>
               <th
-                className={`head-col ${
-                  sortedCol === "status" ? "head-active" : ""
-                }`}
+                className={`head-col`}
                 onClick={() => {
                   setSortedCol("status");
                   onSort({ field: "status" });

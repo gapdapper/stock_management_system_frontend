@@ -65,7 +65,7 @@ export default function Table({
     });
   };
 
-  const handleEdit = async () => {
+  const handleConfirmEdit = async () => {
     if (!selectedProduct) return;
 
     try {
@@ -292,7 +292,7 @@ export default function Table({
         title={`${selectedProduct?.name} ${selectedProduct?.size} ${selectedProduct?.color}`}
         confirmText="Edit"
         cancelText="Cancel"
-        onConfirm={handleEdit}
+        onConfirm={handleConfirmEdit}
         confirmDisabled={!isDirty}
         size="modal-lg"
       >

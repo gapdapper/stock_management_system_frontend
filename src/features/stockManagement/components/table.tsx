@@ -9,13 +9,14 @@ import {
   faArrowDownZA,
   faArrowDown19,
   faArrowDown91,
-  faMagnifyingGlass
+  faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
 import PlaceHolder from "../../../assets/placeholder.svg?react";
 import Modal from "@/components/modal";
 import ProductDetail from "./productDetail";
 import type { IProductData } from "@/app/types/product";
 import { editProductVariant } from "../api/editProductVariant";
+import Toast, { showToast } from "@/components/toast";
 
 type SortPayload = {
   field: keyof IProductData;
@@ -64,7 +65,7 @@ export default function Table({
     });
   };
 
-  const handleEdit = async () => {
+  const handleConfirmEdit = async () => {
     if (!selectedProduct) return;
 
     try {
@@ -73,7 +74,7 @@ export default function Table({
         qty: selectedProduct.qty,
         minStock: selectedProduct.minStock,
       });
-
+      showToast("Edit Success!", "success");
       onRefresh();
     } catch (error) {
       console.error("Edit product variant failed", error);
@@ -82,14 +83,12 @@ export default function Table({
 
   return (
     <>
-      <div className="table-responsive-xxl">
-        <table className="table">
+      <div className="stock-table-wrapper">
+        <table>
           <thead>
             <tr>
               <th
-                className={`head-col ${
-                  sortedCol === "productName" ? "head-active" : ""
-                }`}
+                className={`head-col`}
                 onClick={() => {
                   setSortedCol("productName");
                   onSort({ field: "productName" });
@@ -105,9 +104,7 @@ export default function Table({
                 )}
               </th>
               <th
-                className={`head-col ${
-                  sortedCol === "totalStock" ? "head-active" : ""
-                }`}
+                className={`head-col`}
                 onClick={() => {
                   setSortedCol("totalStock");
                   onSort({ field: "totalStock" });
@@ -123,9 +120,7 @@ export default function Table({
                 )}
               </th>
               <th
-                className={`head-col ${
-                  sortedCol === "lastUpdated" ? "head-active" : ""
-                }`}
+                className={`head-col`}
                 onClick={() => {
                   setSortedCol("lastUpdated");
                   onSort({ field: "lastUpdated" });
@@ -141,9 +136,7 @@ export default function Table({
                 )}
               </th>
               <th
-                className={`head-col ${
-                  sortedCol === "status" ? "head-active" : ""
-                }`}
+                className={`head-col`}
                 onClick={() => {
                   setSortedCol("status");
                   onSort({ field: "status" });
@@ -166,17 +159,16 @@ export default function Table({
               data.map((item) => (
                 <React.Fragment key={item.id}>
                   {/* normal row */}
-                  <tr>
+                  <tr className="hoverable">
                     <td>{item.productName}</td>
                     <td>{item.totalStock}</td>
                     <td>{new Date(item.lastUpdated).toLocaleString()}</td>
                     <td>
                       <span
-                        className={
-                          item.status === "In-stock"
-                            ? "badge rounded-pill text-bg-success"
-                            : "badge rounded-pill text-bg-danger"
-                        }
+                        className={`status-badge ${item.status?.replace(
+                          " ",
+                          "-"
+                        )}`}
                       >
                         {item.status}
                       </span>
@@ -230,7 +222,7 @@ export default function Table({
                                           <td>{idx == 0 ? v.size : ""}</td>
                                           <td className="product-color-badge">
                                             <span
-                                              className={`badge color-badge color-${s.color
+                                              className={`status-badge color-${s.color
                                                 .toLowerCase()
                                                 .replace(" ", "-")}`}
                                             >
@@ -241,11 +233,10 @@ export default function Table({
                                           <td>{s.minStock}</td>
                                           <td>
                                             <span
-                                              className={
-                                                s.stock >= s.minStock
-                                                  ? "badge rounded-pill text-bg-success"
-                                                  : "badge rounded-pill text-bg-danger"
-                                              }
+                                              className={`status-badge ${item.status?.replace(
+                                                " ",
+                                                "-"
+                                              )}`}
                                             >
                                               {s.stock >= s.minStock
                                                 ? "In-stock"
@@ -287,22 +278,21 @@ export default function Table({
                   )}
                 </React.Fragment>
               ))}
-
           </tbody>
         </table>
-            {!data?.length && (
-              <div className="empty-state">
-                <FontAwesomeIcon icon={faMagnifyingGlass} />
-                <p>No result found</p>
-              </div>
-            )}
+        {!data?.length && (
+          <div className="empty-state">
+            <FontAwesomeIcon icon={faMagnifyingGlass} />
+            <p>No result found</p>
+          </div>
+        )}
       </div>
       <Modal
         id="product-detail"
         title={`${selectedProduct?.name} ${selectedProduct?.size} ${selectedProduct?.color}`}
         confirmText="Edit"
         cancelText="Cancel"
-        onConfirm={handleEdit}
+        onConfirm={handleConfirmEdit}
         confirmDisabled={!isDirty}
         size="modal-lg"
       >
@@ -314,6 +304,7 @@ export default function Table({
           />
         )}
       </Modal>
+      <Toast />
     </>
   );
 }

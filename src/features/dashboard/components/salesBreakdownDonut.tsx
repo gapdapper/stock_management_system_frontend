@@ -1,4 +1,4 @@
-import type { IDonutChartData } from "@/app/types/dashboard";
+import type { IChartData } from "@/app/types/dashboard";
 import {
   PieChart,
   Pie,
@@ -10,7 +10,7 @@ import {
 } from "recharts";
 
 type Props = {
-  data: IDonutChartData[];
+  data: IChartData[];
   centerLabel: string;
 };
 

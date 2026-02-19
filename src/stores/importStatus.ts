@@ -14,17 +14,22 @@ export const useImportStatusStore = create<ImportStatusState>((set) => ({
   fetchImportStatus: async () => {
     try {
       const log = await getUploadLog();
-      const today = new Date()
+
+      const today = new Date();
       today.setHours(0, 0, 0, 0);
 
-      const lastImportedDate = new Date(log.uploadAt)
+      const lastImportedDate = new Date(log.uploadAt);
+      lastImportedDate.setHours(0, 0, 0, 0);
+
       set({
-        hasImportedToday: Boolean(lastImportedDate === today),
-        lastImportAt: lastImportedDate.toISOString() ?? null,
+        hasImportedToday:
+          lastImportedDate.getTime() === today.getTime(),
+        lastImportAt: log.uploadAt,
       });
     } catch (error) {
       console.error("Failed to fetch import status", error);
-      set({ hasImportedToday: false });
+      set({ hasImportedToday: false, lastImportAt: null });
     }
   },
 }));
+

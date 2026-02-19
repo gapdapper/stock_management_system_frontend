@@ -4,9 +4,9 @@ import BarChartSection from "@/features/dashboard/components/barChartSection";
 import SalesBreakdownDonut from "@/features/dashboard/components/SalesBreakdownDonut";
 import { getDashboardOverview } from "@/features/dashboard/api/getDashboardOverview";
 import type {
+  IChartData,
   IDashboardOverview,
   IDateRange,
-  IDonutChartData,
 } from "../types/dashboard";
 import { useEffect, useState } from "react";
 import LoadingSpinner from "@/components/loadingSpinner";
@@ -14,8 +14,9 @@ import { normalizeDonutData } from "@/utils/dashboard";
 
 export default function Dashboard() {
   const [rawData, setRawData] = useState<IDashboardOverview | null>(null);
-  const [salesByStatus, setSalesByStatus] = useState<IDonutChartData[]>([]);
-  const [salesByPlatform, setSalesByPlatform] = useState<IDonutChartData[]>([]);
+  const [topItems, setTopItems] = useState<IChartData[]>([]);
+  const [salesByStatus, setSalesByStatus] = useState<IChartData[]>([]);
+  const [salesByPlatform, setSalesByPlatform] = useState<IChartData[]>([]);
   const [dateRange, setDateRange] = useState<IDateRange | null>(null);
   const [currentMonth, setcurrentMonth] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -63,6 +64,13 @@ export default function Dashboard() {
         normalizeDonutData(rawData.salesByPlatform, "platform", "total")
       );
     }
+
+    if (rawData.topItems) {
+      setTopItems(
+        normalizeDonutData(rawData.topItems, "productName", "totalSold")
+      );
+      console.log(rawData.topItems)
+    }
   }, [rawData]);
 
   if (isLoading) {
@@ -86,7 +94,7 @@ export default function Dashboard() {
           </div>
 
           <div className="col-6 mb-5 shadow-sm p-3 rounded">
-            <BarChartSection />
+            <BarChartSection data={topItems} />
           </div>
           <div className="col-6 shadow-sm p-3 rounded">
             <h4>Sales Breakdown by Status</h4>

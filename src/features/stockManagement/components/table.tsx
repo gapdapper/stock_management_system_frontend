@@ -24,7 +24,7 @@ type SortPayload = {
 
 type TableProps = {
   data?: IProductData[];
-  onRefresh: () => void;
+  onRefresh: () => Promise<IProductData[]>;
   onSort: (payload: SortPayload) => void;
   currentSortDirection: string;
 };
@@ -37,31 +37,36 @@ export default function Table({
 }: TableProps) {
   const [isDirty, setIsDirty] = useState(false);
   const [sortedCol, setSortedCol] = useState<keyof IProductData>("productName");
-
   const [selectedProduct, setSelectedProduct] = useState<{
-    id: number;
+    productId: number;
+    variantId: number;
     name: string;
     size: string;
     color: string;
     qty: number;
     minStock: number;
+    variantImageUrl: string;
   } | null>(null);
 
   const handleEditModal = (
+    productId: number,
     variantId: number,
     productName: string,
     size: string,
     color: string,
     qty: number,
-    minStock: number
+    minStock: number,
+    variantImageUrl: string,
   ) => {
     setSelectedProduct({
-      id: variantId,
+      productId: productId,
+      variantId: variantId,
       name: productName,
       size,
       color,
       qty,
       minStock,
+      variantImageUrl,
     });
   };
 
@@ -75,10 +80,35 @@ export default function Table({
         minStock: selectedProduct.minStock,
       });
       showToast("Edit Success!", "success");
-      onRefresh();
+      await onRefresh();
     } catch (error) {
       console.error("Edit product variant failed", error);
     }
+  };
+
+  const reloadModal = async () => {
+    if (!selectedProduct) return;
+
+    const refreshedData = await onRefresh();
+
+    const product = refreshedData?.find(
+      (p) => p.id === selectedProduct.productId
+    );
+
+    const variant = product?.variants
+      ?.find((v) => v.size === selectedProduct.size)
+      ?.sub.find((s) => s.variantId === selectedProduct.variantId);
+
+    if (!variant) return;
+
+    setSelectedProduct((prev) =>
+      prev
+        ? {
+            ...prev,
+            variantImageUrl: variant.variantImageUrl ?? "",
+          }
+        : prev
+    );
   };
 
   return (
@@ -250,12 +280,14 @@ export default function Table({
                                               data-bs-target="#modal-product-detail"
                                               onClick={() =>
                                                 handleEditModal(
+                                                  item.id,
                                                   s.variantId,
                                                   item.productName,
                                                   v.size,
                                                   s.color,
                                                   s.stock,
-                                                  s.minStock
+                                                  s.minStock,
+                                                  s.variantImageUrl,
                                                 )
                                               }
                                             >
@@ -301,6 +333,7 @@ export default function Table({
             data={selectedProduct}
             formHandler={setSelectedProduct}
             onDirtyChange={setIsDirty}
+            onRefresh={reloadModal}
           />
         )}
       </Modal>

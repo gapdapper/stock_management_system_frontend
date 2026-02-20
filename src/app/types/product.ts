@@ -4,6 +4,7 @@ export interface IProductData {
   totalStock: number;
   lastUpdated: Date;
   status?: string;
+  productImageUrl: string;
   variants: {
     size: string;
     sub: {
@@ -11,6 +12,7 @@ export interface IProductData {
       color: string;
       stock: number;
       minStock: number;
+      variantImageUrl: string;
     }[];
   }[];
 }

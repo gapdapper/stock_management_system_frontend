@@ -10,6 +10,7 @@ import {
   faArrowDown19,
   faArrowDown91,
   faMagnifyingGlass,
+  faWrench,
 } from "@fortawesome/free-solid-svg-icons";
 import PlaceHolder from "../../../assets/placeholder.svg?react";
 import Modal from "@/components/modal";
@@ -17,6 +18,8 @@ import ProductDetail from "./productDetail";
 import type { IProductData } from "@/app/types/product";
 import { editProductVariant } from "../api/editProductVariant";
 import Toast, { showToast } from "@/components/toast";
+import { validateFileSize } from "@/utils/product";
+import { uploadProductImage } from "../api/uploadImage";
 
 type SortPayload = {
   field: keyof IProductData;
@@ -75,7 +78,7 @@ export default function Table({
 
     try {
       await editProductVariant({
-        id: selectedProduct.id,
+        id: selectedProduct.variantId,
         qty: selectedProduct.qty,
         minStock: selectedProduct.minStock,
       });
@@ -92,7 +95,7 @@ export default function Table({
     const refreshedData = await onRefresh();
 
     const product = refreshedData?.find(
-      (p) => p.id === selectedProduct.productId
+      (p) => p.id === selectedProduct.productId,
     );
 
     const variant = product?.variants
@@ -107,9 +110,25 @@ export default function Table({
             ...prev,
             variantImageUrl: variant.variantImageUrl ?? "",
           }
-        : prev
+        : prev,
     );
   };
+
+  const submitproductImage = async (productId: number, file: File) => {
+    const validatedFile = validateFileSize(file);
+    try {
+      if (!validatedFile) {
+      showToast('The selected image exceeds the file size limit. (5 MB)', 'error');
+      return;
+      }
+      await uploadProductImage("product", productId, validatedFile)
+      showToast('Product Image Updated Successfully.', 'success');
+      await onRefresh();
+    } catch (error) {
+      console.error("Failed to update the product data.");
+      showToast('Failed to update the product data.', 'error');
+    }
+  }
 
   return (
     <>
@@ -197,7 +216,7 @@ export default function Table({
                       <span
                         className={`status-badge ${item.status?.replace(
                           " ",
-                          "-"
+                          "-",
                         )}`}
                       >
                         {item.status}
@@ -228,7 +247,32 @@ export default function Table({
                             <div className="d-flex">
                               {/* image cell */}
                               <div className="image-cell">
-                                <PlaceHolder />
+                                <div className="image-wrapper">
+                                {item.productImageUrl != "" ? (
+                                  <img
+                                    src={item.productImageUrl}
+                                    alt="Product"
+                                    className="product-img"
+                                  />
+                                ) : (
+                                  <PlaceHolder />
+                                )}
+                                <div className="image-overlay">
+                                  <FontAwesomeIcon icon={faWrench} style={{ fontSize: "10px" }} />
+                                </div>
+
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  className="image-input"
+                                  onChange={(e) => {
+                                    const file = e.target.files?.[0];
+                                    if (file) {
+                                      submitproductImage(item.id, file);
+                                    }
+                                  }}
+                                />
+                                </div>
                                 <p>{item.productName}</p>
                               </div>
 
@@ -265,7 +309,7 @@ export default function Table({
                                             <span
                                               className={`status-badge ${item.status?.replace(
                                                 " ",
-                                                "-"
+                                                "-",
                                               )}`}
                                             >
                                               {s.stock >= s.minStock
@@ -297,7 +341,7 @@ export default function Table({
                                             </button>
                                           </td>
                                         </tr>
-                                      ))
+                                      )),
                                     )}
                                   </tbody>
                                 </table>

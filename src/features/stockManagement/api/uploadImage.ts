@@ -1,12 +1,15 @@
 import { axiosInstance } from "@/lib/api-client";
 
-export const uploadVariantImage = async (
-  variantId: number,
+export const uploadProductImage = async (
+  entityType: "product" | "variant",
+  entityId: number,
   file: File,
 ): Promise<void> => {
+
+  const routePrefix = entityType == "product" ? "products" : "productVariant";
   try {
     await axiosInstance.post(
-      `/productVariant/${variantId}/upload`,
+      `/${routePrefix}/${entityId}/upload`,
       { image: file },
       {
         headers: {

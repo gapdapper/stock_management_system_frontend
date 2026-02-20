@@ -4,7 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleQuestion, faWrench } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useMemo, useRef } from "react";
 import Toast, { showToast } from "@/components/toast";
-import { uploadVariantImage } from "@/features/stockManagement/api/uploadImage";
+import { uploadProductImage } from "@/features/stockManagement/api/uploadImage";
+import { validateFileSize } from "@/utils/product";
 
 type ProductDetailProp = {
   data: any;
@@ -31,14 +32,6 @@ export default function ProductDetail({
     );
   }, [data]);
 
-  const validateFileSize = (file: File) => {
-    const maxFileSizeInBytes = 5 * 1024 * 1024; // 5MB
-    if (file.size > maxFileSizeInBytes) {
-      return null;
-    }
-    return file
-  } 
-
   const submitVariantImage = async (file: File) => {
     const validatedFile = validateFileSize(file);
     try {
@@ -46,7 +39,7 @@ export default function ProductDetail({
       showToast('The selected image exceeds the file size limit. (5 MB)', 'error');
       return;
       }
-      await uploadVariantImage(data.variantId, validatedFile)
+      await uploadProductImage("variant", data.variantId, validatedFile)
       showToast('Product Variant Image Updated Successfully.', 'success');
       await onRefresh();
     } catch (error) {

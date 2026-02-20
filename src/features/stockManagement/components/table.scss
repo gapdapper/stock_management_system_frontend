@@ -8,11 +8,44 @@ button {
   width: 120px;
   margin: 20px 105px 0 105px;
   display: block;
-  svg {
+  position: relative;
+
+  .image-wrapper {
+    svg, img {
+      width: 150px;
+      height: auto;
+    }
+  
+    .image-overlay {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 150px;
-    height: auto;
+    height: 150px;
+    top: 0;
+    background: rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    transition: .5s ease;
+    svg {
+      width: 86px;
+      height: 86px;
+    }
+    }
+    &:hover .image-overlay {
+      opacity: 1;
+    }
+    .image-input {
+      opacity: 0;
+      left: 0;
+      width: 150px;
+      height: 150px;
+      position: absolute;
+      cursor: pointer;
+    }
   }
-  p {
+
+    p {
     font-size: 18px;
     font-weight: 600;
     text-align: center;

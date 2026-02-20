@@ -29,7 +29,7 @@ function StockManagement() {
   };
 
   const onRefresh = async () => {
-    return await fetchProductData();
+    return await fetchProductData() as IProductData[];
   }
 
   useEffect(() => {

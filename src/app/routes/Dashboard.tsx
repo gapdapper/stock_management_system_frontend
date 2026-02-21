@@ -3,6 +3,7 @@ import OverviewStats from "@/features/stockManagement/components/overviewStats";
 import BarChartSection from "@/features/dashboard/components/barChartSection";
 import SalesBreakdownDonut from "@/features/dashboard/components/SalesBreakdownDonut";
 import { getDashboardOverview } from "@/features/dashboard/api/getDashboardOverview";
+import { getAvailableMonths } from "@/features/dashboard/api/getAvailableMonths";
 import type {
   IChartData,
   IDashboardOverview,
@@ -20,11 +21,14 @@ export default function Dashboard() {
   const [dateRange, setDateRange] = useState<IDateRange | null>(null);
   const [currentMonth, setcurrentMonth] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [availableMonth, setAvailableMonth] = useState<string[]>([]);
 
-  const fetchProductData = async () => {
+  const fetchProductData = async (month: string) => {
     try {
-      const data = await getDashboardOverview();
-      setRawData(data);
+      const dashboardData = await getDashboardOverview(month);
+      setRawData(dashboardData);
+      const availableMonthData = await getAvailableMonths();
+      setAvailableMonth(availableMonthData);
     } catch (error) {
       console.error("Failed to fetch product data");
     } finally {
@@ -32,46 +36,72 @@ export default function Dashboard() {
     }
   };
 
-  useEffect(() => {
-    fetchProductData();
+  const fetchAvaialableMonthsData = async () => {
+    try {
+      const availableMonthData = await getAvailableMonths();
+      setAvailableMonth(availableMonthData);
+    } catch (error) {
+      console.error("Failed to fetch available months data");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    const monthName = new Date().toLocaleString("en-US", {
+  useEffect(() => {
+    const currentDate = new Date();
+    const formattedMonth = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}`;
+    fetchProductData(formattedMonth);
+    fetchAvaialableMonthsData();
+
+    const monthName = currentDate.toLocaleString("en-US", {
       month: "long",
     });
-
     setcurrentMonth(monthName);
-
-    const now = new Date();
-    const currentMonthRange = {
-      start: new Date(now.getFullYear(), now.getMonth(), 1),
-      end: now,
-    };
-
-    setDateRange(currentMonthRange);
+    updatePeriod(formattedMonth);
   }, []);
+
+  const updatePeriod = (month: string) => {
+    const today = new Date();
+    const splittedMonth = month.split("-");
+    const start = new Date(`${splittedMonth[0]}-${splittedMonth[1]}-1`);
+    const currentMonthRange = {
+      start: start,
+      end:
+        today.getMonth() == start.getMonth() &&
+        today.getFullYear() == start.getFullYear()
+          ? today
+          : new Date(start.getFullYear(), start.getMonth() + 1, 0),
+    };
+    setDateRange(currentMonthRange);
+  };
 
   useEffect(() => {
     if (!rawData) return;
 
     if (rawData.salesByStatus) {
       setSalesByStatus(
-        normalizeDonutData(rawData.salesByStatus, "status", "count")
+        normalizeDonutData(rawData.salesByStatus, "status", "count"),
       );
     }
 
     if (rawData.salesByPlatform) {
       setSalesByPlatform(
-        normalizeDonutData(rawData.salesByPlatform, "platform", "total")
+        normalizeDonutData(rawData.salesByPlatform, "platform", "total"),
       );
     }
 
     if (rawData.topItems) {
       setTopItems(
-        normalizeDonutData(rawData.topItems, "productName", "totalSold")
+        normalizeDonutData(rawData.topItems, "productName", "totalSold"),
       );
-      console.log(rawData.topItems)
+      console.log(rawData.topItems);
     }
   }, [rawData]);
+
+  const refreshDashboard = (month: string) => {
+    fetchProductData(month);
+    updatePeriod(month);
+  };
 
   if (isLoading) {
     return (
@@ -82,7 +112,11 @@ export default function Dashboard() {
   } else {
     return (
       <>
-        <Headers currentMonth={currentMonth} />
+        <Headers
+          currentMonth={currentMonth}
+          availableMonths={availableMonth}
+          onRefresh={refreshDashboard}
+        />
         <div className="row">
           <div className="col-6 mb-5">
             <OverviewStats
@@ -94,6 +128,7 @@ export default function Dashboard() {
           </div>
 
           <div className="col-6 mb-5 shadow-sm p-3 rounded">
+            <h4>Top 5 Highest Sold Item</h4>
             <BarChartSection data={topItems} />
           </div>
           <div className="col-6 shadow-sm p-3 rounded">

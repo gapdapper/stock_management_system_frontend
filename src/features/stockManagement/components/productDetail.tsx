@@ -3,17 +3,22 @@ import PlaceHolder from "../../../assets/placeholder.svg?react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleQuestion, faWrench } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useMemo, useRef } from "react";
+import Toast, { showToast } from "@/components/toast";
+import { uploadProductImage } from "@/features/stockManagement/api/uploadImage";
+import { validateFileSize } from "@/utils/product";
 
 type ProductDetailProp = {
   data: any;
   formHandler: (data: any) => void;
   onDirtyChange: (data: any) => void;
+  onRefresh: () => Promise<void>;
 };
 
 export default function ProductDetail({
   data,
   formHandler,
   onDirtyChange,
+  onRefresh,
 }: ProductDetailProp) {
   const initialRef = useRef({
     qty: data.qty,
@@ -27,11 +32,28 @@ export default function ProductDetail({
     );
   }, [data]);
 
+  const submitVariantImage = async (file: File) => {
+    const validatedFile = validateFileSize(file);
+    try {
+      if (!validatedFile) {
+      showToast('The selected image exceeds the file size limit. (5 MB)', 'error');
+      return;
+      }
+      await uploadProductImage("variant", data.variantId, validatedFile)
+      showToast('Product Variant Image Updated Successfully.', 'success');
+      await onRefresh();
+    } catch (error) {
+      console.error("Failed to update the product data.");
+      showToast('Failed to update the product data.', 'error');
+    }
+  }
+
   useEffect(() => {
     onDirtyChange(isDirty);
   }, [isDirty, onDirtyChange]);
 
   useEffect(() => {
+    console.log(data)
     initialRef.current = {
       qty: data.qty,
       minStock: data.minStock,
@@ -45,9 +67,9 @@ export default function ProductDetail({
           <div className="col-6">
             <div className=" col-12">
               <div className="product-image">
-                {data.VariantImageUrl ? (
+                {data.variantImageUrl != "" ? (
                   <img
-                    src={data.VariantImageUrl}
+                    src={data.variantImageUrl}
                     alt="Product"
                     className="product-img"
                   />
@@ -65,7 +87,7 @@ export default function ProductDetail({
                   onChange={(e) => {
                     const file = e.target.files?.[0];
                     if (file) {
-                      // handle upload
+                      submitVariantImage(file);
                     }
                   }}
                 />
@@ -137,6 +159,7 @@ export default function ProductDetail({
           </div>
         </div>
       </div>
+      <Toast />
     </>
   );
 }

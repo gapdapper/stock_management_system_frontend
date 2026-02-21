@@ -7,3 +7,11 @@ export const getProductStatus = (variants: IProductData["variants"]) => {
     ? "Low stock"
     : "In-stock";
 };
+
+export const validateFileSize = (file: File) => {
+  const maxFileSizeInBytes = 5 * 1024 * 1024; // 5MB
+  if (file.size > maxFileSizeInBytes) {
+    return null;
+  }
+  return file
+} 

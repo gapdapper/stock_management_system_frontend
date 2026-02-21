@@ -20,12 +20,17 @@ function StockManagement() {
         return { ...product, status: getProductStatus(product.variants) };
       });
       setRawData(mappedData);
+      return mappedData;
     } catch (error) {
       console.error("Failed to fetch product data");
     } finally {
       setIsLoading(false);
     }
   };
+
+  const onRefresh = async () => {
+    return await fetchProductData() as IProductData[];
+  }
 
   useEffect(() => {
     fetchProductData();
@@ -72,7 +77,7 @@ function StockManagement() {
         />
         <Table
           data={sortedData}
-          onRefresh={fetchProductData}
+          onRefresh={onRefresh}
           currentSortDirection={sortDirection}
           onSort={(payload) => {
             setSortField(payload.field);

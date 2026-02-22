@@ -18,6 +18,7 @@ import Modal from "./modal";
 import { useState } from "react";
 import { register } from "./api/register";
 import { findAllUsernames } from "./api/findAllUsernames";
+import Toast, { showToast } from "@/components/toast";
 
 function Navbar() {
   const user = useAuthStore((s) => s.user);
@@ -27,7 +28,7 @@ function Navbar() {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [isValid, setIsValid] = useState<boolean>(false);
-  const [selectedRole, setSelectedRole] = useState("User");
+  const [selectedRole, setSelectedRole] = useState("user");
   const [existingUsernames, setExistingUsernames] = useState<string[]>([]);
 
   const handleLogout = () => {
@@ -57,7 +58,7 @@ function Navbar() {
       return;
     }
 
-      if (!passwordRegex.test(passwordVal)) {
+    if (!passwordRegex.test(passwordVal)) {
       setErrorMessage("Password must be 8-20 alphanumeric characters.");
       setIsValid(false);
       return;
@@ -75,6 +76,7 @@ function Navbar() {
     };
 
     await register(userPayload);
+    showToast("User created successfully.", "success");
   };
 
   const handleCancelAddMember = () => {
@@ -120,20 +122,25 @@ function Navbar() {
           <span>Settings</span>
         </NavLink> */}
         <div className="user-info">
+          {user && user.role == "admin" && (
+            <button
+              className="add-user-btn"
+              title="AddUser"
+              type="button"
+              data-bs-toggle="modal"
+              data-bs-target="#modal-create-user"
+              onClick={async () => {
+                const data = await findAllUsernames();
+                setExistingUsernames(data);
+              }}
+            >
+              <FontAwesomeIcon icon={faUserPlus} />
+            </button>
+          )}
+
+          <p className="username">{user?.username ?? "Loading..."}</p>
           <button
-            title="AddUser"
-            type="button"
-            data-bs-toggle="modal"
-            data-bs-target="#modal-create-user"
-            onClick={async () => {
-              const data = await findAllUsernames();
-              setExistingUsernames(data);
-            }}
-          >
-            <FontAwesomeIcon icon={faUserPlus} />
-          </button>
-          <p>{user?.username ?? "Loading..."}</p>
-          <button
+            className="logout-btn"
             title="Logout"
             type="button"
             data-bs-toggle="modal"
@@ -260,6 +267,7 @@ function Navbar() {
           <p className="input-error-msg">{errorMessage}</p>
         </div>
       </Modal>
+      <Toast />
     </>
   );
 }

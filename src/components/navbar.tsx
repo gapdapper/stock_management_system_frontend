@@ -1,17 +1,34 @@
 import { NavLink } from "react-router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCubes, faChartLine, faBookBookmark, faArrowUpFromBracket, faGear, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCubes,
+  faChartLine,
+  faBookBookmark,
+  faArrowUpFromBracket,
+  faGear,
+  faRightFromBracket,
+  faUserPlus,
+  faCircleInfo,
+} from "@fortawesome/free-solid-svg-icons";
 import { logout } from "@/features/auth/api/logout";
 import { useAuthStore } from "@/stores/authSlice";
 import "./navbar.scss";
 import { useImportStatusStore } from "@/stores/importStatus";
-
+import Modal from "./modal";
+import { useState } from "react";
+import { register } from "./api/register";
+import { findAllUsernames } from "./api/findAllUsernames";
 
 function Navbar() {
- const user = useAuthStore((s) => s.user);
- const hasImportedToday = useImportStatusStore(
-  (s) => s.hasImportedToday
-); 
+  const user = useAuthStore((s) => s.user);
+  const hasImportedToday = useImportStatusStore((s) => s.hasImportedToday);
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isValid, setIsValid] = useState<boolean>(false);
+  const [selectedRole, setSelectedRole] = useState("User");
+  const [existingUsernames, setExistingUsernames] = useState<string[]>([]);
 
   const handleLogout = () => {
     try {
@@ -20,6 +37,52 @@ function Navbar() {
       console.error("Logout error:", error);
     }
   };
+
+  const validate = (usernameVal: string, passwordVal: string) => {
+    const usernameRegex = /^[a-zA-Z0-9]{4,20}$/;
+    const passwordRegex = /^[a-zA-Z0-9]{8,20}$/;
+
+    // add check duplicate username
+    const duplicatedUsername = existingUsernames.find((u) => usernameVal == u);
+    console.log(duplicatedUsername)
+    if (duplicatedUsername) {
+      setErrorMessage("This username was already taken");
+      setIsValid(false);
+      return;
+    }
+
+    if (!usernameRegex.test(usernameVal)) {
+      setErrorMessage("Username must be 4-20 alphanumeric characters.");
+      setIsValid(false);
+      return;
+    }
+
+      if (!passwordRegex.test(passwordVal)) {
+      setErrorMessage("Password must be 8-20 alphanumeric characters.");
+      setIsValid(false);
+      return;
+    }
+
+    setErrorMessage("");
+    setIsValid(true);
+  };
+
+  const handleConfirmAddMember = async () => {
+    const userPayload = {
+      username: username,
+      password: password,
+      role: selectedRole,
+    };
+
+    await register(userPayload);
+  };
+
+  const handleCancelAddMember = () => {
+    setUsername("");
+    setPassword("");
+    setErrorMessage("");
+  };
+
   return (
     <>
       <nav className="float-start position-fixed sidebar">
@@ -29,7 +92,9 @@ function Navbar() {
         <div className="import-status">
           <p>
             Today's Import:
-            <span className={`badge ${hasImportedToday ? "success" : "warning"}`}>
+            <span
+              className={`badge ${hasImportedToday ? "success" : "warning"}`}
+            >
               {hasImportedToday ? "1/1" : "0/1"}
             </span>
           </p>
@@ -55,6 +120,18 @@ function Navbar() {
           <span>Settings</span>
         </NavLink> */}
         <div className="user-info">
+          <button
+            title="AddUser"
+            type="button"
+            data-bs-toggle="modal"
+            data-bs-target="#modal-create-user"
+            onClick={async () => {
+              const data = await findAllUsernames();
+              setExistingUsernames(data);
+            }}
+          >
+            <FontAwesomeIcon icon={faUserPlus} />
+          </button>
           <p>{user?.username ?? "Loading..."}</p>
           <button
             title="Logout"
@@ -107,6 +184,82 @@ function Navbar() {
           </div>
         </div>
       </div>
+
+      <Modal
+        title="Create new user"
+        id="create-user"
+        confirmText="Create"
+        cancelText="Cancel"
+        onConfirm={handleConfirmAddMember}
+        confirmDisabled={!isValid}
+        onClose={handleCancelAddMember}
+        size="modal-md"
+      >
+        <div className="create-new-user-modal-content row">
+          <div className="col-6">
+            <label className="form-label">
+              Username{" "}
+              <FontAwesomeIcon
+                icon={faCircleInfo}
+                className="username-info-icon"
+              />{" "}
+              <span className="username-info">
+                Username must be alphanumeric characters (a-z, A-Z, 0-9) with a
+                length to be between 4 and 20 characters
+              </span>
+            </label>
+
+            <input
+              type="text"
+              className="form-control"
+              onChange={(e) => {
+                const value = e.target.value;
+                setUsername(value);
+                validate(e.target.value, password);
+              }}
+              value={username}
+            />
+          </div>
+          <div className="col-6 dropdown-select">
+            <select
+              name=""
+              id=""
+              className="form-control"
+              onChange={(e) => {
+                setSelectedRole(e.target.value);
+              }}
+            >
+              <option value="user">User</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+          <div className="col-6">
+            <label className="form-label">
+              Password{" "}
+              <FontAwesomeIcon
+                icon={faCircleInfo}
+                className="password-info-icon"
+              />{" "}
+              <span className="password-info">
+                Password must be alphanumeric characters (a-z, A-Z, 0-9) with a
+                length to be between 8 and 20 characters
+              </span>
+            </label>
+
+            <input
+              type="text"
+              className="form-control"
+              onChange={(e) => {
+                const value = e.target.value;
+                setPassword(value);
+                validate(username, e.target.value);
+              }}
+              value={password}
+            />
+          </div>
+          <p className="input-error-msg">{errorMessage}</p>
+        </div>
+      </Modal>
     </>
   );
 }

@@ -8,8 +8,6 @@ type AuthState = {
     id: string;
     username: string;
     role: string;
-    firstName?: string;
-    lastName?: string;
   } | null;
 };
 type AuthActions = {

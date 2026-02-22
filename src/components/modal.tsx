@@ -7,7 +7,7 @@ type ModalProps = {
   confirmText?: string;
   cancelText?: string;
   onConfirm?: () => void;
-  confirmDisabled: boolean;
+  confirmDisabled?: boolean;
   size?: string;
   onClose?: () => void;
 };

@@ -15,10 +15,24 @@ import { useAuthStore } from "@/stores/authSlice";
 import "./navbar.scss";
 import { useImportStatusStore } from "@/stores/importStatus";
 import Modal from "./modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { register } from "./api/register";
-import { findAllUsernames } from "./api/findAllUsernames";
+import { checkAvailableUsernames } from "./api/checkAvailableUsername";
 import Toast, { showToast } from "@/components/toast";
+
+function useDebounce(cb: string, delay: number) {
+  const [debounceValue, setDebounceValue] = useState(cb);
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebounceValue(cb);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [cb, delay]);
+  return debounceValue;
+}
 
 function Navbar() {
   const user = useAuthStore((s) => s.user);
@@ -27,9 +41,11 @@ function Navbar() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [isValid, setIsValid] = useState<boolean>(false);
+  const [isFormatValid, setIsFormatValid] = useState<boolean>(false);
+  const [isNotDuplicate, setIsNotDuplicate] = useState<boolean>(false);
   const [selectedRole, setSelectedRole] = useState("user");
-  const [existingUsernames, setExistingUsernames] = useState<string[]>([]);
+
+  const debouncedUsername = useDebounce(username, 500);
 
   const handleLogout = () => {
     try {
@@ -39,34 +55,45 @@ function Navbar() {
     }
   };
 
-  const validate = (usernameVal: string, passwordVal: string) => {
+  // Validate username and password format
+  useEffect(() => {
     const usernameRegex = /^[a-zA-Z0-9]{4,20}$/;
     const passwordRegex = /^[a-zA-Z0-9]{8,20}$/;
 
-    // add check duplicate username
-    const duplicatedUsername = existingUsernames.find((u) => usernameVal == u);
-    console.log(duplicatedUsername)
-    if (duplicatedUsername) {
-      setErrorMessage("This username was already taken");
-      setIsValid(false);
-      return;
-    }
-
-    if (!usernameRegex.test(usernameVal)) {
+    if (!usernameRegex.test(username)) {
       setErrorMessage("Username must be 4-20 alphanumeric characters.");
-      setIsValid(false);
+      setIsFormatValid(false);
       return;
     }
 
-    if (!passwordRegex.test(passwordVal)) {
+    if (!passwordRegex.test(password)) {
       setErrorMessage("Password must be 8-20 alphanumeric characters.");
-      setIsValid(false);
+      setIsFormatValid(false);
       return;
     }
 
     setErrorMessage("");
-    setIsValid(true);
-  };
+    setIsFormatValid(true);
+  }, [username, password]);
+
+  // Check duplicate username (debounced)
+  useEffect(() => {
+    if (!debouncedUsername) return;
+
+    const checkDuplicate = async () => {
+      const duplicated = await checkAvailableUsernames(debouncedUsername);
+
+      if (duplicated) {
+        setErrorMessage("This username was already taken");
+        setIsNotDuplicate(false);
+      } else {
+        setErrorMessage("");
+        setIsNotDuplicate(true);
+      }
+    };
+
+    checkDuplicate();
+  }, [debouncedUsername]);
 
   const handleConfirmAddMember = async () => {
     const userPayload = {
@@ -129,10 +156,6 @@ function Navbar() {
               type="button"
               data-bs-toggle="modal"
               data-bs-target="#modal-create-user"
-              onClick={async () => {
-                const data = await findAllUsernames();
-                setExistingUsernames(data);
-              }}
             >
               <FontAwesomeIcon icon={faUserPlus} />
             </button>
@@ -198,7 +221,7 @@ function Navbar() {
         confirmText="Create"
         cancelText="Cancel"
         onConfirm={handleConfirmAddMember}
-        confirmDisabled={!isValid}
+        confirmDisabled={!isFormatValid || !isNotDuplicate}
         onClose={handleCancelAddMember}
         size="modal-md"
       >
@@ -222,7 +245,6 @@ function Navbar() {
               onChange={(e) => {
                 const value = e.target.value;
                 setUsername(value);
-                validate(e.target.value, password);
               }}
               value={username}
             />
@@ -259,7 +281,6 @@ function Navbar() {
               onChange={(e) => {
                 const value = e.target.value;
                 setPassword(value);
-                validate(username, e.target.value);
               }}
               value={password}
             />

@@ -60,13 +60,13 @@ function Navbar() {
     const usernameRegex = /^[a-zA-Z0-9]{4,20}$/;
     const passwordRegex = /^[a-zA-Z0-9]{8,20}$/;
 
-    if (!usernameRegex.test(username)) {
+    if (username != "" && !usernameRegex.test(username)) {
       setErrorMessage("Username must be 4-20 alphanumeric characters.");
       setIsFormatValid(false);
       return;
     }
 
-    if (!passwordRegex.test(password)) {
+    if (password != "" && !passwordRegex.test(password)) {
       setErrorMessage("Password must be 8-20 alphanumeric characters.");
       setIsFormatValid(false);
       return;
@@ -79,11 +79,9 @@ function Navbar() {
   // Check duplicate username (debounced)
   useEffect(() => {
     if (!debouncedUsername) return;
-
     const checkDuplicate = async () => {
-      const duplicated = await checkAvailableUsernames(debouncedUsername);
-
-      if (duplicated) {
+      const isAvailable = await checkAvailableUsernames(debouncedUsername);
+      if (!isAvailable) {
         setErrorMessage("This username was already taken");
         setIsNotDuplicate(false);
       } else {

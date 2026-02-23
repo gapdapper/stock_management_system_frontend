@@ -7,7 +7,7 @@ import { getTransactions } from "@/features/salesRecord/api/getTransactions";
 
 export default function SalesRecord() {
   const [rawData, setRawData] = useState<ITransactions[]>([]);
-  const [filteredData, setFilteredData] = useState<ITransactions[]>([]);
+  const [filterData, setFilterData] = useState<ITransactions[]>([]);
   const [filter, setFilter] = useState<IFilter>({
     platform: "all",
     status: "all",
@@ -19,12 +19,12 @@ export default function SalesRecord() {
   const ITEMS_PER_PAGE = 20;
 
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const paginatedData = filteredData.slice(
+  const paginatedData = filterData.slice(
     startIndex,
     startIndex + ITEMS_PER_PAGE
   );
 
-  const fetchProductData = async () => {
+  const fetchTransactionsData = async () => {
     try {
       const data = await getTransactions();
       setRawData(data);
@@ -37,7 +37,7 @@ export default function SalesRecord() {
   };
 
   useEffect(() => {
-    fetchProductData();
+    fetchTransactionsData();
   }, []);
 
   useEffect(() => {
@@ -84,7 +84,7 @@ export default function SalesRecord() {
         }
       });
     }
-    setFilteredData(result);
+    setFilterData(result);
     setTotalPages(Math.ceil(result.length / ITEMS_PER_PAGE));
   }, [rawData, filter]);
 

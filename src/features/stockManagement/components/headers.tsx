@@ -22,7 +22,7 @@ export default function Headers({
   const [resetKey, setResetKey] = useState<number>(0);
   const [waitingList, setwaitingList] = useState<IWaitingProduct[]>([]);
 
-  const handleRestockConfirm = async () => {
+  const restockItem = async () => {
     const payload = {
       items: waitingList.map((item) => ({
         variantId: item.variantId,
@@ -69,7 +69,7 @@ export default function Headers({
         title="Re-stock Items"
         confirmText="Confirm"
         cancelText="Cancel"
-        onConfirm={handleRestockConfirm}
+        onConfirm={restockItem}
         confirmDisabled={waitingList.length == 0}
         onClose={() => setResetKey((k) => k + 1)}
         size="modal-lg"

@@ -11,7 +11,7 @@ export default function SalesDetail() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   let params = useParams();
 
-  const fetchProductData = async () => {
+  const fetchTransactionData = async () => {
     try {
       if (!params || !params.id) return;
       const data = await getTransactionByOrderId(params.id);
@@ -24,7 +24,7 @@ export default function SalesDetail() {
   };
 
   useEffect(() => {
-    fetchProductData();
+    fetchTransactionData();
   }, []);
   if (isLoading) {
     return (

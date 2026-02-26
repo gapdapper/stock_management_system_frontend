@@ -23,7 +23,7 @@ export default function Dashboard() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [availableMonth, setAvailableMonth] = useState<string[]>([]);
 
-  const fetchProductData = async (month: string) => {
+  const fetchDashboardData = async (month: string) => {
     try {
       const dashboardData = await getDashboardOverview(month);
       setRawData(dashboardData);
@@ -34,7 +34,7 @@ export default function Dashboard() {
     }
   };
 
-  const fetchAvaialableMonthsData = async () => {
+  const fetchAvailableMonthsData = async () => {
     try {
       const availableMonthData = await getAvailableMonths();
       setAvailableMonth(availableMonthData);
@@ -48,8 +48,8 @@ export default function Dashboard() {
   useEffect(() => {
     const currentDate = new Date();
     const formattedMonth = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}`;
-    fetchProductData(formattedMonth);
-    fetchAvaialableMonthsData();
+    fetchDashboardData(formattedMonth);
+    fetchAvailableMonthsData();
 
     const monthName = currentDate.toLocaleString("en-US", {
       month: "long",
@@ -74,30 +74,34 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    if (!rawData) return;
-
-    if (rawData.salesByStatus) {
-      setSalesByStatus(
-        normalizeDonutData(rawData.salesByStatus, "status", "count"),
-      );
-    }
-
-    if (rawData.salesByPlatform) {
-      setSalesByPlatform(
-        normalizeDonutData(rawData.salesByPlatform, "platform", "total"),
-      );
-    }
-
-    if (rawData.topItems) {
-      setTopItems(
-        normalizeDonutData(rawData.topItems, "productName", "totalSold"),
-      );
-      console.log(rawData.topItems);
-    }
+    if(!rawData) return;
+    setChartData(rawData);
   }, [rawData]);
 
+  const setChartData = (data: IDashboardOverview) => {
+    if (!data) return;
+
+    if (data.salesByStatus) {
+      setSalesByStatus(
+        normalizeDonutData(data.salesByStatus, "status", "count"),
+      );
+    }
+
+    if (data.salesByPlatform) {
+      setSalesByPlatform(
+        normalizeDonutData(data.salesByPlatform, "platform", "total"),
+      );
+    }
+
+    if (data.topItems) {
+      setTopItems(
+        normalizeDonutData(data.topItems, "productName", "totalSold"),
+      );
+    }
+  }
+
   const refreshDashboard = (month: string) => {
-    fetchProductData(month);
+    fetchDashboardData(month);
     updatePeriod(month);
   };
 

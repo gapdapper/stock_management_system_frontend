@@ -7,7 +7,7 @@ import { useImportStatusStore } from "@/stores/importStatus";
 export default function FileImport() {
   const ALLOWED_EXTENSIONS = ["csv", "xlsx"];
   const MAX_FILE_SIZE_MB = 5;
-  const fetchImportStatus = useImportStatusStore((s) => s.fetchImportStatus);
+  const updateImportStatus = useImportStatusStore((s) => s.fetchImportStatus);
 
   const handleFilesSelected = async (files: File[]) => {
     const invalidFiles = files.filter((file) => {
@@ -30,7 +30,7 @@ export default function FileImport() {
       });
 
       await importFile(formData);
-      await fetchImportStatus();
+      await updateImportStatus();
       showToast("Import completed", "success");
     } catch (error) {
       showToast("Import failed", "error");

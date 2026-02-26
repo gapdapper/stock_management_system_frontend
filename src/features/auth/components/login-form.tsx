@@ -35,6 +35,8 @@ function LoginForm() {
           id="username"
           name="username"
           placeholder="Enter your username"
+          minLength={4}
+          maxLength={20}
           className="form-control mb-3"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
@@ -47,6 +49,8 @@ function LoginForm() {
           id="password"
           name="password"
           placeholder="Enter your password"
+          minLength={8}
+          maxLength={20}
           className="form-control mb-5"
           value={password}
           onChange={(e) => setPassword(e.target.value)}

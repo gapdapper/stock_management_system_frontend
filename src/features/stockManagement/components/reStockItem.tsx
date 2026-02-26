@@ -168,6 +168,7 @@ export default function ReStockItem({
             <input
               type="number"
               value={selectedQty}
+              maxLength={4}
               onChange={(e) => setselectedQty(Number(e.target.value))}
             />
           )}

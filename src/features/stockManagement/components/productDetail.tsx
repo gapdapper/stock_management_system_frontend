@@ -125,6 +125,7 @@ export default function ProductDetail({
                 id="stock-input"
                 className="form-control"
                 placeholder="xx"
+                maxLength={4}
                 aria-label="Stock"
                 aria-describedby="basic-addon1"
                 value={data.qty}
@@ -148,6 +149,7 @@ export default function ProductDetail({
                 id="minimum-stock-input"
                 className="form-control"
                 placeholder="xx"
+                maxLength={4}
                 aria-label="Minimum Stock"
                 aria-describedby="basic-addon1"
                 value={data.minStock}

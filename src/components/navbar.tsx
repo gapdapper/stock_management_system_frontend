@@ -60,6 +60,11 @@ function Navbar() {
     const usernameRegex = /^[a-zA-Z0-9]{4,20}$/;
     const passwordRegex = /^[a-zA-Z0-9]{8,20}$/;
 
+    if (!username || !password) {
+      setIsFormatValid(false);
+    return;
+  }
+
     if (username != "" && !usernameRegex.test(username)) {
       setErrorMessage("Username must be 4-20 alphanumeric characters.");
       setIsFormatValid(false);

@@ -1,4 +1,4 @@
-import Toast, { showToast } from "@/components/toast";
+import Toast, { showToast } from "@/components/Toast";
 import { importFile } from "@/features/importFile/api/importFile";
 import Headers from "@/features/importFile/components/Headers";
 import ImportSection from "@/features/importFile/components/ImportSection";

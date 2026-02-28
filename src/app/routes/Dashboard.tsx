@@ -9,7 +9,7 @@ import type {
   IDateRange,
 } from "../types/dashboard";
 import { useEffect, useState } from "react";
-import LoadingSpinner from "@/components/loadingSpinner";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import { normalizeDonutData } from "@/utils/dashboard";
 import "@/features/dashboard/Dashboard.scss";
 

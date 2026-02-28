@@ -3,10 +3,10 @@ import { getProductsWithVariant } from "@/features/StockManagement/api/getProduc
 import { useEffect, useMemo, useState } from "react";
 import type { IProductData, IWaitingProduct } from "../types/product";
 import { getProductStatus } from "@/utils/product";
-import LoadingSpinner from "@/components/loadingSpinner";
-import Toast, { showToast } from "@/components/toast";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import Toast, { showToast } from "@/components/Toast";
 import { restockProduct } from "@/features/StockManagement/api/restockProduct";
-import Modal from "@/components/modal";
+import Modal from "@/components/Modal";
 import ReStockItem from "@/features/StockManagement/components/ReStockItem";
 import "@/features/stockManagement/StockManagement.scss";
 

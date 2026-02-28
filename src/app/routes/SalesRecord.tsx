@@ -1,4 +1,4 @@
-import LoadingSpinner from "@/components/loadingSpinner";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import Headers from "@/features/salesRecord/components/Headers";
 import Table from "@/features/salesRecord/components/Table";
 import { useEffect, useState } from "react";

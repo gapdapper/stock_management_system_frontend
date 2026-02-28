@@ -13,11 +13,11 @@ import {
   faWrench,
 } from "@fortawesome/free-solid-svg-icons";
 import PlaceHolder from "../../../assets/placeholder.svg?react";
-import Modal from "@/components/modal";
+import Modal from "@/components/Modal";
 import ProductDetail from "./ProductDetail";
 import type { IProductData } from "@/app/types/product";
 import { editProductVariant } from "../api/editProductVariant";
-import Toast, { showToast } from "@/components/toast";
+import Toast, { showToast } from "@/components/Toast";
 import { validateFileSize } from "@/utils/product";
 import { uploadProductImage } from "../api/uploadImage";
 

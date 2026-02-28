@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import SummaryCard from "./SummaryCard";
 import type { ITransactions } from "@/app/types/transaction";
-import LoadingSpinner from "@/components/loadingSpinner";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import { getTransactionByOrderId } from "@/features/salesRecord/api/getTransactions";
 import { useParams } from "react-router";
 import ItemTable from "./ItemTable";

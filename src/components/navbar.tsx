@@ -12,13 +12,13 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { logout } from "@/features/auth/api/logout";
 import { useAuthStore } from "@/stores/authSlice";
-import "./navbar.scss";
+import "./Navbar.scss";
 import { useImportStatusStore } from "@/stores/importStatus";
-import Modal from "./modal";
+import Modal from "./Modal";
 import { useEffect, useState } from "react";
 import { register } from "./api/register";
 import { checkAvailableUsernames } from "./api/checkAvailableUsername";
-import Toast, { showToast } from "@/components/toast";
+import Toast, { showToast } from "@/components/Toast";
 
 function useDebounce(cb: string, delay: number) {
   const [debounceValue, setDebounceValue] = useState(cb);

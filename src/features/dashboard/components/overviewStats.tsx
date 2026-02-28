@@ -1,5 +1,5 @@
 import type { IDateRange } from "@/app/types/dashboard";
-import "./overviewStats.scss";
+import "./OverviewStats.scss";
 
 type Prop = {
   totalOrder?: number;

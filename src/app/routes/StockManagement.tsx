@@ -19,10 +19,7 @@ function StockManagement() {
   const [resetKey, setResetKey] = useState<number>(0);
   const [waitingList, setwaitingList] = useState<IWaitingProduct[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
   const ITEMS_PER_PAGE = 20;
-
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
 
   const goToPage = (page: number) => {
     setCurrentPage(page);
@@ -55,15 +52,22 @@ function StockManagement() {
     fetchProductData();
   }, []);
 
+  const filteredData = useMemo(() => {
+    if (!filter.trim()) return rawData;
+
+    const keyword = filter.trim().toLowerCase();
+    return rawData.filter((item) =>
+      item.productName.toLowerCase().includes(keyword),
+    );
+  }, [rawData, filter]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filter]);
+
   const sortedData = useMemo(() => {
-    let data = [...rawData];
-    if (filter.trim()) {
-      const keyword = filter.trim().toLowerCase();
-      data = data.filter((item) =>
-        item.productName.toLowerCase().includes(keyword),
-      );
-    }
-    setTotalPages(Math.ceil(data.length / ITEMS_PER_PAGE));
+    const data = [...filteredData];
+
     return data.sort((a, b) => {
       const aVal = a[sortField];
       const bVal = b[sortField];
@@ -72,18 +76,22 @@ function StockManagement() {
         return sortDirection === "asc"
           ? aVal.localeCompare(bVal)
           : bVal.localeCompare(aVal);
-      } else if (typeof aVal === "number" && typeof bVal === "number") {
+      }
+
+      if (typeof aVal === "number" && typeof bVal === "number") {
         return sortDirection === "asc" ? aVal - bVal : bVal - aVal;
       }
 
       return 0;
     });
-  }, [rawData, sortField, sortDirection, filter]);
+  }, [filteredData, sortField, sortDirection]);
 
-  const paginatedData = sortedData.slice(
-    startIndex,
-    startIndex + ITEMS_PER_PAGE,
-  );
+  const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
+
+  const paginatedData = useMemo(() => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    return sortedData.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  }, [sortedData, currentPage]);
 
   const restockItem = async () => {
     const payload = {

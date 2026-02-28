@@ -17,7 +17,7 @@ import ContentLayout from "@/components/layouts/content-layout.tsx";
 import AuthProvider from "./auth-provider.tsx";
 import AuthSync from "./routes/auth/AuthSync.tsx";
 import Dashboard from "./routes/Dashboard.tsx";
-import SalesRecord from "./routes/SalesRecord.tsx";
+import SalesRecord from "./routes/SalesTracker.tsx";
 import SalesDetail from "@/features/salesDetail/components/SalesDetail.tsx";
 import FileImport from "./routes/FileImport.tsx";
 

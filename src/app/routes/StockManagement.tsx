@@ -8,7 +8,7 @@ import Toast, { showToast } from "@/components/toast";
 import { restockProduct } from "@/features/StockManagement/api/restockProduct";
 import Modal from "@/components/modal";
 import ReStockItem from "@/features/StockManagement/components/ReStockItem";
-import "@/features/stockManagement/StockManagement.scss"
+import "@/features/stockManagement/StockManagement.scss";
 
 function StockManagement() {
   const [rawData, setRawData] = useState<IProductData[]>([]);
@@ -18,7 +18,20 @@ function StockManagement() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [resetKey, setResetKey] = useState<number>(0);
   const [waitingList, setwaitingList] = useState<IWaitingProduct[]>([]);
-  
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const ITEMS_PER_PAGE = 20;
+
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  const goToPage = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
   const fetchProductData = async () => {
     try {
       const data = await getProductsWithVariant();
@@ -50,6 +63,7 @@ function StockManagement() {
         item.productName.toLowerCase().includes(keyword),
       );
     }
+    setTotalPages(Math.ceil(data.length / ITEMS_PER_PAGE));
     return data.sort((a, b) => {
       const aVal = a[sortField];
       const bVal = b[sortField];
@@ -66,6 +80,10 @@ function StockManagement() {
     });
   }, [rawData, sortField, sortDirection, filter]);
 
+  const paginatedData = sortedData.slice(
+    startIndex,
+    startIndex + ITEMS_PER_PAGE,
+  );
 
   const restockItem = async () => {
     const payload = {
@@ -134,7 +152,7 @@ function StockManagement() {
         </Modal>
         <Toast />
         <Table
-          data={sortedData}
+          data={paginatedData}
           onRefresh={onRefresh}
           currentSortDirection={sortDirection}
           onSort={(payload) => {
@@ -142,6 +160,40 @@ function StockManagement() {
             setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
           }}
         />
+        <div className="pagination-minimal d-flex justify-content-start align-items-center gap-2 mt-4 mb-4">
+          <button
+            className="btn btn-sm btn-outline-secondary"
+            disabled={currentPage === 1}
+            onClick={() => goToPage(currentPage - 1)}
+          >
+            ← Prev
+          </button>
+
+          {Array.from({ length: totalPages }).map((_, idx) => {
+            const page = idx + 1;
+            const isActive = page === currentPage;
+
+            return (
+              <button
+                key={page}
+                className={`btn btn-sm ${
+                  isActive ? "btn-dark" : "btn-outline-secondary"
+                }`}
+                onClick={() => goToPage(page)}
+              >
+                {page}
+              </button>
+            );
+          })}
+
+          <button
+            className="btn btn-sm btn-outline-secondary"
+            disabled={currentPage === totalPages}
+            onClick={() => goToPage(currentPage + 1)}
+          >
+            Next →
+          </button>
+        </div>
       </>
     );
   }

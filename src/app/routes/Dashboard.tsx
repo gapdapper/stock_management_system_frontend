@@ -1,5 +1,5 @@
 import Headers from "@/features/dashboard/components/headers";
-import OverviewStats from "@/features/stockManagement/components/overviewStats";
+import OverviewStats from "@/features/dashboard/components/overviewStats";
 import BarChartSection from "@/features/dashboard/components/barChartSection";
 import SalesBreakdownDonut from "@/features/dashboard/components/salesBreakdownDonut";
 import { getDashboardOverview } from "@/features/dashboard/api/getDashboardOverview";

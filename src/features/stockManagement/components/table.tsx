@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./table.scss";
+import "./Table.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEllipsis,
@@ -14,7 +14,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import PlaceHolder from "../../../assets/placeholder.svg?react";
 import Modal from "@/components/modal";
-import ProductDetail from "./productDetail";
+import ProductDetail from "./ProductDetail";
 import type { IProductData } from "@/app/types/product";
 import { editProductVariant } from "../api/editProductVariant";
 import Toast, { showToast } from "@/components/toast";

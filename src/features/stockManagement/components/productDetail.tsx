@@ -1,10 +1,10 @@
-import "./productDetail.scss";
+import "./ProductDetail.scss";
 import PlaceHolder from "../../../assets/placeholder.svg?react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleQuestion, faWrench } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useMemo, useRef } from "react";
 import Toast, { showToast } from "@/components/toast";
-import { uploadProductImage } from "@/features/stockManagement/api/uploadImage";
+import { uploadProductImage } from "@/features/StockManagement/api/uploadImage";
 import { validateFileSize } from "@/utils/product";
 
 type ProductDetailProp = {

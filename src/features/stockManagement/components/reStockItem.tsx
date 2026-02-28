@@ -4,7 +4,7 @@ import type {
   IWaitingProduct,
 } from "@/app/types/product";
 import { useEffect, useState } from "react";
-import "./reStockItem.scss";
+import "./ReStockItem.scss";
 
 type RestockItemProps = {
   data?: IProductData[];

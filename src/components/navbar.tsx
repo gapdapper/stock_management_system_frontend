@@ -112,7 +112,7 @@ function Navbar() {
 
   return (
     <>
-      <nav className="float-start position-fixed sidebar">
+      <nav className=" sidebar">
         <div className="headers">
           <h4>Woodentoys4u</h4>
         </div>
@@ -122,21 +122,21 @@ function Navbar() {
             <span
               className={`badge ${hasImportedToday ? "success" : "warning"}`}
             >
-              {hasImportedToday ? "1/1" : "0/1"}
+              {hasImportedToday ? "SUCCESS" : "PENDING"}
             </span>
           </p>
         </div>
         <NavLink to="/">
           <FontAwesomeIcon icon={faCubes} />
-          <span>Stock</span>
+          <span>Stock Management</span>
         </NavLink>
         <NavLink to="/dashboard">
           <FontAwesomeIcon icon={faChartLine} />
-          <span>Dashboard</span>
+          <span>Sales Dashboard</span>
         </NavLink>
         <NavLink to="/sales">
           <FontAwesomeIcon icon={faBookBookmark} />
-          <span>Sales</span>
+          <span>Sales Tracker</span>
         </NavLink>
         <NavLink to="/import">
           <FontAwesomeIcon icon={faArrowUpFromBracket} />

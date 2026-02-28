@@ -13,11 +13,11 @@ export default function ContentLayout() {
   }, []);
 
  return(
-  <>
+  <div className="layout-wrapper">
       <Navbar />
-      <div className="container">
+      <main className="container-fluid">
         <Outlet />
-      </div>
-    </>
+      </main>
+    </div>
   );
 }

@@ -1,5 +1,5 @@
 import { Outlet } from "react-router";
-import Navbar from "../avbar";
+import Navbar from "../Navbar";
 import "./content-layout.scss";
 import { useEffect } from "react";
 import { useImportStatusStore } from "@/stores/importStatus";

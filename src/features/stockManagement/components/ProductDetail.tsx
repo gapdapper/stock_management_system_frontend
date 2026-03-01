@@ -3,7 +3,7 @@ import PlaceHolder from "../../../assets/placeholder.svg?react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleQuestion, faWrench } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useMemo, useRef } from "react";
-import Toast, { showToast } from "@/components/oast";
+import Toast, { showToast } from "@/components/Toast";
 import { uploadProductImage } from "@/features/StockManagement/api/StockManagementService";
 import { validateFileSize } from "@/utils/product";
 import type { IProductEditModalData } from "@/app/types/product";

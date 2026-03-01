@@ -40,7 +40,8 @@ export default function Table({
 }: TableProps) {
   const [isDirty, setIsDirty] = useState(false);
   const [sortedCol, setSortedCol] = useState<keyof IProductData>("productName");
-  const [selectedProduct, setSelectedProduct] = useState<IProductEditModalData | null>(null);
+  const [selectedProduct, setSelectedProduct] =
+    useState<IProductEditModalData | null>(null);
 
   const handleConfirmEdit = async () => {
     if (!selectedProduct) return;
@@ -87,17 +88,20 @@ export default function Table({
     const validatedFile = validateFileSize(file);
     try {
       if (!validatedFile) {
-      showToast('The selected image exceeds the file size limit. (5 MB)', 'error');
-      return;
+        showToast(
+          "The selected image exceeds the file size limit. (5 MB)",
+          "error",
+        );
+        return;
       }
-      await uploadProductImage("product", productId, validatedFile)
-      showToast('Product Image Updated Successfully.', 'success');
+      await uploadProductImage("product", productId, validatedFile);
+      showToast("Product Image Updated Successfully.", "success");
       await onRefresh();
     } catch (error) {
       console.error("Failed to update the product data.");
-      showToast('Failed to update the product data.', 'error');
+      showToast("Failed to update the product data.", "error");
     }
-  }
+  };
 
   return (
     <>
@@ -183,7 +187,7 @@ export default function Table({
                     <td>{new Date(item.lastUpdated).toLocaleString()}</td>
                     <td>
                       <span
-                        className={`status-badge ${item.status?.replace(
+                        className={`status-badge ${item.status?.replaceAll(
                           " ",
                           "-",
                         )}`}
@@ -217,30 +221,33 @@ export default function Table({
                               {/* image cell */}
                               <div className="image-cell">
                                 <div className="image-wrapper">
-                                {item.productImageUrl != "" ? (
-                                  <img
-                                    src={item.productImageUrl}
-                                    alt="Product"
-                                    className="product-img"
-                                  />
-                                ) : (
-                                  <PlaceHolder />
-                                )}
-                                <div className="image-overlay">
-                                  <FontAwesomeIcon icon={faWrench} style={{ fontSize: "10px" }} />
-                                </div>
+                                  {item.productImageUrl != "" ? (
+                                    <img
+                                      src={item.productImageUrl}
+                                      alt="Product"
+                                      className="product-img"
+                                    />
+                                  ) : (
+                                    <PlaceHolder />
+                                  )}
+                                  <div className="image-overlay">
+                                    <FontAwesomeIcon
+                                      icon={faWrench}
+                                      style={{ fontSize: "10px" }}
+                                    />
+                                  </div>
 
-                                <input
-                                  type="file"
-                                  accept="image/*"
-                                  className="image-input"
-                                  onChange={(e) => {
-                                    const file = e.target.files?.[0];
-                                    if (file) {
-                                      submitproductImage(item.id, file);
-                                    }
-                                  }}
-                                />
+                                  <input
+                                    type="file"
+                                    accept="image/*"
+                                    className="image-input"
+                                    onChange={(e) => {
+                                      const file = e.target.files?.[0];
+                                      if (file) {
+                                        submitproductImage(item.id, file);
+                                      }
+                                    }}
+                                  />
                                 </div>
                                 <p>{item.productName}</p>
                               </div>
@@ -267,7 +274,7 @@ export default function Table({
                                             <span
                                               className={`status-badge color-${s.color
                                                 .toLowerCase()
-                                                .replace(" ", "-")}`}
+                                                .replaceAll(" ", "-")}`}
                                             >
                                               {s.color}
                                             </span>
@@ -276,14 +283,16 @@ export default function Table({
                                           <td>{s.minStock}</td>
                                           <td>
                                             <span
-                                              className={`status-badge ${item.status?.replace(
+                                              className={`status-badge ${item.status?.replaceAll(
                                                 " ",
                                                 "-",
                                               )}`}
                                             >
-                                              {s.stock >= s.minStock
-                                                ? "In-stock"
-                                                : "Low stock"}
+                                              {s.stock <= s.minStock
+                                                ? s.stock == 0
+                                                  ? "Out of stock"
+                                                  : "Low stock"
+                                                : "In-stock"}
                                             </span>
                                           </td>
                                           <td>
@@ -300,8 +309,9 @@ export default function Table({
                                                   color: s.color,
                                                   qty: s.stock,
                                                   minStock: s.minStock,
-                                                  variantImageUrl: s.variantImageUrl,
-                                              })
+                                                  variantImageUrl:
+                                                    s.variantImageUrl,
+                                                })
                                               }
                                             >
                                               <FontAwesomeIcon

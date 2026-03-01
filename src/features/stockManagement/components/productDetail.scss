@@ -24,7 +24,6 @@
       font-size: 12px;
       font-weight: 600;
       letter-spacing: 0.3px;
-      text-transform: capitalize;
     }
 
     .in-stock {
@@ -33,6 +32,11 @@
     }
 
     .low-stock {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .out-of-stock {
       background: #fee2e2;
       color: #991b1b;
     }

@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router";
 import "./Table.scss";
 import type { ITransactions } from "@/app/types/transaction";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 type Prop = {
   data: ITransactions[];
@@ -45,6 +47,12 @@ export default function Table({ data }: Prop) {
           ))}
         </tbody>
       </table>
+              {!data?.length && (
+          <div className="empty-state">
+            <FontAwesomeIcon icon={faMagnifyingGlass} />
+            <p>No result found</p>
+          </div>
+        )}
     </div>
   );
 }

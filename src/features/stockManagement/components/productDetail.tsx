@@ -37,17 +37,20 @@ export default function ProductDetail({
     const validatedFile = validateFileSize(file);
     try {
       if (!validatedFile) {
-      showToast('The selected image exceeds the file size limit. (5 MB)', 'error');
-      return;
+        showToast(
+          "The selected image exceeds the file size limit. (5 MB)",
+          "error",
+        );
+        return;
       }
-      await uploadProductImage("variant", data.variantId, validatedFile)
-      showToast('Product Variant Image Updated Successfully.', 'success');
+      await uploadProductImage("variant", data.variantId, validatedFile);
+      showToast("Product Variant Image Updated Successfully.", "success");
       await onRefresh();
     } catch (error) {
       console.error("Failed to update the product data.");
-      showToast('Failed to update the product data.', 'error');
+      showToast("Failed to update the product data.", "error");
     }
-  }
+  };
 
   useEffect(() => {
     onDirtyChange(isDirty);
@@ -96,13 +99,19 @@ export default function ProductDetail({
 
             <div className="status-badge col-12 mt-0">
               <span
-                className={
-                  data.qty >= data.minStock
-                    ? "status-badge in-stock"
-                    : "status-badge low-stock"
-                }
+                className={`status-badge ${
+                  data.qty <= data.minStock
+                    ? data.qty == 0
+                      ? "out-of-stock"
+                      : "low-stock"
+                    : "in-stock"
+                }`}
               >
-                {data.qty >= data.minStock ? "In-stock" : "Low stock"}
+                {data.qty <= data.minStock
+                  ? data.qty == 0
+                    ? "Out of stock"
+                    : "Low stock"
+                  : "In-stock"}
               </span>
             </div>
           </div>

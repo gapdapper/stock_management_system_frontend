@@ -1,11 +1,17 @@
 import type { IProductData } from "@/app/types/product";
 
 export const getProductStatus = (variants: IProductData["variants"]) => {
-  return variants.some(v =>
-    v.sub.some(s => s.stock < s.minStock)
-  )
-    ? "Low stock"
-    : "In-stock";
+  const allSubVariants = variants.flatMap(v => v.sub);
+
+  if (allSubVariants.some(s => s.stock <= 0)) {
+    return "Out of stock";
+  }
+
+  if (allSubVariants.some(s => s.stock < s.minStock)) {
+    return "Low stock";
+  }
+
+  return "In-stock";
 };
 
 export const validateFileSize = (file: File) => {

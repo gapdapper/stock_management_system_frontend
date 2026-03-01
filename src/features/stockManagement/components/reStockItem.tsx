@@ -23,7 +23,7 @@ export default function ReStockItem({
   const [selectedSize, setSelectedSize] = useState<IProductSize | null>(null);
   const [selectedColor, setselectedColor] = useState<string>("");
   const [selectedQty, setselectedQty] = useState<number>(0);
-  const handleProductChange = (productId: number) => {
+  const handleProductSelect = (productId: number) => {
     const product = data?.find((p) => p.id === productId) || null;
     setSelectedProduct(product);
     setSelectedSize(null);
@@ -102,7 +102,7 @@ export default function ReStockItem({
             name="product-name"
             id="product-name"
             value={selectedProduct?.id ?? ""}
-            onChange={(e) => handleProductChange(Number(e.target.value))}
+            onChange={(e) => handleProductSelect(Number(e.target.value))}
           >
             <option value="" disabled>
               Select a product

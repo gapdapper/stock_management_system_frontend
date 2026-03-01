@@ -4,11 +4,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleQuestion, faWrench } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useMemo, useRef } from "react";
 import Toast, { showToast } from "@/components/Toast";
-import { uploadProductImage } from "@/features/StockManagement/api/uploadImage";
+import { uploadProductImage } from "@/features/StockManagement/api/StockManagementService";
 import { validateFileSize } from "@/utils/product";
+import type { IProductEditModalData } from "@/app/types/product";
 
 type ProductDetailProp = {
-  data: any;
+  data: IProductEditModalData;
   formHandler: (data: any) => void;
   onDirtyChange: (data: any) => void;
   onRefresh: () => Promise<void>;
@@ -53,7 +54,6 @@ export default function ProductDetail({
   }, [isDirty, onDirtyChange]);
 
   useEffect(() => {
-    console.log(data)
     initialRef.current = {
       qty: data.qty,
       minStock: data.minStock,
@@ -108,7 +108,7 @@ export default function ProductDetail({
           </div>
           <div className="col-6">
             <p>
-              <strong>Product:</strong> {data.name}
+              <strong>Product:</strong> {data.productName}
             </p>
             <p>
               <strong>Size:</strong> {data.size}

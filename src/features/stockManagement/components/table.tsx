@@ -15,11 +15,11 @@ import {
 import PlaceHolder from "../../../assets/placeholder.svg?react";
 import Modal from "@/components/Modal";
 import ProductDetail from "./ProductDetail";
-import type { IProductData } from "@/app/types/product";
-import { editProductVariant } from "../api/editProductVariant";
+import type { IProductData, IProductEditModalData } from "@/app/types/product";
+import { editProductVariant } from "../api/StockManagementService";
 import Toast, { showToast } from "@/components/Toast";
 import { validateFileSize } from "@/utils/product";
-import { uploadProductImage } from "../api/uploadImage";
+import { uploadProductImage } from "../api/StockManagementService";
 
 type SortPayload = {
   field: keyof IProductData;
@@ -27,7 +27,7 @@ type SortPayload = {
 
 type TableProps = {
   data?: IProductData[];
-  onRefresh: () => Promise<IProductData[]>;
+  onRefresh: () => Promise<IProductData[] | undefined>;
   onSort: (payload: SortPayload) => void;
   currentSortDirection: string;
 };
@@ -40,38 +40,7 @@ export default function Table({
 }: TableProps) {
   const [isDirty, setIsDirty] = useState(false);
   const [sortedCol, setSortedCol] = useState<keyof IProductData>("productName");
-  const [selectedProduct, setSelectedProduct] = useState<{
-    productId: number;
-    variantId: number;
-    name: string;
-    size: string;
-    color: string;
-    qty: number;
-    minStock: number;
-    variantImageUrl: string;
-  } | null>(null);
-
-  const handleEditModal = (
-    productId: number,
-    variantId: number,
-    productName: string,
-    size: string,
-    color: string,
-    qty: number,
-    minStock: number,
-    variantImageUrl: string,
-  ) => {
-    setSelectedProduct({
-      productId: productId,
-      variantId: variantId,
-      name: productName,
-      size,
-      color,
-      qty,
-      minStock,
-      variantImageUrl,
-    });
-  };
+  const [selectedProduct, setSelectedProduct] = useState<IProductEditModalData | null>(null);
 
   const handleConfirmEdit = async () => {
     if (!selectedProduct) return;
@@ -323,16 +292,16 @@ export default function Table({
                                               data-bs-toggle="modal"
                                               data-bs-target="#modal-product-detail"
                                               onClick={() =>
-                                                handleEditModal(
-                                                  item.id,
-                                                  s.variantId,
-                                                  item.productName,
-                                                  v.size,
-                                                  s.color,
-                                                  s.stock,
-                                                  s.minStock,
-                                                  s.variantImageUrl,
-                                                )
+                                                setSelectedProduct({
+                                                  productId: item.id,
+                                                  variantId: s.variantId,
+                                                  productName: item.productName,
+                                                  size: v.size,
+                                                  color: s.color,
+                                                  qty: s.stock,
+                                                  minStock: s.minStock,
+                                                  variantImageUrl: s.variantImageUrl,
+                                              })
                                               }
                                             >
                                               <FontAwesomeIcon
@@ -365,7 +334,7 @@ export default function Table({
       </div>
       <Modal
         id="product-detail"
-        title={`${selectedProduct?.name} ${selectedProduct?.size} ${selectedProduct?.color}`}
+        title={`${selectedProduct?.productName} ${selectedProduct?.size} ${selectedProduct?.color}`}
         confirmText="Edit"
         cancelText="Cancel"
         onConfirm={handleConfirmEdit}

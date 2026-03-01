@@ -1,11 +1,11 @@
 import Table from "@/features/StockManagement/components/Table";
-import { getProductsWithVariant } from "@/features/StockManagement/api/getProductWithVariant";
+import { getProductsWithVariant } from "@/features/StockManagement/api/StockManagementService";
 import { useEffect, useMemo, useState } from "react";
 import type { IProductData, IWaitingProduct } from "../types/product";
 import { getProductStatus } from "@/utils/product";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import Toast, { showToast } from "@/components/Toast";
-import { restockProduct } from "@/features/StockManagement/api/restockProduct";
+import { restockProduct } from "@/features/StockManagement/api/StockManagementService";
 import Modal from "@/components/Modal";
 import ReStockItem from "@/features/StockManagement/components/ReStockItem";
 import "@/features/stockManagement/StockManagement.scss";
@@ -21,14 +21,7 @@ function StockManagement() {
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 20;
 
-  const goToPage = (page: number) => {
-    setCurrentPage(page);
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  };
-
+  // #region data fetching
   const fetchProductData = async () => {
     try {
       const data = await getProductsWithVariant();
@@ -44,14 +37,12 @@ function StockManagement() {
     }
   };
 
-  const onRefresh = async () => {
-    return (await fetchProductData()) as IProductData[];
-  };
-
   useEffect(() => {
     fetchProductData();
   }, []);
+  // #endregion
 
+  // #region sort&filter
   const filteredData = useMemo(() => {
     if (!filter.trim()) return rawData;
 
@@ -85,8 +76,18 @@ function StockManagement() {
       return 0;
     });
   }, [filteredData, sortField, sortDirection]);
+  // #endregion
 
+  // #region pagination
   const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
+
+  const goToPage = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
 
   const paginatedData = useMemo(() => {
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -103,11 +104,12 @@ function StockManagement() {
     try {
       showToast("Restock Success!", "success");
       await restockProduct(payload);
-      onRefresh();
+      fetchProductData();
     } catch (error) {
       throw new Error("Failed to restock the product: " + error);
     }
   };
+    // #endregion
 
   if (isLoading) {
     return (
@@ -161,7 +163,7 @@ function StockManagement() {
         <Toast />
         <Table
           data={paginatedData}
-          onRefresh={onRefresh}
+          onRefresh={fetchProductData}
           currentSortDirection={sortDirection}
           onSort={(payload) => {
             setSortField(payload.field);

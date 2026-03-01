@@ -1,8 +1,8 @@
-import LoadingSpinner from "@/components/LoadingSpinner";
-import Table from "@/features/SalesRecord/components/Table";
+import LoadingSpinner from "@/components/loadingSpinner";
+import Table from "@/features/SalesTracker/components/Table";
 import { useEffect, useState } from "react";
 import type { IFilter, ITransactions } from "../types/transaction";
-import { getTransactions } from "@/features/SalesRecord/api/getTransactions";
+import { getTransactions } from "@/features/SalesTracker/api/SalesTrackerService";
 
 export default function SalesRecord() {
   const [rawData, setRawData] = useState<ITransactions[]>([]);

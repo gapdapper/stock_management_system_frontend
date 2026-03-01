@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { login } from "@/features/auth/api/login";
+import { login } from "@/features/auth/api/AuthService";
 import { useAuthStore } from "@/stores/authSlice";
 import "./login-form.scss";
 

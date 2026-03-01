@@ -10,7 +10,7 @@ import {
   faUserPlus,
   faCircleInfo,
 } from "@fortawesome/free-solid-svg-icons";
-import { logout } from "@/features/auth/api/logout";
+import { logout } from "@/features/auth/api/AuthService";
 import { useAuthStore } from "@/stores/authSlice";
 import "./Navbar.scss";
 import { useImportStatusStore } from "@/stores/importStatus";

@@ -63,3 +63,21 @@ export const requestRefreshToken = (): Promise<string> => {
   return refreshPromise;
 };
 
+export const register = async (user: any): Promise<any> => {
+    try {
+        await axiosInstance.post(`/auth/register`, user);
+    } catch (error) {
+        console.error('Failed to fetch upload logs:', error);
+        throw error;   
+    }
+}
+
+export const checkAvailableUsernames = async (username: string): Promise<any> => {
+    try {
+        const response =  await axiosInstance.get(`/auth/check-username?username=${username}`);
+        return response.data.isAvailable;
+    } catch (error) {
+        console.error('Failed to fetch available usernames:', error);
+        throw error;   
+    }
+}

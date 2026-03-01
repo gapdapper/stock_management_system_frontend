@@ -16,8 +16,8 @@ import "./Navbar.scss";
 import { useImportStatusStore } from "@/stores/importStatus";
 import Modal from "./Modal";
 import { useEffect, useState } from "react";
-import { register } from "./api/register";
-import { checkAvailableUsernames } from "./api/checkAvailableUsername";
+import { register } from "@/features/auth/api/AuthService";
+import { checkAvailableUsernames } from "@/features/auth/api/AuthService";
 import Toast, { showToast } from "@/components/Toast";
 
 function useDebounce(cb: string, delay: number) {

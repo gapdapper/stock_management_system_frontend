@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "./toast.scss";
+import "./Toast.scss";
 
 type ToastType = "success" | "error" | "info";
 

@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router";
 import "./Table.scss";
-import type { IFilter, ITransactions } from "@/app/types/transaction";
-import { useEffect, useState } from "react";
+import type { ITransactions } from "@/app/types/transaction";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 type Prop = {
   data: ITransactions[];
@@ -9,53 +10,7 @@ type Prop = {
 
 export default function Table({ data }: Prop) {
   let navigate = useNavigate();
-  // const [tableData, setTableData] = useState<ITransactions[]>([]);
-
-  // useEffect(() => {
-  //   let result = [...data];
-  //   console.log(data);
-  //   console.log(filter);
-
-  //   // Status filter
-  //   if (filter.status !== "all") {
-  //     result = result.filter((item) => item.status === filter.status);
-  //   }
-
-  //   // Platform filter
-  //   if (filter.platform !== "all") {
-  //     result = result.filter((item) => item.platform === filter.platform);
-  //   }
-
-  //   // Date range filter
-  //   if (filter.period !== "all") {
-  //     const now = new Date();
-
-  //     result = result.filter((item) => {
-  //       const createdAt = new Date(item.createdAt);
-
-  //       switch (filter.period) {
-  //         case "today":
-  //           return createdAt.toDateString() === now.toDateString();
-
-  //         case "last-7-days":
-  //           const sevenDaysAgo = new Date();
-  //           sevenDaysAgo.setDate(now.getDate() - 7);
-  //           return createdAt >= sevenDaysAgo;
-
-  //         case "this-month":
-  //           return (
-  //             createdAt.getMonth() === now.getMonth() &&
-  //             createdAt.getFullYear() === now.getFullYear()
-  //           );
-
-  //         default:
-  //           return true;
-  //       }
-  //     });
-  //   }
-  //   setTableData(result);
-  // }, [data, filter]);
-
+ 
   return (
     <div className="table-wrapper">
       <table className="transaction-table">
@@ -92,6 +47,12 @@ export default function Table({ data }: Prop) {
           ))}
         </tbody>
       </table>
+              {!data?.length && (
+          <div className="empty-state">
+            <FontAwesomeIcon icon={faMagnifyingGlass} />
+            <p>No result found</p>
+          </div>
+        )}
     </div>
   );
 }

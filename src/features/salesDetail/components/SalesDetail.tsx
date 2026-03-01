@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import SummaryCard from "./SummaryCard";
 import type { ITransactions } from "@/app/types/transaction";
-import LoadingSpinner from "@/components/loadingSpinner";
-import { getTransactionByOrderId } from "@/features/salesRecord/api/getTransactions";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import { getTransactionByOrderId } from "@/features/SalesRecord/api/getTransactions";
 import { useParams } from "react-router";
 import ItemTable from "./ItemTable";
 
@@ -11,7 +11,7 @@ export default function SalesDetail() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   let params = useParams();
 
-  const fetchProductData = async () => {
+  const fetchTransactionData = async () => {
     try {
       if (!params || !params.id) return;
       const data = await getTransactionByOrderId(params.id);
@@ -24,7 +24,7 @@ export default function SalesDetail() {
   };
 
   useEffect(() => {
-    fetchProductData();
+    fetchTransactionData();
   }, []);
   if (isLoading) {
     return (

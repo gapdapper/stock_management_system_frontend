@@ -1,17 +1,51 @@
 import { NavLink } from "react-router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCubes, faChartLine, faBookBookmark, faArrowUpFromBracket, faGear, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCubes,
+  faChartLine,
+  faBookBookmark,
+  faArrowUpFromBracket,
+  faGear,
+  faRightFromBracket,
+  faUserPlus,
+  faCircleInfo,
+} from "@fortawesome/free-solid-svg-icons";
 import { logout } from "@/features/auth/api/logout";
 import { useAuthStore } from "@/stores/authSlice";
-import "./navbar.scss";
+import "./Navbar.scss";
 import { useImportStatusStore } from "@/stores/importStatus";
+import Modal from "./Modal";
+import { useEffect, useState } from "react";
+import { register } from "./api/register";
+import { checkAvailableUsernames } from "./api/checkAvailableUsername";
+import Toast, { showToast } from "@/components/Toast";
 
+function useDebounce(cb: string, delay: number) {
+  const [debounceValue, setDebounceValue] = useState(cb);
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebounceValue(cb);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [cb, delay]);
+  return debounceValue;
+}
 
 function Navbar() {
- const user = useAuthStore((s) => s.user);
- const hasImportedToday = useImportStatusStore(
-  (s) => s.hasImportedToday
-); 
+  const user = useAuthStore((s) => s.user);
+  const hasImportedToday = useImportStatusStore((s) => s.hasImportedToday);
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isFormatValid, setIsFormatValid] = useState<boolean>(false);
+  const [isNotDuplicate, setIsNotDuplicate] = useState<boolean>(false);
+  const [selectedRole, setSelectedRole] = useState("user");
+
+  const debouncedUsername = useDebounce(username, 500);
 
   const handleLogout = () => {
     try {
@@ -20,31 +54,94 @@ function Navbar() {
       console.error("Logout error:", error);
     }
   };
+
+  // Validate username and password format
+  useEffect(() => {
+    const usernameRegex = /^[a-zA-Z0-9]{4,20}$/;
+    const passwordRegex = /^[a-zA-Z0-9]{8,20}$/;
+
+    if (!username || !password) {
+      setIsFormatValid(false);
+    return;
+  }
+
+    if (username != "" && !usernameRegex.test(username)) {
+      setErrorMessage("Username must be 4-20 alphanumeric characters.");
+      setIsFormatValid(false);
+      return;
+    }
+
+    if (password != "" && !passwordRegex.test(password)) {
+      setErrorMessage("Password must be 8-20 alphanumeric characters.");
+      setIsFormatValid(false);
+      return;
+    }
+
+    setErrorMessage("");
+    setIsFormatValid(true);
+  }, [username, password]);
+
+  // Check duplicate username (debounced)
+  useEffect(() => {
+    if (!debouncedUsername) return;
+    const checkDuplicate = async () => {
+      const isAvailable = await checkAvailableUsernames(debouncedUsername);
+      if (!isAvailable) {
+        setErrorMessage("This username was already taken");
+        setIsNotDuplicate(false);
+      } else {
+        setErrorMessage("");
+        setIsNotDuplicate(true);
+      }
+    };
+
+    checkDuplicate();
+  }, [debouncedUsername]);
+
+  const handleConfirmAddMember = async () => {
+    const userPayload = {
+      username: username,
+      password: password,
+      role: selectedRole,
+    };
+
+    await register(userPayload);
+    showToast("User created successfully.", "success");
+  };
+
+  const handleCancelAddMember = () => {
+    setUsername("");
+    setPassword("");
+    setErrorMessage("");
+  };
+
   return (
     <>
-      <nav className="float-start position-fixed sidebar">
+      <nav className=" sidebar">
         <div className="headers">
           <h4>Woodentoys4u</h4>
         </div>
         <div className="import-status">
           <p>
             Today's Import:
-            <span className={`badge ${hasImportedToday ? "success" : "warning"}`}>
-              {hasImportedToday ? "1/1" : "0/1"}
+            <span
+              className={`badge ${hasImportedToday ? "success" : "warning"}`}
+            >
+              {hasImportedToday ? "SUCCESS" : "PENDING"}
             </span>
           </p>
         </div>
         <NavLink to="/">
           <FontAwesomeIcon icon={faCubes} />
-          <span>Stock</span>
+          <span>Stock Management</span>
         </NavLink>
         <NavLink to="/dashboard">
           <FontAwesomeIcon icon={faChartLine} />
-          <span>Dashboard</span>
+          <span>Sales Dashboard</span>
         </NavLink>
         <NavLink to="/sales">
           <FontAwesomeIcon icon={faBookBookmark} />
-          <span>Sales</span>
+          <span>Sales Tracker</span>
         </NavLink>
         <NavLink to="/import">
           <FontAwesomeIcon icon={faArrowUpFromBracket} />
@@ -55,8 +152,21 @@ function Navbar() {
           <span>Settings</span>
         </NavLink> */}
         <div className="user-info">
-          <p>{user?.username ?? "Loading..."}</p>
+          {user && user.role == "admin" && (
+            <button
+              className="add-user-btn"
+              title="AddUser"
+              type="button"
+              data-bs-toggle="modal"
+              data-bs-target="#modal-create-user"
+            >
+              <FontAwesomeIcon icon={faUserPlus} />
+            </button>
+          )}
+
+          <p className="username">{user?.username ?? "Loading..."}</p>
           <button
+            className="logout-btn"
             title="Logout"
             type="button"
             data-bs-toggle="modal"
@@ -107,6 +217,81 @@ function Navbar() {
           </div>
         </div>
       </div>
+
+      <Modal
+        title="Create new user"
+        id="create-user"
+        confirmText="Create"
+        cancelText="Cancel"
+        onConfirm={handleConfirmAddMember}
+        confirmDisabled={!isFormatValid || !isNotDuplicate}
+        onClose={handleCancelAddMember}
+        size="modal-md"
+      >
+        <div className="create-new-user-modal-content row">
+          <div className="col-6">
+            <label className="form-label">
+              Username{" "}
+              <FontAwesomeIcon
+                icon={faCircleInfo}
+                className="username-info-icon"
+              />{" "}
+              <span className="username-info">
+                Username must be alphanumeric characters (a-z, A-Z, 0-9) with a
+                length to be between 4 and 20 characters
+              </span>
+            </label>
+
+            <input
+              type="text"
+              className="form-control"
+              onChange={(e) => {
+                const value = e.target.value;
+                setUsername(value);
+              }}
+              value={username}
+            />
+          </div>
+          <div className="col-6 dropdown-select">
+            <select
+              name=""
+              id=""
+              className="form-control"
+              onChange={(e) => {
+                setSelectedRole(e.target.value);
+              }}
+            >
+              <option value="user">User</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+          <div className="col-6">
+            <label className="form-label">
+              Password{" "}
+              <FontAwesomeIcon
+                icon={faCircleInfo}
+                className="password-info-icon"
+              />{" "}
+              <span className="password-info">
+                Password must be alphanumeric characters (a-z, A-Z, 0-9) with a
+                length to be between 8 and 20 characters
+              </span>
+            </label>
+
+            <input
+              type="text"
+              className="form-control"
+              onChange={(e) => {
+                const value = e.target.value;
+                setPassword(value);
+              }}
+              value={password}
+            />
+          </div>
+          <p className="input-error-msg">{errorMessage}</p>
+        </div>
+      </Modal>
+      <Toast />
     </>
   );
 }

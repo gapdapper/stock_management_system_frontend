@@ -47,3 +47,14 @@ export interface IProductSize {
     minStock: number;
   }[];
 }
+
+export interface IProductEditModalData {
+  productId: number;
+  variantId: number;
+  productName: string;
+  size: string;
+  color: string;
+  qty: number;
+  minStock: number;
+  variantImageUrl: string;
+}

@@ -1,7 +1,6 @@
 .table-wrapper {
   background: #ffffff;
   border-radius: 12px;
-  padding: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   overflow-x: auto;
 
@@ -11,7 +10,6 @@
   border-radius: 999px;
   font-size: 12px;
   font-weight: 600;
-  text-transform: capitalize;
 
   &.order.placed {
     background: #e5e7eb;

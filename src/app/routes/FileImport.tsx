@@ -1,13 +1,12 @@
-import Toast, { showToast } from "@/components/toast";
+import Toast, { showToast } from "@/components/Toast";
 import { importFile } from "@/features/importFile/api/importFile";
-import Headers from "@/features/importFile/components/Headers";
 import ImportSection from "@/features/importFile/components/ImportSection";
 import { useImportStatusStore } from "@/stores/importStatus";
 
 export default function FileImport() {
   const ALLOWED_EXTENSIONS = ["csv", "xlsx"];
   const MAX_FILE_SIZE_MB = 5;
-  const fetchImportStatus = useImportStatusStore((s) => s.fetchImportStatus);
+  const updateImportStatus = useImportStatusStore((s) => s.fetchImportStatus);
 
   const handleFilesSelected = async (files: File[]) => {
     const invalidFiles = files.filter((file) => {
@@ -30,7 +29,7 @@ export default function FileImport() {
       });
 
       await importFile(formData);
-      await fetchImportStatus();
+      await updateImportStatus();
       showToast("Import completed", "success");
     } catch (error) {
       showToast("Import failed", "error");
@@ -38,7 +37,12 @@ export default function FileImport() {
   };
   return (
     <>
-      <Headers />
+      <div className="mb-4">
+        <h1 className="mb-1">Import Sales Data</h1>
+        <p className="text-muted mb-0">
+          Import exported sales data from e-commerce platforms into the system
+        </p>
+      </div>
       <ImportSection onFilesSelected={handleFilesSelected} />
       <Toast />
     </>

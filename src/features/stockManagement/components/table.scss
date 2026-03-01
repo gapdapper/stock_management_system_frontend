@@ -3,6 +3,10 @@ button {
   border: none;
 }
 
+.table-group-divider {
+  border-top: none;
+}
+
 .image-cell {
   align-self: center;
   width: 120px;
@@ -185,7 +189,6 @@ tr:has(.row-collapse-btn[aria-expanded="true"]) {
 .stock-table-wrapper {
   background: #ffffff;
   border-radius: 12px;
-  padding: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   table {
     width: 100%;
@@ -231,7 +234,6 @@ tr:has(.row-collapse-btn[aria-expanded="true"]) {
     border-radius: 999px;
     font-size: 12px;
     font-weight: 600;
-    text-transform: capitalize;
     color: #fff;
 
     &.In-stock {
@@ -240,6 +242,11 @@ tr:has(.row-collapse-btn[aria-expanded="true"]) {
     }
 
     &.Low-stock {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    &.Out-of-stock {
       background: #fee2e2;
       color: #991b1b;
     }

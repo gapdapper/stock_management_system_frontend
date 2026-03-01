@@ -27,6 +27,7 @@ export interface IChartData {
   name: string;
   value: number;
   zz?: string;
+  [key: string]: any;
 }
 
 export interface IDateRange {

@@ -50,16 +50,7 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    const currentDate = new Date();
-    const formattedMonth = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}`;
-    // fetchDashboardData(formattedMonth);
     fetchAvailableMonthsData();
-
-    // const monthName = currentDate.toLocaleString("en-US", {
-    //   month: "long",
-    // });
-    // setcurrentMonth(monthName);
-    // updatePeriod(formattedMonth);
   }, []);
 
   const updatePeriod = (month: string) => {

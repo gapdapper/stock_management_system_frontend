@@ -1,7 +1,7 @@
 import Toast, { showToast } from "@/components/Toast";
-import { importFile } from "@/features/importFile/api/importFile";
-import ImportSection from "@/features/importFile/components/ImportSection";
+import { importFile } from "@/features/importFile/api/ImportService";
 import { useImportStatusStore } from "@/stores/importStatus";
+import "@/features/importFile/components/FileImport.scss"
 
 export default function FileImport() {
   const ALLOWED_EXTENSIONS = ["csv", "xlsx"];
@@ -35,6 +35,14 @@ export default function FileImport() {
       showToast("Import failed", "error");
     }
   };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? []);
+    if (files.length === 0) return;
+
+    handleFilesSelected(files);
+  };
+
   return (
     <>
       <div className="mb-4">
@@ -43,7 +51,29 @@ export default function FileImport() {
           Import exported sales data from e-commerce platforms into the system
         </p>
       </div>
-      <ImportSection onFilesSelected={handleFilesSelected} />
+      <div className="import-container">
+        <label htmlFor="file-input" className="drop-zone">
+          <div className="drop-content">
+            <div className="icon">📄</div>
+
+            <h6 className="mb-1">Import sales data</h6>
+
+            <p className="text-muted small mb-2">
+              Drag & drop your exported sales file here (CSV/XLXS)
+            </p>
+
+            <span className="hint">or click to browse file</span>
+          </div>
+          <input
+            id="file-input"
+            type="file"
+            hidden
+            multiple
+            accept=".csv,.xlsx"
+            onChange={handleChange}
+          />
+        </label>
+      </div>
       <Toast />
     </>
   );

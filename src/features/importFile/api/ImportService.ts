@@ -12,3 +12,13 @@ export const importFile = async (formData: FormData): Promise<void> => {
     throw error;
   }
 };
+
+export const getUploadLog = async (): Promise<{ id: number, uploadAt: string }> => {
+    try {
+        const response =  await axiosInstance.get('/dailyUploadLog');
+        return response.data.uploadLog;
+    } catch (error) {
+        console.error('Failed to fetch upload logs:', error);
+        throw error;   
+    }
+}

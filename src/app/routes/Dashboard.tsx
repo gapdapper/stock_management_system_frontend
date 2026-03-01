@@ -1,8 +1,7 @@
 import OverviewStats from "@/features/dashboard/components/OverviewStats";
 import BarChartSection from "@/features/dashboard/components/BarChartSection";
 import SalesBreakdownDonut from "@/features/dashboard/components/SalesBreakdownDonut";
-import { getDashboardOverview } from "@/features/dashboard/api/getDashboardOverview";
-import { getAvailableMonths } from "@/features/dashboard/api/getAvailableMonths";
+import { getAvailableMonths, getDashboardOverview } from "@/features/dashboard/api/DashboardService";
 import type {
   IChartData,
   IDashboardOverview,
@@ -93,17 +92,6 @@ export default function Dashboard() {
         normalizeDonutData(data.topItems, "productName", "totalSold"),
       );
     }
-  };
-
-  const refreshDashboard = (month: string) => {
-    fetchDashboardData(month);
-    updatePeriod(month);
-    const [year, monthVal] = month.split("-").map((val) => Number(val));
-    const newDate = new Date(year, monthVal - 1);
-    const monthName = newDate.toLocaleString("en-US", {
-      month: "long",
-    });
-    setcurrentMonth(monthName);
   };
 
   useEffect(() => {

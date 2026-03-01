@@ -14,7 +14,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import PlaceHolder from "../../../assets/placeholder.svg?react";
 import Modal from "@/components/Modal";
-import ProductDetail from "./ProductDetail";
+import ProductDetail from "./roductDetail";
 import type { IProductData, IProductEditModalData } from "@/app/types/product";
 import { editProductVariant } from "../api/StockManagementService";
 import Toast, { showToast } from "@/components/Toast";

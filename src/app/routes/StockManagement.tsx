@@ -6,7 +6,7 @@ import { getProductStatus } from "@/utils/product";
 import LoadingSpinner from "@/components/loadingSpinner";
 import Toast, { showToast } from "@/components/Toast";
 import Modal from "@/components/Modal";
-import ReStockItem from "@/features/StockManagement/components/reStockItem";
+import ReStockItem from "@/features/StockManagement/components/ReStockItem";
 import "@/features/stockManagement/StockManagement.scss";
 
 function StockManagement() {
@@ -169,7 +169,7 @@ function StockManagement() {
             setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
           }}
         />
-        <div className="pagination-minimal d-flex justify-content-start align-items-center gap-2 mt-4 mb-4">
+        {paginatedData.length > 0 && <div className="pagination-minimal d-flex justify-content-start align-items-center gap-2 mt-4 mb-4">
           <button
             className="btn btn-sm btn-outline-secondary"
             disabled={currentPage === 1}
@@ -202,7 +202,8 @@ function StockManagement() {
           >
             Next →
           </button>
-        </div>
+        </div>}
+        
       </>
     );
   }

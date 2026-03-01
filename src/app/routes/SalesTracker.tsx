@@ -159,40 +159,42 @@ export default function SalesRecord() {
           </div>
         </div>
         <Table data={paginatedData} />
-        <div className="pagination-minimal d-flex justify-content-start align-items-center gap-2 mt-4 mb-4">
-          <button
-            className="btn btn-sm btn-outline-secondary"
-            disabled={currentPage === 1}
-            onClick={() => goToPage(currentPage - 1)}
-          >
-            ← Prev
-          </button>
+        {paginatedData.length > 0 && (
+          <div className="pagination-minimal d-flex justify-content-start align-items-center gap-2 mt-4 mb-4">
+            <button
+              className="btn btn-sm btn-outline-secondary"
+              disabled={currentPage === 1}
+              onClick={() => goToPage(currentPage - 1)}
+            >
+              ← Prev
+            </button>
 
-          {Array.from({ length: totalPages }).map((_, idx) => {
-            const page = idx + 1;
-            const isActive = page === currentPage;
+            {Array.from({ length: totalPages }).map((_, idx) => {
+              const page = idx + 1;
+              const isActive = page === currentPage;
 
-            return (
-              <button
-                key={page}
-                className={`btn btn-sm ${
-                  isActive ? "btn-dark" : "btn-outline-secondary"
-                }`}
-                onClick={() => goToPage(page)}
-              >
-                {page}
-              </button>
-            );
-          })}
+              return (
+                <button
+                  key={page}
+                  className={`btn btn-sm ${
+                    isActive ? "btn-dark" : "btn-outline-secondary"
+                  }`}
+                  onClick={() => goToPage(page)}
+                >
+                  {page}
+                </button>
+              );
+            })}
 
-          <button
-            className="btn btn-sm btn-outline-secondary"
-            disabled={currentPage === totalPages}
-            onClick={() => goToPage(currentPage + 1)}
-          >
-            Next →
-          </button>
-        </div>
+            <button
+              className="btn btn-sm btn-outline-secondary"
+              disabled={currentPage === totalPages}
+              onClick={() => goToPage(currentPage + 1)}
+            >
+              Next →
+            </button>
+          </div>
+        )}
       </>
     );
   }

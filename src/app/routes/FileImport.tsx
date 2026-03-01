@@ -1,4 +1,4 @@
-import Toast, { showToast } from "@/components/Toast";
+import Toast, { showToast } from "@/components/oast";
 import { importFile } from "@/features/importFile/api/ImportService";
 import { useImportStatusStore } from "@/stores/importStatus";
 import "@/features/importFile/components/FileImport.scss"

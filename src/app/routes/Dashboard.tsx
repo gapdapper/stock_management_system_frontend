@@ -1,4 +1,4 @@
-import OverviewStats from "@/features/dashboard/components/OverviewStats";
+import OverviewStats from "@/features/dashboard/components/overviewStats";
 import BarChartSection from "@/features/dashboard/components/BarChartSection";
 import SalesBreakdownDonut from "@/features/dashboard/components/SalesBreakdownDonut";
 import { getAvailableMonths, getDashboardOverview } from "@/features/dashboard/api/DashboardService";
@@ -8,7 +8,7 @@ import type {
   IDateRange,
 } from "../types/dashboard";
 import { useEffect, useState } from "react";
-import LoadingSpinner from "@/components/LoadingSpinner";
+import LoadingSpinner from "@/components/loadingSpinner";
 import { normalizeDonutData } from "@/utils/dashboard";
 import "@/features/dashboard/Dashboard.scss";
 

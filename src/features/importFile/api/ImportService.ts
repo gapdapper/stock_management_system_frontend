@@ -1,3 +1,4 @@
+import type { IUploadLog } from "@/app/types/uploadlog";
 import { axiosInstance } from "@/lib/api-client";
 
 export const importFile = async (formData: FormData): Promise<void> => {
@@ -13,7 +14,7 @@ export const importFile = async (formData: FormData): Promise<void> => {
   }
 };
 
-export const getUploadLog = async (): Promise<{ id: number, uploadAt: string }> => {
+export const getUploadLog = async (): Promise<IUploadLog> => {
     try {
         const response =  await axiosInstance.get('/dailyUploadLog');
         return response.data.uploadLog;

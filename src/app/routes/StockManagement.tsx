@@ -84,6 +84,10 @@ function StockManagement() {
       setSortDirection("asc");
     }
   };
+
+  const handleFilterChange = (value: string) => {
+    setFilter(value);
+  };
   // #endregion
 
   // #region pagination
@@ -137,7 +141,7 @@ function StockManagement() {
                 type="text"
                 value={filter}
                 placeholder="Search by product name"
-                onChange={(e) => setFilter(e.target.value)}
+                onChange={(e) => handleFilterChange(e.target.value)}
               />
             </div>
 

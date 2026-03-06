@@ -75,6 +75,15 @@ function StockManagement() {
       return 0;
     });
   }, [filteredData, sortField, sortDirection]);
+
+  const handleSortChange = (field: keyof IProductData) => {
+    if (field === sortField) {
+      setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
+    } else {
+      setSortField(field);
+      setSortDirection("asc");
+    }
+  };
   // #endregion
 
   // #region pagination
@@ -164,9 +173,8 @@ function StockManagement() {
           data={paginatedData}
           onRefresh={fetchProductData}
           currentSortDirection={sortDirection}
-          onSort={(payload) => {
-            setSortField(payload.field);
-            setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
+          onSort={(field) => {
+            handleSortChange(field)
           }}
         />
         {paginatedData.length > 0 && <div className="pagination-minimal d-flex justify-content-start align-items-center gap-2 mt-4 mb-4">

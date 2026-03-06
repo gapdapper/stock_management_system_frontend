@@ -21,14 +21,11 @@ import Toast, { showToast } from "@/components/Toast";
 import { validateFileSize } from "@/utils/product";
 import { uploadProductImage } from "../api/StockManagementService";
 
-type SortPayload = {
-  field: keyof IProductData;
-};
 
 type TableProps = {
   data?: IProductData[];
   onRefresh: () => Promise<IProductData[] | undefined>;
-  onSort: (payload: SortPayload) => void;
+  onSort: (field: keyof IProductData) => void;
   currentSortDirection: string;
 };
 
@@ -113,7 +110,7 @@ export default function Table({
                 className={`head-col`}
                 onClick={() => {
                   setSortedCol("productName");
-                  onSort({ field: "productName" });
+                  onSort("productName");
                 }}
               >
                 Product Name
@@ -129,7 +126,7 @@ export default function Table({
                 className={`head-col`}
                 onClick={() => {
                   setSortedCol("totalStock");
-                  onSort({ field: "totalStock" });
+                  onSort("totalStock");
                 }}
               >
                 Total Stock
@@ -145,7 +142,7 @@ export default function Table({
                 className={`head-col`}
                 onClick={() => {
                   setSortedCol("lastUpdated");
-                  onSort({ field: "lastUpdated" });
+                  onSort("lastUpdated");
                 }}
               >
                 Last Updated
@@ -161,7 +158,7 @@ export default function Table({
                 className={`head-col`}
                 onClick={() => {
                   setSortedCol("status");
-                  onSort({ field: "status" });
+                  onSort("status");
                 }}
               >
                 Status

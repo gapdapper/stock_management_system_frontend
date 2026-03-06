@@ -100,6 +100,10 @@ export default function Table({
     }
   };
 
+  const handleProductChange = (product: IProductEditModalData) => {
+    setSelectedProduct(product);
+  };
+
   return (
     <>
       <div className="stock-table-wrapper">
@@ -298,7 +302,7 @@ export default function Table({
                                               data-bs-toggle="modal"
                                               data-bs-target="#modal-product-detail"
                                               onClick={() =>
-                                                setSelectedProduct({
+                                                handleProductChange({
                                                   productId: item.id,
                                                   variantId: s.variantId,
                                                   productName: item.productName,
@@ -351,7 +355,7 @@ export default function Table({
         {selectedProduct && (
           <ProductDetail
             data={selectedProduct}
-            formHandler={setSelectedProduct}
+            formHandler={handleProductChange}
             onDirtyChange={setIsDirty}
             onRefresh={reloadModal}
           />

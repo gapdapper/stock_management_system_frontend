@@ -98,7 +98,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (!formattedMonth.length) return;
-    setSelectedMonth(formattedMonth[0].val);
+    handleMonthChange(formattedMonth[0].val);
   }, [formattedMonth]);
 
   useEffect(() => {

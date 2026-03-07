@@ -1,4 +1,4 @@
-import type { IBulkRestockPayload, IProductData, IProductVariantPayload } from '@/app/types/product';
+import type { IBulkRestockPayload, IProductData, IProductVariantPayload } from '@/types/product';
 import { axiosInstance } from '@/lib/api-client';
 
 export const editProductVariant = async (payload: IProductVariantPayload): Promise<void> => {

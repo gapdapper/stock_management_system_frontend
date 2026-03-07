@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import SummaryCard from "./SummaryCard";
-import type { ITransactions } from "@/app/types/transaction";
+import type { ITransactions } from "@/types/transaction";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { getTransactionByOrderId } from "@/features/SalesTracker/api/SalesTrackerService";
 import { useParams } from "react-router";

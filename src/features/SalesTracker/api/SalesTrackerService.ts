@@ -1,5 +1,5 @@
 import { axiosInstance } from "@/lib/api-client";
-import type { ITransactions } from "@/app/types/transaction";
+import type { ITransactions } from "@/types/transaction";
 
 export const getTransactions = async (): Promise<ITransactions[]> => {
   try {

@@ -1,4 +1,4 @@
-import type { IUploadLog } from "@/app/types/uploadlog";
+import type { IUploadLog } from "@/types/uploadlog";
 import { axiosInstance } from "@/lib/api-client";
 
 export const importFile = async (formData: FormData): Promise<void> => {

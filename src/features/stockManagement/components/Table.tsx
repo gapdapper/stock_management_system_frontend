@@ -15,7 +15,7 @@ import {
 import PlaceHolder from "../../../assets/placeholder.svg?react";
 import Modal from "@/components/Modal";
 import ProductDetail from "./ProductDetail";
-import type { IProductData, IProductEditModalData } from "@/app/types/product";
+import type { IProductData, IProductEditModalData } from "@/types/product";
 import { editProductVariant } from "../api/StockManagementService";
 import Toast, { showToast } from "@/components/Toast";
 import { validateFileSize } from "@/utils/product";

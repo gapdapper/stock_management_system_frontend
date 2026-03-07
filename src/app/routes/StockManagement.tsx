@@ -1,7 +1,7 @@
 import Table from "@/features/StockManagement/components/Table";
 import { getProductsWithVariant, restockProduct } from "@/features/StockManagement/api/StockManagementService";
 import { useEffect, useMemo, useState } from "react";
-import type { IProductData, IWaitingProduct } from "../types/product";
+import type { IProductData, IWaitingProduct } from "@/types/product";
 import { getProductStatus } from "@/utils/product";
 import LoadingSpinner from "@/components/loadingSpinner";
 import Toast, { showToast } from "@/components/Toast";

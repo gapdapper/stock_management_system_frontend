@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleLeft } from "@fortawesome/free-solid-svg-icons";
 import "./SummaryCard.scss";
 import { useNavigate } from "react-router";
-import type { ITransactions } from "@/app/types/transaction";
+import type { ITransactions } from "@/types/transaction";
 
 type Prop = {
   data: ITransactions;

@@ -1,4 +1,4 @@
-import type { IChartData } from "@/app/types/dashboard";
+import type { IChartData } from "@/types/dashboard";
 import {
   PieChart,
   Pie,

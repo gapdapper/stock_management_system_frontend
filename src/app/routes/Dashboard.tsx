@@ -1,12 +1,12 @@
 import OverviewStats from "@/features/dashboard/components/overviewStats";
-import BarChartSection from "@/features/dashboard/components/BarChartSection";
-import SalesBreakdownDonut from "@/features/dashboard/components/SalesBreakdownDonut";
+import BarChartSection from "@/features/dashboard/components/barChartSection";
+import SalesBreakdownDonut from "@/features/dashboard/components/salesBreakdownDonut";
 import { getAvailableMonths, getDashboardOverview } from "@/features/dashboard/api/DashboardService";
 import type {
   IChartData,
   IDashboardOverview,
   IDateRange,
-} from "../types/dashboard";
+} from "@/types/dashboard";
 import { useEffect, useState } from "react";
 import LoadingSpinner from "@/components/loadingSpinner";
 import { normalizeDonutData } from "@/utils/dashboard";
@@ -143,6 +143,10 @@ export default function Dashboard() {
     setcurrentMonth(newDate.toLocaleString("en-US", { month: "long" }));
   }, [selectedMonth]);
 
+  const handleMonthChange = (month: string) => {
+    setSelectedMonth(month);
+  }
+
   if (isLoading) {
     return (
       <div className="d-flex justify-content-center mt-5 pt-5">
@@ -159,7 +163,7 @@ export default function Dashboard() {
               name="date-range-filter"
               id="date-range-filter"
               value={selectedMonth}
-              onChange={(e) => setSelectedMonth(e.target.value)}
+              onChange={(e) => handleMonthChange(e.target.value)}
             >
               {formattedMonth.length &&
                 formattedMonth.map((month) => {

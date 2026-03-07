@@ -2,7 +2,7 @@ import type {
   IProductData,
   IProductSize,
   IWaitingProduct,
-} from "@/app/types/product";
+} from "@/types/product";
 import { useEffect, useState } from "react";
 import "./ReStockItem.scss";
 

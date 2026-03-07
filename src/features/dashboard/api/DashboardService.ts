@@ -1,4 +1,4 @@
-import type { IDashboardOverview } from '@/app/types/dashboard';
+import type { IDashboardOverview } from '@/types/dashboard';
 import { axiosInstance } from '@/lib/api-client';
 
 export const getAvailableMonths = async (): Promise<any> => {

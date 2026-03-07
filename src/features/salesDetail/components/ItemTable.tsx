@@ -1,4 +1,4 @@
-import type { ITransactionItem } from "@/app/types/transaction";
+import type { ITransactionItem } from "@/types/transaction";
 import "./ItemTable.scss"
 
 type Prop = {

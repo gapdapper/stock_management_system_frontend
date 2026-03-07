@@ -14,8 +14,8 @@ export default function SalesRecord() {
   });
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
   const ITEMS_PER_PAGE = 20;
+  const totalPages = Math.ceil(filterData.length / ITEMS_PER_PAGE);
 
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const paginatedData = filterData.slice(
@@ -38,10 +38,6 @@ export default function SalesRecord() {
   useEffect(() => {
     fetchTransactionsData();
   }, []);
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [filter]);
 
   useEffect(() => {
     let result = [...rawData];
@@ -83,9 +79,13 @@ export default function SalesRecord() {
         }
       });
     }
-    setFilterData(result);
-    setTotalPages(Math.ceil(result.length / ITEMS_PER_PAGE));
+    updateFilteredData(result);
+    updatePage(1);
   }, [rawData, filter]);
+
+  const updateFilteredData = (data: ITransactions[]) => {
+    setFilterData(data);
+  };
 
   const goToPage = (page: number) => {
     setCurrentPage(page);
@@ -93,6 +93,10 @@ export default function SalesRecord() {
       top: 0,
       behavior: "smooth",
     });
+  };
+  
+  const updatePage = (page: number) => {
+    setCurrentPage(page);
   };
 
   const handleFilterSelected = (key: keyof IFilter, val: string) => {

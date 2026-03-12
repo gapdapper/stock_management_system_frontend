@@ -64,8 +64,8 @@ function StockManagement() {
 
       if (typeof aVal === "string" && typeof bVal === "string") {
         return sortDirection === "asc"
-          ? aVal.localeCompare(bVal)
-          : bVal.localeCompare(aVal);
+          ? aVal.localeCompare(bVal, undefined, { numeric: true, sensitivity: "base" })
+          : bVal.localeCompare(aVal, undefined, { numeric: true, sensitivity: "base" });
       }
 
       if (typeof aVal === "number" && typeof bVal === "number") {

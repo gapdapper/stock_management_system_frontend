@@ -339,7 +339,7 @@ export default function Table({
         {!data?.length && (
           <div className="empty-state">
             <FontAwesomeIcon icon={faMagnifyingGlass} />
-            <p>No result found</p>
+            <p>No products match your search.</p>
           </div>
         )}
       </div>

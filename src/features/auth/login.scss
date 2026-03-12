@@ -1,7 +1,18 @@
 .auth-layout {
   display: flex;
-  justify-content: center;
-  align-items: center;
   height: 100vh;
-  background-color: #f5f5f5;
+  
+  .auth-img {
+    flex: 3;
+    background-image: url('@/assets/auth-bg.jpg');
+    background-size: cover;
+    background-position: 100% 10%;
+  }
+
+  .auth-login {
+    flex: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }

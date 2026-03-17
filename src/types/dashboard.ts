@@ -34,3 +34,8 @@ export interface IDateRange {
   start: Date;
   end: Date;
 }
+
+export interface IMonthOption {
+  val: string; 
+  display: string
+}

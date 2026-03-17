@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 import "./Table.scss";
-import type { ITransactions } from "@/app/types/transaction";
+import type { ITransactions } from "@/types/transaction";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 

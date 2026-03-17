@@ -15,20 +15,17 @@ import {
 import PlaceHolder from "../../../assets/placeholder.svg?react";
 import Modal from "@/components/Modal";
 import ProductDetail from "./ProductDetail";
-import type { IProductData, IProductEditModalData } from "@/app/types/product";
+import type { IProductData, IProductEditModalData } from "@/types/product";
 import { editProductVariant } from "../api/StockManagementService";
 import Toast, { showToast } from "@/components/Toast";
 import { validateFileSize } from "@/utils/product";
 import { uploadProductImage } from "../api/StockManagementService";
 
-type SortPayload = {
-  field: keyof IProductData;
-};
 
 type TableProps = {
   data?: IProductData[];
   onRefresh: () => Promise<IProductData[] | undefined>;
-  onSort: (payload: SortPayload) => void;
+  onSort: (field: keyof IProductData) => void;
   currentSortDirection: string;
 };
 
@@ -103,6 +100,10 @@ export default function Table({
     }
   };
 
+  const handleProductChange = (product: IProductEditModalData) => {
+    setSelectedProduct(product);
+  };
+
   return (
     <>
       <div className="stock-table-wrapper">
@@ -113,7 +114,7 @@ export default function Table({
                 className={`head-col`}
                 onClick={() => {
                   setSortedCol("productName");
-                  onSort({ field: "productName" });
+                  onSort("productName");
                 }}
               >
                 Product Name
@@ -129,7 +130,7 @@ export default function Table({
                 className={`head-col`}
                 onClick={() => {
                   setSortedCol("totalStock");
-                  onSort({ field: "totalStock" });
+                  onSort("totalStock");
                 }}
               >
                 Total Stock
@@ -145,7 +146,7 @@ export default function Table({
                 className={`head-col`}
                 onClick={() => {
                   setSortedCol("lastUpdated");
-                  onSort({ field: "lastUpdated" });
+                  onSort("lastUpdated");
                 }}
               >
                 Last Updated
@@ -161,7 +162,7 @@ export default function Table({
                 className={`head-col`}
                 onClick={() => {
                   setSortedCol("status");
-                  onSort({ field: "status" });
+                  onSort("status");
                 }}
               >
                 Status
@@ -301,7 +302,7 @@ export default function Table({
                                               data-bs-toggle="modal"
                                               data-bs-target="#modal-product-detail"
                                               onClick={() =>
-                                                setSelectedProduct({
+                                                handleProductChange({
                                                   productId: item.id,
                                                   variantId: s.variantId,
                                                   productName: item.productName,
@@ -338,7 +339,7 @@ export default function Table({
         {!data?.length && (
           <div className="empty-state">
             <FontAwesomeIcon icon={faMagnifyingGlass} />
-            <p>No result found</p>
+            <p>No products match your search.</p>
           </div>
         )}
       </div>
@@ -354,7 +355,7 @@ export default function Table({
         {selectedProduct && (
           <ProductDetail
             data={selectedProduct}
-            formHandler={setSelectedProduct}
+            formHandler={handleProductChange}
             onDirtyChange={setIsDirty}
             onRefresh={reloadModal}
           />

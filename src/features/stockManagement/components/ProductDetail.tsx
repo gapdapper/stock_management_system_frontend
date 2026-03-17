@@ -6,7 +6,7 @@ import { useEffect, useMemo, useRef } from "react";
 import Toast, { showToast } from "@/components/Toast";
 import { uploadProductImage } from "@/features/StockManagement/api/StockManagementService";
 import { validateFileSize } from "@/utils/product";
-import type { IProductEditModalData } from "@/app/types/product";
+import type { IProductEditModalData } from "@/types/product";
 
 type ProductDetailProp = {
   data: IProductEditModalData;

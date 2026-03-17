@@ -1,4 +1,4 @@
-import type { IProductData } from "@/app/types/product";
+import type { IProductData } from "@/types/product";
 
 export const getProductStatus = (variants: IProductData["variants"]) => {
   const allSubVariants = variants.flatMap(v => v.sub);

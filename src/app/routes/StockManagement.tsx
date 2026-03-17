@@ -1,11 +1,10 @@
 import Table from "@/features/StockManagement/components/Table";
-import { getProductsWithVariant } from "@/features/StockManagement/api/StockManagementService";
+import { getProductsWithVariant, restockProduct } from "@/features/StockManagement/api/StockManagementService";
 import { useEffect, useMemo, useState } from "react";
-import type { IProductData, IWaitingProduct } from "../types/product";
+import type { IProductData, IWaitingProduct } from "@/types/product";
 import { getProductStatus } from "@/utils/product";
-import LoadingSpinner from "@/components/LoadingSpinner";
+import LoadingSpinner from "@/components/loadingSpinner";
 import Toast, { showToast } from "@/components/Toast";
-import { restockProduct } from "@/features/StockManagement/api/StockManagementService";
 import Modal from "@/components/Modal";
 import ReStockItem from "@/features/StockManagement/components/ReStockItem";
 import "@/features/stockManagement/StockManagement.scss";
@@ -65,8 +64,8 @@ function StockManagement() {
 
       if (typeof aVal === "string" && typeof bVal === "string") {
         return sortDirection === "asc"
-          ? aVal.localeCompare(bVal)
-          : bVal.localeCompare(aVal);
+          ? aVal.localeCompare(bVal, undefined, { numeric: true, sensitivity: "base" })
+          : bVal.localeCompare(aVal, undefined, { numeric: true, sensitivity: "base" });
       }
 
       if (typeof aVal === "number" && typeof bVal === "number") {
@@ -76,6 +75,19 @@ function StockManagement() {
       return 0;
     });
   }, [filteredData, sortField, sortDirection]);
+
+  const handleSortChange = (field: keyof IProductData) => {
+    if (field === sortField) {
+      setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
+    } else {
+      setSortField(field);
+      setSortDirection("asc");
+    }
+  };
+
+  const handleFilterChange = (value: string) => {
+    setFilter(value);
+  };
   // #endregion
 
   // #region pagination
@@ -129,7 +141,7 @@ function StockManagement() {
                 type="text"
                 value={filter}
                 placeholder="Search by product name"
-                onChange={(e) => setFilter(e.target.value)}
+                onChange={(e) => handleFilterChange(e.target.value)}
               />
             </div>
 
@@ -165,12 +177,11 @@ function StockManagement() {
           data={paginatedData}
           onRefresh={fetchProductData}
           currentSortDirection={sortDirection}
-          onSort={(payload) => {
-            setSortField(payload.field);
-            setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
+          onSort={(field) => {
+            handleSortChange(field)
           }}
         />
-        <div className="pagination-minimal d-flex justify-content-start align-items-center gap-2 mt-4 mb-4">
+        {paginatedData.length > 0 && <div className="pagination-minimal d-flex justify-content-start align-items-center gap-2 mt-4 mb-4">
           <button
             className="btn btn-sm btn-outline-secondary"
             disabled={currentPage === 1}
@@ -203,7 +214,8 @@ function StockManagement() {
           >
             Next →
           </button>
-        </div>
+        </div>}
+        
       </>
     );
   }

@@ -1,4 +1,4 @@
-import type { IDateRange } from "@/app/types/dashboard";
+import type { IDateRange } from "@/types/dashboard";
 import "./OverviewStats.scss";
 
 type Prop = {

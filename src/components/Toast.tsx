@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./Toast.scss";
+import { createPortal } from "react-dom";
 
 type ToastType = "success" | "error" | "info";
 
@@ -38,9 +39,10 @@ export default function Toast() {
 
   if (!toast.visible) return null;
 
-  return (
-    <div className={`toast-float ${toast.type}`}>
-      {toast.message}
-    </div>
-  );
+return createPortal(
+  <div className={`toast-float ${toast.type}`}>
+    {toast.message}
+  </div>,
+  document.body
+);
 }

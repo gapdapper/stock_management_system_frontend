@@ -2,7 +2,7 @@ import type {
   IProductData,
   IProductSize,
   IWaitingProduct,
-} from "@/app/types/product";
+} from "@/types/product";
 import { useEffect, useState } from "react";
 import "./ReStockItem.scss";
 
@@ -18,16 +18,16 @@ export default function ReStockItem({
   const [productData, setproductData] = useState<IProductData[]>([]);
   const [waitingList, setwaitingList] = useState<IWaitingProduct[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<IProductData | null>(
-    null
+    null,
   );
   const [selectedSize, setSelectedSize] = useState<IProductSize | null>(null);
-  const [selectedColor, setselectedColor] = useState<string>("");
+  const [selectedColor, setSelectedColor] = useState<string>("");
   const [selectedQty, setselectedQty] = useState<number>(0);
   const handleProductSelect = (productId: number) => {
     const product = data?.find((p) => p.id === productId) || null;
     setSelectedProduct(product);
     setSelectedSize(null);
-    setselectedColor("");
+    setSelectedColor("");
     setselectedQty(0);
   };
 
@@ -46,7 +46,7 @@ export default function ReStockItem({
     setwaitingList((prev) => [...prev, waitingProduct]);
     setSelectedProduct(null);
     setSelectedSize(null);
-    setselectedColor("");
+    setSelectedColor("");
     setselectedQty(0);
   };
 
@@ -55,7 +55,7 @@ export default function ReStockItem({
       throw new Error("No product data provided");
     }
     const sortedData = data.sort((a, b) =>
-      a.productName.localeCompare(b.productName)
+      a.productName.localeCompare(b.productName),
     );
     setproductData(sortedData);
   }, [data]);
@@ -66,9 +66,21 @@ export default function ReStockItem({
 
   const handleRemoveListItem = (variantId: number) => {
     const updatedWaitingList = waitingList.filter(
-      (item) => item.variantId != variantId
+      (item) => item.variantId != variantId,
     );
     setwaitingList(updatedWaitingList);
+  };
+
+  const handleSizeChange = (sizeValue: string) => {
+    const size =
+      selectedProduct?.variants.find((v) => v.size === sizeValue) || null;
+
+    setSelectedSize(size);
+    setSelectedColor("");
+  };
+
+  const handleColorChange = (color: string) => {
+    setSelectedColor(color);
   };
 
   return (
@@ -121,13 +133,7 @@ export default function ReStockItem({
               id="product-size"
               value={selectedSize?.size ?? ""}
               onChange={(e) => {
-                const size =
-                  selectedProduct?.variants.find(
-                    (v) => v.size === e.target.value
-                  ) || null;
-
-                setSelectedSize(size);
-                setselectedColor("");
+                handleSizeChange(e.target.value);
               }}
             >
               <option value="" disabled>
@@ -148,7 +154,7 @@ export default function ReStockItem({
               name="product-color"
               id="product-color"
               value={selectedColor}
-              onChange={(e) => setselectedColor(e.target.value)}
+              onChange={(e) => handleColorChange(e.target.value)}
             >
               <option value="" disabled>
                 Select a color

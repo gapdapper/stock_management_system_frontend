@@ -10,14 +10,14 @@ import {
   faUserPlus,
   faCircleInfo,
 } from "@fortawesome/free-solid-svg-icons";
-import { logout } from "@/features/auth/api/logout";
+import { logout } from "@/features/auth/api/AuthService";
 import { useAuthStore } from "@/stores/authSlice";
 import "./Navbar.scss";
 import { useImportStatusStore } from "@/stores/importStatus";
 import Modal from "./Modal";
 import { useEffect, useState } from "react";
-import { register } from "./api/register";
-import { checkAvailableUsernames } from "./api/checkAvailableUsername";
+import { register } from "@/features/auth/api/AuthService";
+import { checkAvailableUsernames } from "@/features/auth/api/AuthService";
 import Toast, { showToast } from "@/components/Toast";
 
 function useDebounce(cb: string, delay: number) {
@@ -98,7 +98,7 @@ function Navbar() {
     checkDuplicate();
   }, [debouncedUsername]);
 
-  const handleConfirmAddMember = async () => {
+  const handleConfirmCreateUser = async () => {
     const userPayload = {
       username: username,
       password: password,
@@ -109,7 +109,7 @@ function Navbar() {
     showToast("User created successfully.", "success");
   };
 
-  const handleCancelAddMember = () => {
+  const handleCancelCreateUser = () => {
     setUsername("");
     setPassword("");
     setErrorMessage("");
@@ -223,9 +223,9 @@ function Navbar() {
         id="create-user"
         confirmText="Create"
         cancelText="Cancel"
-        onConfirm={handleConfirmAddMember}
+        onConfirm={handleConfirmCreateUser}
         confirmDisabled={!isFormatValid || !isNotDuplicate}
-        onClose={handleCancelAddMember}
+        onClose={handleCancelCreateUser}
         size="modal-md"
       >
         <div className="create-new-user-modal-content row">

@@ -24,6 +24,7 @@ export interface IProductVariantPayload {
 }
 
 export interface IWaitingProduct {
+  productId?: number;
   variantId: number;
   productName: string;
   size: string;

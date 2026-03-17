@@ -8,6 +8,7 @@ import Toast, { showToast } from "@/components/Toast";
 import Modal from "@/components/Modal";
 import ReStockItem from "@/features/StockManagement/components/ReStockItem";
 import "@/features/stockManagement/StockManagement.scss";
+import { useNavigate } from "react-router";
 
 function StockManagement() {
   const [rawData, setRawData] = useState<IProductData[]>([]);
@@ -19,6 +20,7 @@ function StockManagement() {
   const [waitingList, setwaitingList] = useState<IWaitingProduct[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 20;
+  let navigate = useNavigate();
 
   // #region data fetching
   const fetchProductData = async () => {
@@ -148,8 +150,7 @@ function StockManagement() {
             <button
               className="btn-restock"
               type="button"
-              data-bs-toggle="modal"
-              data-bs-target="#modal-restock-items"
+              onClick={() => {navigate('/stock/restock')}}
             >
               + Re-stock
             </button>

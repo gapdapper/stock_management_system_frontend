@@ -84,111 +84,132 @@ export default function ReStockItem({
   };
 
   return (
-    <div className="restock-container">
-      <div className="waiting-list">
-        <p>Products</p>
-        {waitingList.length === 0 && <p className="empty">No items added</p>}
-        {waitingList.map((p, index) => (
-          <div className="waiting-item" key={index}>
-            <div className="item-info">
-              <span className="name">{p.productName}</span>
-              <span className="meta">
-                Size: <b>{p.size}</b> • Color: <b>{p.color}</b> • Qty:{" "}
-                <b>{p.stock}</b>
-              </span>
-            </div>
+    // <div className="restock-container">
+    //   <div className="waiting-list">
+    //     <p>Products</p>
+    //     {waitingList.length === 0 && <p className="empty">No items added</p>}
+    //     {waitingList.map((p, index) => (
+    //       <div className="waiting-item" key={index}>
+    //         <div className="item-info">
+    //           <span className="name">{p.productName}</span>
+    //           <span className="meta">
+    //             Size: <b>{p.size}</b> • Color: <b>{p.color}</b> • Qty:{" "}
+    //             <b>{p.stock}</b>
+    //           </span>
+    //         </div>
 
-            <button
-              className="btn-remove"
-              onClick={() => handleRemoveListItem(p.variantId)}
-            >
-              ×
-            </button>
-          </div>
-        ))}
-      </div>
-      <div className="restock-form">
-        {/* PRODUCT */}
-        <div className="form-row">
-          <select
-            name="product-name"
-            id="product-name"
-            value={selectedProduct?.id ?? ""}
-            onChange={(e) => handleProductSelect(Number(e.target.value))}
-          >
-            <option value="" disabled>
-              Select a product
-            </option>
+    //         <button
+    //           className="btn-remove"
+    //           onClick={() => handleRemoveListItem(p.variantId)}
+    //         >
+    //           ×
+    //         </button>
+    //       </div>
+    //     ))}
+    //   </div>
+    //   <div className="restock-form">
+    //     {/* PRODUCT */}
+    //     <div className="form-row">
+    //       <select
+    //         name="product-name"
+    //         id="product-name"
+    //         value={selectedProduct?.id ?? ""}
+    //         onChange={(e) => handleProductSelect(Number(e.target.value))}
+    //       >
+    //         <option value="" disabled>
+    //           Select a product
+    //         </option>
 
-            {productData?.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.productName}
-              </option>
-            ))}
-          </select>
-          {/* SIZE */}
-          {selectedProduct && (
-            <select
-              name="product-size"
-              id="product-size"
-              value={selectedSize?.size ?? ""}
-              onChange={(e) => {
-                handleSizeChange(e.target.value);
-              }}
-            >
-              <option value="" disabled>
-                Select a size
-              </option>
+    //         {productData?.map((p) => (
+    //           <option key={p.id} value={p.id}>
+    //             {p.productName}
+    //           </option>
+    //         ))}
+    //       </select>
+    //       {/* SIZE */}
+    //       {selectedProduct && (
+    //         <select
+    //           name="product-size"
+    //           id="product-size"
+    //           value={selectedSize?.size ?? ""}
+    //           onChange={(e) => {
+    //             handleSizeChange(e.target.value);
+    //           }}
+    //         >
+    //           <option value="" disabled>
+    //             Select a size
+    //           </option>
 
-              {selectedProduct.variants.map((v) => (
-                <option key={v.size} value={v.size}>
-                  {v.size}
-                </option>
-              ))}
-            </select>
-          )}
+    //           {selectedProduct.variants.map((v) => (
+    //             <option key={v.size} value={v.size}>
+    //               {v.size}
+    //             </option>
+    //           ))}
+    //         </select>
+    //       )}
 
-          {/* COLOR */}
-          {selectedSize && (
-            <select
-              name="product-color"
-              id="product-color"
-              value={selectedColor}
-              onChange={(e) => handleColorChange(e.target.value)}
-            >
-              <option value="" disabled>
-                Select a color
-              </option>
+    //       {/* COLOR */}
+    //       {selectedSize && (
+    //         <select
+    //           name="product-color"
+    //           id="product-color"
+    //           value={selectedColor}
+    //           onChange={(e) => handleColorChange(e.target.value)}
+    //         >
+    //           <option value="" disabled>
+    //             Select a color
+    //           </option>
 
-              {selectedSize.sub.map((s) => (
-                <option key={s.color} value={s.color}>
-                  {s.color}
-                </option>
-              ))}
-            </select>
-          )}
+    //           {selectedSize.sub.map((s) => (
+    //             <option key={s.color} value={s.color}>
+    //               {s.color}
+    //             </option>
+    //           ))}
+    //         </select>
+    //       )}
+    //     </div>
+    //     <div className="form-row">
+    //       {/* QTY */}
+    //       {selectedSize && selectedColor && (
+    //         <input
+    //           type="number"
+    //           value={selectedQty}
+    //           maxLength={4}
+    //           onChange={(e) => setselectedQty(Number(e.target.value))}
+    //         />
+    //       )}
+
+    //       {/* add item to waiting list */}
+    //       {selectedSize && selectedColor && (
+    //         <button
+    //           className="btn-add"
+    //           onClick={handleProductAdd}
+    //           disabled={selectedQty == 0}
+    //         >
+    //           +
+    //         </button>
+    //       )}
+    //     </div>
+    //   </div>
+    // </div>
+    <div className="restock-section">
+      <h5>Product list</h5>
+      {waitingList.length != 0 && waitingList.map((product) => {
+        return <></>
+      })}
+      <div className="product-card">
+        <h2>1</h2>
+        <div className="product-selection">
+        <div className="label-select">
+        <p className="product-name">Product name</p>
+        <p className="product-size">Product size</p>
+        <p className="product-color">Product color</p>
         </div>
-        <div className="form-row">
-          {/* QTY */}
-          {selectedSize && selectedColor && (
-            <input
-              type="number"
-              value={selectedQty}
-              maxLength={4}
-              onChange={(e) => setselectedQty(Number(e.target.value))}
-            />
-          )}
-
-          {/* add item to waiting list */}
-          {selectedSize && selectedColor && (
-            <button
-              className="btn-add"
-              onClick={handleProductAdd}
-              disabled={selectedQty == 0}
-            >
-              +
-            </button>
-          )}
+        <div className="product-dropdown">
+        <select name="" id="" className="product-name-select"></select>
+        <select name="" id="" className="product-size-select"></select>
+        <select name="" id="" className="product-color-select"></select>
+        </div>
         </div>
       </div>
     </div>

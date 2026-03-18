@@ -1,26 +1,28 @@
 import "./Restock.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import type { IProductData, IWaitingProduct } from "@/types/product";
+import { faCircleMinus, faAngleRight } from "@fortawesome/free-solid-svg-icons";
+import type {
+  IProductData,
+  IRestockSumamry,
+  IWaitingProduct,
+} from "@/types/product";
 import { useEffect, useMemo, useState } from "react";
 import {
   getProductsWithVariant,
   restockProduct,
 } from "../api/StockManagementService";
 import { getProductStatus } from "@/utils/product";
+import SuccessModal from "@/components/SuccessModal";
 import { useNavigate } from "react-router";
 
 export default function Restock() {
   const [waitingList, setWaitingList] = useState<IWaitingProduct[]>([]);
   const [productData, setProductData] = useState<IProductData[]>([]);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showErrorMsg, setShowErrorMsg] = useState(false);
+  const [summary, setSummary] = useState<IRestockSumamry[]>([]);
 
   let navigate = useNavigate();
-
-  const isFormValid =
-    waitingList.length > 0 &&
-    waitingList.every(
-      (item) => item.productId && item.size && item.color && item.stock > 0,
-    );
 
   useEffect(() => {
     const fetchProductData = async () => {
@@ -125,34 +127,87 @@ export default function Restock() {
       })),
     };
     try {
+      const summaryData = buildSummary();
       await restockProduct(payload);
+      setSummary(summaryData);
       setWaitingList([]);
-
+      setShowSuccess(true);
+      console.log(summaryData);
     } catch (error) {
       throw new Error("Failed to restock the product: " + error);
     }
   };
 
+  const handleSubmit = async () => {
+      const isFormValid =
+    waitingList.length > 0 &&
+    waitingList.every(
+      (item) => item.productId && item.size && item.color && item.stock > 0,
+    );
+
+    if(!isFormValid){
+      setShowErrorMsg(true);
+      return;
+    }
+    setShowErrorMsg(false);
+    await restockItem();
+  }
+
+  const isItemComplete = (item: IWaitingProduct) => {
+    return item.productId && item.size && item.color && item.stock > 0;
+  };
+
   const clearWaitingList = () => {
     setWaitingList([]);
+    setShowErrorMsg(false);
+  };
+
+  const handleRestockAgain = () => {
+    setShowSuccess(false);
+  };
+
+  const buildSummary = (): IRestockSumamry[] => {
+    return waitingList.map((item) => {
+      const product = productMap.get(item.productId!);
+      const size = product?.variants.find((v) => v.size === item.size);
+      const variant = size?.sub.find((s) => s.color === item.color);
+
+      const beforeQty = variant?.stock ?? 0;
+      const afterQty = beforeQty + item.stock;
+
+      return {
+        productName: item.productName,
+        size: item.size,
+        color: item.color,
+        beforeQty,
+        afterQty,
+      };
+    });
   };
 
   const productMap = useMemo(
-  () => new Map(productData.map((p) => [p.id, p])),
-  [productData]
+    () => new Map(productData.map((p) => [p.id, p])),
+    [productData],
   );
 
   return (
     <div>
-      <h3>Stock Management</h3>
+      <h3 className="restock-header"><span className="breadcrumb-link" onClick={() => navigate("/")}>Stock Management</span> <FontAwesomeIcon icon={faAngleRight} className="breadcrumb-seperator"/> Restock</h3>
       <div className="restock-container">
-        <h5>Restock</h5>
+        <div className="product-list-header">
+        <h5>Product List</h5>
+        <p className="product-list-description">
+          Add products, choose size and color, then enter quantity.
+        </p>
+        </div>
         {waitingList.length != 0 &&
           waitingList.map((item, index) => {
-            const product = item.productId ? productMap.get(item.productId) : undefined;
+            const product = item.productId
+              ? productMap.get(item.productId)
+              : undefined;
             const size = product?.variants.find((v) => v.size === item.size);
             return (
-              <div className="product-card" key={item.variantId || index}>
+              <div className={`product-card ${showErrorMsg && !isItemComplete(item) ? "error" : ""}`} key={item.variantId || index}>
                 <p className="product-number">{index + 1}.</p>
                 <div className="product-info">
                   <label htmlFor="product-name-dropdown">Product name</label>
@@ -218,6 +273,7 @@ export default function Restock() {
                   </select>
                   <input
                     type="number"
+                    id="product-qty-input"
                     name="product-qty-input"
                     value={item.stock ?? 0}
                     disabled={!item.color}
@@ -232,7 +288,7 @@ export default function Restock() {
                     handleRemoveProduct(index);
                   }}
                 >
-                  <FontAwesomeIcon icon={faTrash} />
+                  <FontAwesomeIcon icon={faCircleMinus} />
                 </button>
               </div>
             );
@@ -247,7 +303,9 @@ export default function Restock() {
         </div>
 
         <div className="restock-summary">
-          <p>Total product: {waitingList.length}</p>
+          <div className="summary-info">
+            {waitingList.length != 0 && (<p><span className="total-product">Total Product:</span> {waitingList.length}</p>)}
+          </div>
           <div className="summary-btn">
             <button
               className="btn btn-secondary"
@@ -257,14 +315,49 @@ export default function Restock() {
             </button>
             <button
               className="btn btn-success"
-              disabled={!isFormValid}
-              onClick={() => restockItem()}
+              disabled={waitingList.length === 0}
+              onClick={() => handleSubmit()}
             >
               Confirm
             </button>
           </div>
         </div>
       </div>
+      {showSuccess && (
+        <SuccessModal
+          title="Restock Successfully!"
+          primaryAction={() => {
+            navigate("/");
+          }}
+          primaryActionName="Back to Stock"
+          secondaryAction={() => {
+            handleRestockAgain();
+          }}
+          secondaryActionName="Restock Again"
+        >
+          <div className="product-summary fade-in">
+            <p className="summary-title">Product Summary</p>
+            <div className="product-summary-content">
+              {summary.map((item, i) => (
+                <div className="product-summary-item" key={i}>
+                  <div className="product-info">
+                    <span className="product-name">{item.productName} x{item.afterQty - item.beforeQty}</span>
+                    <span className="variant">
+                      {item.size} / {item.color}
+                    </span>
+                  </div>
+
+                  <div className="qty-change">
+                    <span className="before">{item.beforeQty}</span>
+                    <span className="arrow">→</span>
+                    <span className="after">{item.afterQty}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </SuccessModal>
+      )}
     </div>
   );
 }

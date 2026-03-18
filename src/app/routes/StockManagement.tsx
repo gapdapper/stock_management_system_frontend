@@ -136,7 +136,6 @@ function StockManagement() {
       <>
         <div className="stock-header">
           <h1 className="stock-title">Stock Management</h1>
-
           <div className="header-actions">
             <div className="search-box">
               <input
@@ -150,7 +149,7 @@ function StockManagement() {
             <button
               className="btn-restock"
               type="button"
-              onClick={() => {navigate('/stock/restock')}}
+              onClick={() => {navigate('/restock')}}
             >
               + Re-stock
             </button>

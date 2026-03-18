@@ -38,7 +38,7 @@ createRoot(document.getElementById("root")!).render(
         <Route element={<ProtectedRoute />}>
           <Route element={<ContentLayout />}>
             <Route index element={<StockManagement />} />
-            <Route path="/stock/restock" element={<Restock />} />
+            <Route path="/restock" element={<Restock />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/sales" element={<SalesRecord />} />
             <Route path="/sales/:id" element={<SalesDetail />} />

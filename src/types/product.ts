@@ -59,3 +59,11 @@ export interface IProductEditModalData {
   minStock: number;
   variantImageUrl: string;
 }
+
+export interface IRestockSumamry {
+  productName: string;
+  size: string;
+  color: string;
+  beforeQty: number;
+  afterQty: number;
+}

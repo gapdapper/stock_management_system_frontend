@@ -1,4 +1,4 @@
-import { NavLink } from "react-router";
+import { NavLink, useLocation } from "react-router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCubes,
@@ -47,6 +47,8 @@ function Navbar() {
 
   const debouncedUsername = useDebounce(username, 500);
 
+  const location = useLocation();
+
   const handleLogout = () => {
     try {
       logout();
@@ -62,8 +64,8 @@ function Navbar() {
 
     if (!username || !password) {
       setIsFormatValid(false);
-    return;
-  }
+      return;
+    }
 
     if (username != "" && !usernameRegex.test(username)) {
       setErrorMessage("Username must be 4-20 alphanumeric characters.");
@@ -131,7 +133,15 @@ function Navbar() {
             </span>
           </p>
         </div>
-        <NavLink to="/">
+        <NavLink
+          to="/"
+          className={() =>
+            location.pathname === "/" ||
+            location.pathname.startsWith("/restock")
+              ? "nav-item active"
+              : "nav-item"
+          }
+        >
           <FontAwesomeIcon icon={faCubes} />
           <span>Stock Management</span>
         </NavLink>

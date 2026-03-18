@@ -1,12 +1,10 @@
 import Table from "@/features/StockManagement/components/Table";
-import { getProductsWithVariant, restockProduct } from "@/features/StockManagement/api/StockManagementService";
+import { getProductsWithVariant } from "@/features/StockManagement/api/StockManagementService";
 import { useEffect, useMemo, useState } from "react";
 import type { IProductData, IWaitingProduct } from "@/types/product";
 import { getProductStatus } from "@/utils/product";
 import LoadingSpinner from "@/components/loadingSpinner";
-import Toast, { showToast } from "@/components/Toast";
-import Modal from "@/components/Modal";
-import ReStockItem from "@/features/StockManagement/components/ReStockItem";
+import Toast from "@/components/Toast";
 import "@/features/stockManagement/StockManagement.scss";
 import { useNavigate } from "react-router";
 
@@ -16,8 +14,6 @@ function StockManagement() {
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const [filter, setFilter] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [resetKey, setResetKey] = useState<number>(0);
-  const [waitingList, setwaitingList] = useState<IWaitingProduct[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 20;
   let navigate = useNavigate();
@@ -108,21 +104,6 @@ function StockManagement() {
     return sortedData.slice(startIndex, startIndex + ITEMS_PER_PAGE);
   }, [sortedData, currentPage]);
 
-  const restockItem = async () => {
-    const payload = {
-      items: waitingList.map((item) => ({
-        variantId: item.variantId,
-        qty: item.stock,
-      })),
-    };
-    try {
-      showToast("Restock Success!", "success");
-      await restockProduct(payload);
-      fetchProductData();
-    } catch (error) {
-      throw new Error("Failed to restock the product: " + error);
-    }
-  };
     // #endregion
 
   if (isLoading) {
@@ -155,23 +136,6 @@ function StockManagement() {
             </button>
           </div>
         </div>
-
-        <Modal
-          id="restock-items"
-          title="Re-stock Items"
-          confirmText="Confirm"
-          cancelText="Cancel"
-          onConfirm={restockItem}
-          confirmDisabled={waitingList.length == 0}
-          onClose={() => setResetKey((k) => k + 1)}
-          size="modal-lg"
-        >
-          <ReStockItem
-            data={rawData}
-            key={resetKey}
-            onCloseConditon={setwaitingList}
-          />
-        </Modal>
         <Toast />
         <Table
           data={paginatedData}

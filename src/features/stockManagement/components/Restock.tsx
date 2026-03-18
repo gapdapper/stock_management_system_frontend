@@ -167,7 +167,18 @@ export default function Restock() {
   };
 
   const buildSummary = (): IRestockSumamry[] => {
-    return waitingList.map((item) => {
+    const grouped = new Map<number, IWaitingProduct>();
+
+    waitingList.forEach((item) => {
+      if (!item.variantId) return;
+
+      if (grouped.has(item.variantId)) {
+        grouped.get(item.variantId)!.stock += item.stock;
+      } else {
+        grouped.set(item.variantId, { ...item });
+      }
+    });
+    return Array.from(grouped.values()).map((item) => {
       const product = productMap.get(item.productId!);
       const size = product?.variants.find((v) => v.size === item.size);
       const variant = size?.sub.find((s) => s.color === item.color);

@@ -52,9 +52,9 @@ function LoginForm() {
         <label htmlFor="password" className="mb-1 fw-semibold">
           Password
         </label>
-          <a className="forget-password-btn" onClick={() => {setIsShowForgetPassword(!isShowForgetPassword)}}>
+          {/* <a className="forget-password-btn" onClick={() => {setIsShowForgetPassword(!isShowForgetPassword)}}>
             Forget password?
-          </a>
+          </a> */}
         </div>
         <input
           type="password"

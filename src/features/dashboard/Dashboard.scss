@@ -1,5 +1,19 @@
-.dashboard-header {
-    select {
-        width: 245px;
+.dashboard-container {
+  .dashboard-header {
+    margin-bottom: 20px;
+    min-height: 38px;
+    h1 {
+      font-size: 26px;
+      margin: 0;
     }
+    select {
+      width: 245px;
+      height: 42px;
+      padding: 4px;
+      border-radius: 8px;
+    }
+  }
+  h4 {
+    font-weight: 400;
+  }
 }

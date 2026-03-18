@@ -21,7 +21,7 @@
 .overview-stat .unit-sold,
 .overview-stat .avg-items {
   font-size: 1.75rem;
-  font-weight: 600;
+  font-weight: 400;
   color: #111827;
 }
 
@@ -39,8 +39,8 @@
 
 .overview-stat > div::before {
   font-size: 0.75rem;
-  font-weight: 500;
-  color: #6b7280;
+  font-weight: 400;
+  color: #808080;
   margin-bottom: 0.5rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -63,8 +63,8 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
 
   .period-label {
-    font-size: 0.7rem;
-    color: #6b7280;
+    font-size: 0.75rem;
+    color: #808080;
     text-transform: uppercase;
     letter-spacing: 0.04em;
   }
@@ -72,7 +72,7 @@
   .period-range {
     align-items: center;
     font-size: 1.85rem;
-    font-weight: 500;
+    font-weight: 400;
     color: #374151;
   }
 }

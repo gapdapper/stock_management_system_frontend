@@ -134,13 +134,14 @@ export default function Dashboard() {
     );
   } else {
     return (
-      <>
-        <div className="dashboard-header mb-3 d-flex justify-content-between">
+      <div className="dashboard-container">
+        <div className="dashboard-header d-flex justify-content-between">
           <h1 className="dashboard-title">Dashboard - {currentMonth}</h1>
           <div className="dashboard-input align-self-center">
             <select
               name="date-range-filter"
               id="date-range-filter"
+              className="date-range-filter"
               value={selectedMonth}
               onChange={(e) => handleMonthChange(e.target.value)}
             >
@@ -189,7 +190,7 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-      </>
+      </div>
     );
   }
 }

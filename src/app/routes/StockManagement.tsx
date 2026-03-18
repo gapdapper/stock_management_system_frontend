@@ -55,7 +55,6 @@ function StockManagement() {
   }, [filter]);
 
   const sortedData = useMemo(() => {
-    debugger;
     const data = [...filteredData];
 
     return data.sort((a, b) => {

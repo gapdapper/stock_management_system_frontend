@@ -1,7 +1,7 @@
 import Table from "@/features/StockManagement/components/Table";
 import { getProductsWithVariant } from "@/features/StockManagement/api/StockManagementService";
-import { useEffect, useMemo, useState } from "react";
-import type { IProductData, IWaitingProduct } from "@/types/product";
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { IProductData } from "@/types/product";
 import { getProductStatus } from "@/utils/product";
 import LoadingSpinner from "@/components/loadingSpinner";
 import Toast from "@/components/Toast";
@@ -16,6 +16,7 @@ function StockManagement() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 20;
+  const headerRef = useRef<HTMLDivElement>(null);
   let navigate = useNavigate();
 
   // #region data fetching
@@ -54,6 +55,7 @@ function StockManagement() {
   }, [filter]);
 
   const sortedData = useMemo(() => {
+    debugger;
     const data = [...filteredData];
 
     return data.sort((a, b) => {
@@ -93,11 +95,23 @@ function StockManagement() {
 
   const goToPage = (page: number) => {
     setCurrentPage(page);
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
   };
+
+  const scrollToHeader = () => {
+    const header = headerRef.current;
+    const container = document.querySelector("main");
+
+    if (header && container) {
+      container.scrollTo({
+        top: header.offsetTop - 24,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  useEffect(() => {
+    scrollToHeader();
+  }, [currentPage]);
 
   const paginatedData = useMemo(() => {
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -115,7 +129,7 @@ function StockManagement() {
   } else {
     return (
       <>
-        <div className="stock-header">
+        <div ref={headerRef} className="stock-header">
           <h1 className="stock-title">Stock Management</h1>
           <div className="header-actions">
             <div className="search-box">
@@ -132,7 +146,7 @@ function StockManagement() {
               type="button"
               onClick={() => {navigate('/restock')}}
             >
-              + Re-stock
+              Restock
             </button>
           </div>
         </div>

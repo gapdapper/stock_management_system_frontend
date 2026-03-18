@@ -2,9 +2,10 @@
   font-size: 26px;
   line-height: 38px;
   margin-bottom: 20px;
-  font-weight: 400;
+  font-weight: 500;
   .breadcrumb-link {
     color: #6c757d;
+    font-weight: 400;
     cursor: pointer;
     transition: color 0.2s ease;
     &:hover {
@@ -53,11 +54,11 @@
     .product-info {
       display: grid;
       grid-template-columns: 2fr 1fr 1fr 1fr;
-      grid-template-rows: 2fr 5fr;
+      grid-template-rows: 2fr 4fr;
       column-gap: 12px;
       label {
         color: grey;
-        font-size: 12px;
+        font-size: 14px;
         align-self: end;
       }
       p {
@@ -67,11 +68,8 @@
     select {
       overflow: hidden;
       text-overflow: ellipsis;
-      padding: 6px;
+      padding: 4px;
       border-radius: 8px;
-      option {
-        padding: 8px;
-      }
     }
     input {
       border-radius: 8px;
@@ -83,7 +81,7 @@
     .product-number {
       display: flex;
       font-size: 26px;
-      font-weight: 300;
+      font-weight: 400;
       justify-self: center;
       align-self: flex-end;
       padding-bottom: 2px;

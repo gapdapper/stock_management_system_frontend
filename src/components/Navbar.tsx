@@ -9,14 +9,14 @@ import {
   faUserPlus,
   faCircleQuestion,
 } from "@fortawesome/free-solid-svg-icons";
-import { logout } from "@/features/auth/api/AuthService";
+import { logout } from "@/features/Auth/api/AuthService";
 import { useAuthStore } from "@/stores/authSlice";
 import "./Navbar.scss";
 import { useImportStatusStore } from "@/stores/importStatus";
 import Modal from "./Modal";
 import { useEffect, useState } from "react";
-import { register } from "@/features/auth/api/AuthService";
-import { checkAvailableUsernames } from "@/features/auth/api/AuthService";
+import { register } from "@/features/Auth/api/AuthService";
+import { checkAvailableUsernames } from "@/features/Auth/api/AuthService";
 import Toast, { showToast } from "@/components/Toast";
 
 function useDebounce(cb: string, delay: number) {

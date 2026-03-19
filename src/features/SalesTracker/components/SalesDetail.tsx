@@ -7,7 +7,7 @@ import { useNavigate, useParams } from "react-router";
 import ItemTable from "./ItemTable";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
-import "@/features/salesDetail/components/SalesDetail.scss";
+import "./SalesDetail.scss";
 
 export default function SalesDetail() {
   const [rawData, setRawData] = useState<ITransactions | null>(null);

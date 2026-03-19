@@ -5,7 +5,7 @@ import type { IProductData } from "@/types/product";
 import { getProductStatus } from "@/utils/product";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import Toast from "@/components/Toast";
-import "@/features/stockManagement/StockManagement.scss";
+import "@/features/StockManagement/StockManagement.scss";
 import { useNavigate } from "react-router";
 
 function StockManagement() {

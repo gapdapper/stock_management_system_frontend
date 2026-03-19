@@ -1,6 +1,6 @@
 import { useAuthStore } from '@/stores/authSlice';
 import axios from 'axios'
-import { requestRefreshToken } from '@/features/auth/api/AuthService';
+import { requestRefreshToken } from '@/features/Auth/api/AuthService';
 
 export const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,

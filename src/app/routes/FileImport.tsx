@@ -1,7 +1,7 @@
 import Toast, { showToast } from "@/components/Toast";
-import { importFile } from "@/features/importFile/api/ImportService";
+import { importFile } from "@/features/ImportFile/api/ImportService";
 import { useImportStatusStore } from "@/stores/importStatus";
-import "@/features/importFile/components/FileImport.scss";
+import "@/features/ImportFile/components/FileImport.scss";
 import SuccessModal from "@/components/SuccessModal";
 import { useState } from "react";
 import type { IImportSummary } from "@/types/transaction";

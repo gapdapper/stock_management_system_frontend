@@ -12,7 +12,7 @@ import type {
   IMonthOption,
 } from "@/types/dashboard";
 import { useEffect, useMemo, useState } from "react";
-import LoadingSpinner from "@/components/loadingSpinner";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import { normalizeDonutData } from "@/utils/dashboard";
 import "@/features/dashboard/Dashboard.scss";
 

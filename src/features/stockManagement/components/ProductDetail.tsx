@@ -1,5 +1,5 @@
 import "./ProductDetail.scss";
-import PlaceHolder from "../../../assets/placeholder.svg?react";
+import PlaceHolder from "../../../assets/placeholder.jpg"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleQuestion, faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useMemo, useRef } from "react";
@@ -77,7 +77,7 @@ export default function ProductDetail({
                     className="product-img"
                   />
                 ) : (
-                  <PlaceHolder />
+                  <img src={PlaceHolder} alt="placeholder" />
                 )}
                 <div className="image-overlay">
                   <FontAwesomeIcon icon={faCloudArrowUp} size="xs" />

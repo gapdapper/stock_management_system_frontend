@@ -5,10 +5,8 @@ import {
   faChartLine,
   faBookBookmark,
   faArrowUpFromBracket,
-  faGear,
   faRightFromBracket,
   faUserPlus,
-  faCircleInfo,
   faCircleQuestion,
 } from "@fortawesome/free-solid-svg-icons";
 import { logout } from "@/features/auth/api/AuthService";

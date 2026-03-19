@@ -1,5 +1,5 @@
-import OverviewStats from "@/features/Dashboard/components/overviewStats-temp";
-import BarChartSection from "@/features/Dashboard/components/barChartSection-temp";
+import OverviewStats from "@/features/Dashboard/components/OverviewStats";
+import BarChartSection from "@/features/Dashboard/components/BarChartSection";
 import SalesBreakdownDonut from "@/features/Dashboard/components/salesBreakdownDonut-temp";
 import {
   getAvailableMonths,

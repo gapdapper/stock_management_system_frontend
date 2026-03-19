@@ -1,6 +1,6 @@
 import OverviewStats from "@/features/Dashboard/components/OverviewStats";
 import BarChartSection from "@/features/Dashboard/components/BarChartSection";
-import SalesBreakdownDonut from "@/features/Dashboard/components/salesBreakdownDonut-temp";
+import SalesBreakdownDonut from "@/features/Dashboard/components/SalesBreakdownDonut";
 import {
   getAvailableMonths,
   getDashboardOverview,
@@ -14,7 +14,7 @@ import type {
 import { useEffect, useMemo, useState } from "react";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { normalizeDonutData } from "@/utils/dashboard";
-import "@/features/dashboard/Dashboard.scss";
+import "@/features/Dashboard/Dashboard.scss";
 
 export default function Dashboard() {
   // states

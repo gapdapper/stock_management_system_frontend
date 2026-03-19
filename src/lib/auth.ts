@@ -1,4 +1,4 @@
-import { requestRefreshToken, getMe } from '@/features/auth/api/AuthService';
+import { requestRefreshToken, getMe } from '@/features/Auth/api/AuthService';
 import { useAuthStore } from '@/stores/authSlice';
 
 export const refreshToken = async (): Promise<string | null> => {

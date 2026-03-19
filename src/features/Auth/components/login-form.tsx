@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { login } from "@/features/auth/api/AuthService";
+import { login } from "@/features/Auth/api/AuthService";
 import { useAuthStore } from "@/stores/authSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCubes, faKey } from "@fortawesome/free-solid-svg-icons";

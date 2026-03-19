@@ -23,7 +23,7 @@ function StockManagement() {
   const fetchProductData = async () => {
     try {
       const data = await getProductsWithVariant();
-      const mappedData = data.products.map((product) => {
+      const mappedData = data.products.map((product: IProductData) => {
         return { ...product, status: getProductStatus(product.variants) };
       });
       setRawData(mappedData);
@@ -154,7 +154,7 @@ function StockManagement() {
           data={paginatedData}
           onRefresh={fetchProductData}
           currentSortDirection={sortDirection}
-          onSort={(field) => {
+          onSort={(field: keyof IProductData) => {
             handleSortChange(field)
           }}
         />

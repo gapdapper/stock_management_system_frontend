@@ -19,7 +19,7 @@ import AuthProvider from "./auth-provider.tsx";
 import AuthSync from "./routes/auth/AuthSync.tsx";
 import Dashboard from "./routes/Dashboard.tsx";
 import SalesRecord from "./routes/SalesTracker.tsx";
-import SalesDetail from "@/features/salesDetail/components/SalesDetail.tsx";
+import SalesDetail from "@/features/SalesTracker/components/SalesDetail.tsx";
 import Restock from "@/features/StockManagement/components/Restock.tsx";
 import FileImport from "./routes/FileImport.tsx";
 

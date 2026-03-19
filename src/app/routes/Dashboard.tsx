@@ -1,10 +1,10 @@
-import OverviewStats from "@/features/dashboard-temp/components/overviewStats";
-import BarChartSection from "@/features/dashboard-temp/components/barChartSection";
-import SalesBreakdownDonut from "@/features/dashboard-temp/components/salesBreakdownDonut";
+import OverviewStats from "@/features/Dashboard/components/overviewStats";
+import BarChartSection from "@/features/Dashboard/components/barChartSection";
+import SalesBreakdownDonut from "@/features/Dashboard/components/salesBreakdownDonut";
 import {
   getAvailableMonths,
   getDashboardOverview,
-} from "@/features/dashboard-temp/api/DashboardService";
+} from "@/features/Dashboard/api/DashboardService";
 import type {
   IChartData,
   IDashboardOverview,

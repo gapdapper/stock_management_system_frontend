@@ -1,4 +1,4 @@
-import { NavLink } from "react-router";
+import { NavLink, useLocation } from "react-router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCubes,
@@ -9,6 +9,7 @@ import {
   faRightFromBracket,
   faUserPlus,
   faCircleInfo,
+  faCircleQuestion,
 } from "@fortawesome/free-solid-svg-icons";
 import { logout } from "@/features/auth/api/AuthService";
 import { useAuthStore } from "@/stores/authSlice";
@@ -47,6 +48,8 @@ function Navbar() {
 
   const debouncedUsername = useDebounce(username, 500);
 
+  const location = useLocation();
+
   const handleLogout = () => {
     try {
       logout();
@@ -62,8 +65,8 @@ function Navbar() {
 
     if (!username || !password) {
       setIsFormatValid(false);
-    return;
-  }
+      return;
+    }
 
     if (username != "" && !usernameRegex.test(username)) {
       setErrorMessage("Username must be 4-20 alphanumeric characters.");
@@ -127,11 +130,19 @@ function Navbar() {
             <span
               className={`badge ${hasImportedToday ? "success" : "warning"}`}
             >
-              {hasImportedToday ? "SUCCESS" : "PENDING"}
+              {hasImportedToday ? "DONE" : "PENDING"}
             </span>
           </p>
         </div>
-        <NavLink to="/">
+        <NavLink
+          to="/"
+          className={() =>
+            location.pathname === "/" ||
+            location.pathname.startsWith("/restock")
+              ? "nav-item active"
+              : "nav-item"
+          }
+        >
           <FontAwesomeIcon icon={faCubes} />
           <span>Stock Management</span>
         </NavLink>
@@ -231,15 +242,14 @@ function Navbar() {
         <div className="create-new-user-modal-content row">
           <div className="col-6">
             <label className="form-label">
-              Username{" "}
-              <FontAwesomeIcon
-                icon={faCircleInfo}
-                className="username-info-icon"
-              />{" "}
-              <span className="username-info">
-                Username must be alphanumeric characters (a-z, A-Z, 0-9) with a
-                length to be between 4 and 20 characters
-              </span>
+              Username
+              <div className="custom-tooltip">
+                <FontAwesomeIcon icon={faCircleQuestion} />
+                <span className="custom-tooltiptext">
+                  Username must be alphanumeric characters (a-z, A-Z, 0-9) with
+                  a length to be between 4 and 20 characters
+                </span>
+              </div>
             </label>
 
             <input
@@ -267,15 +277,14 @@ function Navbar() {
           </div>
           <div className="col-6">
             <label className="form-label">
-              Password{" "}
-              <FontAwesomeIcon
-                icon={faCircleInfo}
-                className="password-info-icon"
-              />{" "}
-              <span className="password-info">
-                Password must be alphanumeric characters (a-z, A-Z, 0-9) with a
-                length to be between 8 and 20 characters
-              </span>
+              Password
+              <div className="custom-tooltip">
+                <FontAwesomeIcon icon={faCircleQuestion} />
+                <span className="custom-tooltiptext">
+                  Password must be alphanumeric characters (a-z, A-Z, 0-9) with
+                  a length to be between 8 and 20 characters
+                </span>
+              </div>
             </label>
 
             <input

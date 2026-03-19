@@ -19,6 +19,7 @@ import AuthSync from "./routes/auth/AuthSync.tsx";
 import Dashboard from "./routes/Dashboard.tsx";
 import SalesRecord from "./routes/SalesTracker.tsx";
 import SalesDetail from "@/features/salesDetail/components/SalesDetail.tsx";
+import Restock from "@/features/StockManagement/components/Restock.tsx";
 import FileImport from "./routes/FileImport.tsx";
 
 library.add(fas, far, fab);
@@ -37,6 +38,7 @@ createRoot(document.getElementById("root")!).render(
         <Route element={<ProtectedRoute />}>
           <Route element={<ContentLayout />}>
             <Route index element={<StockManagement />} />
+            <Route path="/restock" element={<Restock />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/sales" element={<SalesRecord />} />
             <Route path="/sales/:id" element={<SalesDetail />} />

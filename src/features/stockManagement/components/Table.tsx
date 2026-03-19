@@ -10,7 +10,7 @@ import {
   faArrowDown19,
   faArrowDown91,
   faMagnifyingGlass,
-  faWrench,
+  faCloudArrowUp,
 } from "@fortawesome/free-solid-svg-icons";
 import PlaceHolder from "../../../assets/placeholder.svg?react";
 import Modal from "@/components/Modal";
@@ -233,8 +233,8 @@ export default function Table({
                                   )}
                                   <div className="image-overlay">
                                     <FontAwesomeIcon
-                                      icon={faWrench}
-                                      style={{ fontSize: "10px" }}
+                                      icon={faCloudArrowUp}
+                                      style={{ fontSize: "6px" }}
                                     />
                                   </div>
 

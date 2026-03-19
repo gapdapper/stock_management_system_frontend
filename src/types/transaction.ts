@@ -23,3 +23,13 @@ export interface IFilter {
   period: string;
   platform: string;
 }
+
+export interface IImportSummary {
+  orderId: string,
+  buyer: string,
+  paymentTypeId: number,
+  shippingPostalCode: number,
+  platformId: number,
+  status: string,
+  note: string,
+}

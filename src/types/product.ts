@@ -24,6 +24,7 @@ export interface IProductVariantPayload {
 }
 
 export interface IWaitingProduct {
+  productId?: number;
   variantId: number;
   productName: string;
   size: string;
@@ -57,4 +58,12 @@ export interface IProductEditModalData {
   qty: number;
   minStock: number;
   variantImageUrl: string;
+}
+
+export interface IRestockSumamry {
+  productName: string;
+  size: string;
+  color: string;
+  beforeQty: number;
+  afterQty: number;
 }

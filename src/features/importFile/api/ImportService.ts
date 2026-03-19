@@ -1,13 +1,15 @@
 import type { IUploadLog } from "@/types/uploadlog";
 import { axiosInstance } from "@/lib/api-client";
+import type { IImportSummary } from "@/types/transaction";
 
-export const importFile = async (formData: FormData): Promise<void> => {
+export const importFile = async (formData: FormData): Promise<IImportSummary[]> => {
   try {
-    await axiosInstance.post("/transactions/import", formData, {
+    const result = await axiosInstance.post("/transactions/import", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     });
+    return result.data.result;
   } catch (error) {
     console.error("Failed to fetch transaction:", error);
     throw error;

@@ -73,7 +73,7 @@
     font-weight: 600;
     text-transform: capitalize;
 
-    &.order\ placed {
+    &.order.placed {
       background: #e5e7eb;
       color: #374151;
     }
@@ -81,6 +81,11 @@
     &.shipped {
       background: #dbeafe;
       color: #1d4ed8;
+    }
+
+    &.delivered {
+      background: #ccfbf1;
+      color: #0f766e;
     }
 
     &.completed {
@@ -91,6 +96,11 @@
     &.cancelled {
       background: #fee2e2;
       color: #991b1b;
+    }
+
+    &.returned {
+      background: #fef3c7;
+      color: #92400e;
     }
   }
 }

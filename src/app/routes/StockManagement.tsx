@@ -1,13 +1,12 @@
 import Table from "@/features/StockManagement/components/Table";
-import { getProductsWithVariant, restockProduct } from "@/features/StockManagement/api/StockManagementService";
-import { useEffect, useMemo, useState } from "react";
-import type { IProductData, IWaitingProduct } from "@/types/product";
+import { getProductsWithVariant } from "@/features/StockManagement/api/StockManagementService";
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { IProductData } from "@/types/product";
 import { getProductStatus } from "@/utils/product";
 import LoadingSpinner from "@/components/loadingSpinner";
-import Toast, { showToast } from "@/components/Toast";
-import Modal from "@/components/Modal";
-import ReStockItem from "@/features/StockManagement/components/ReStockItem";
+import Toast from "@/components/Toast";
 import "@/features/stockManagement/StockManagement.scss";
+import { useNavigate } from "react-router";
 
 function StockManagement() {
   const [rawData, setRawData] = useState<IProductData[]>([]);
@@ -15,10 +14,10 @@ function StockManagement() {
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const [filter, setFilter] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [resetKey, setResetKey] = useState<number>(0);
-  const [waitingList, setwaitingList] = useState<IWaitingProduct[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 20;
+  const headerRef = useRef<HTMLDivElement>(null);
+  let navigate = useNavigate();
 
   // #region data fetching
   const fetchProductData = async () => {
@@ -95,32 +94,29 @@ function StockManagement() {
 
   const goToPage = (page: number) => {
     setCurrentPage(page);
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
   };
+
+  const scrollToHeader = () => {
+    const header = headerRef.current;
+    const container = document.querySelector("main");
+
+    if (header && container) {
+      container.scrollTo({
+        top: header.offsetTop - 24,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  useEffect(() => {
+    scrollToHeader();
+  }, [currentPage]);
 
   const paginatedData = useMemo(() => {
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
     return sortedData.slice(startIndex, startIndex + ITEMS_PER_PAGE);
   }, [sortedData, currentPage]);
 
-  const restockItem = async () => {
-    const payload = {
-      items: waitingList.map((item) => ({
-        variantId: item.variantId,
-        qty: item.stock,
-      })),
-    };
-    try {
-      showToast("Restock Success!", "success");
-      await restockProduct(payload);
-      fetchProductData();
-    } catch (error) {
-      throw new Error("Failed to restock the product: " + error);
-    }
-  };
     // #endregion
 
   if (isLoading) {
@@ -132,9 +128,8 @@ function StockManagement() {
   } else {
     return (
       <>
-        <div className="stock-header">
+        <div ref={headerRef} className="stock-header">
           <h1 className="stock-title">Stock Management</h1>
-
           <div className="header-actions">
             <div className="search-box">
               <input
@@ -148,30 +143,12 @@ function StockManagement() {
             <button
               className="btn-restock"
               type="button"
-              data-bs-toggle="modal"
-              data-bs-target="#modal-restock-items"
+              onClick={() => {navigate('/restock')}}
             >
-              + Re-stock
+              Restock
             </button>
           </div>
         </div>
-
-        <Modal
-          id="restock-items"
-          title="Re-stock Items"
-          confirmText="Confirm"
-          cancelText="Cancel"
-          onConfirm={restockItem}
-          confirmDisabled={waitingList.length == 0}
-          onClose={() => setResetKey((k) => k + 1)}
-          size="modal-lg"
-        >
-          <ReStockItem
-            data={rawData}
-            key={resetKey}
-            onCloseConditon={setwaitingList}
-          />
-        </Modal>
         <Toast />
         <Table
           data={paginatedData}

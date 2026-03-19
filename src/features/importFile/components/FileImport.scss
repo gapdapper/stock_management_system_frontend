@@ -1,3 +1,24 @@
+.file-import-container {
+  .file-import-header {
+    min-width: 38px;
+    h4 {
+      font-size: 26px;
+      font-weight: 500;
+      color: #222;
+      margin-bottom: 20px;
+    }
+  }
+  .sub-header {
+    margin: 0;
+    font-weight: 400;
+  }
+  .sub-header-description {
+    padding-bottom: 16px;
+    font-size: 14px;
+    color: #6c757d;
+  }
+}
+
 .drop-zone {
   display: block;
   width: 100%;
@@ -36,5 +57,49 @@
   background: #ffffff;
   border-radius: 16px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
-  padding: 20px 24px;
+  padding: 16px;
+}
+
+.import-summary {
+  background: #f9fafb;
+  border-radius: 12px;
+  .summary-title {
+    font-size: 18px;
+    font-weight: 500;
+    padding: 16px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #e5e7eb;
+    background-color: #f3f4f6;
+  }
+  .summary-footer {
+    font-size: 18px;
+    font-weight: 500;
+    padding: 16px;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    margin-bottom: 0;
+    border-bottom: 1px solid #e5e7eb;
+    background-color: #f3f4f6;
+  }
+  .transaction-summary-content {
+    padding: 0px 16px 16px 16px;
+    min-width: 490px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .transaction-summary-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 150px;
+    margin-bottom: 8px;
+  }
+  .status {
+    text-transform: capitalize;
+  }
+  .empty-transaction {
+    align-self: center;
+  }
 }

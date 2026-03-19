@@ -3,6 +3,7 @@ import Table from "@/features/SalesTracker/components/Table";
 import { useEffect, useState } from "react";
 import type { IFilter, ITransactions } from "@/types/transaction";
 import { getTransactions } from "@/features/SalesTracker/api/SalesTrackerService";
+import "@/features/SalesTracker/SalesTracker.scss";
 
 export default function SalesRecord() {
   const [rawData, setRawData] = useState<ITransactions[]>([]);
@@ -94,7 +95,7 @@ export default function SalesRecord() {
       behavior: "smooth",
     });
   };
-  
+
   const updatePage = (page: number) => {
     setCurrentPage(page);
   };
@@ -114,10 +115,10 @@ export default function SalesRecord() {
     );
   } else {
     return (
-      <>
+      <div className="sales-tracker-container">
         <div className="headers mb-3">
           <div className="d-flex justify-content-between align-items-start align-items-md-center gap-3 flex-column flex-md-row">
-            <h1 className="stock-title">Sales</h1>
+            <h1 className="stock-title">Sales Tracker</h1>
             <div className="filter-section d-flex gap-2 flex-wrap">
               <select
                 name="status-filter"
@@ -199,7 +200,7 @@ export default function SalesRecord() {
             </button>
           </div>
         )}
-      </>
+      </div>
     );
   }
 }

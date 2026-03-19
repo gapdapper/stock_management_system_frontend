@@ -1,0 +1,44 @@
+.login-container {
+  width: 65%;
+
+  .form-icon {
+    display: flex;
+    justify-content: center;
+    font-size: 64px;
+    padding-bottom: 52px;
+  }
+
+  button {
+    width: 100%;
+  }
+
+  .password-label {
+    display: flex;
+    justify-content: space-between;
+    a {
+      cursor: pointer;
+    }
+  }
+}
+
+.forget-password-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 65%;
+  .form-icon {
+    display: flex;
+    justify-content: center;
+    font-size: 64px;
+    padding-bottom: 52px;
+  }
+  button {
+    width: 100%;
+  }
+
+  a {
+    align-self: center;
+    cursor: pointer;
+    padding-top: 16px;
+  }
+}

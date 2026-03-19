@@ -1,0 +1,254 @@
+button {
+  background-color: transparent;
+  border: none;
+}
+
+.table-group-divider {
+  border-top: none;
+}
+
+.image-cell {
+  align-self: center;
+  width: 120px;
+  margin: 20px 105px 0 105px;
+  display: block;
+  position: relative;
+
+  .image-wrapper {
+    svg, img {
+      width: 150px;
+      height: auto;
+    }
+  
+    .image-overlay {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 150px;
+    height: 150px;
+    top: 0;
+    background: rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    transition: .5s ease;
+    svg {
+      width: 86px;
+      height: 86px;
+    }
+    }
+    &:hover .image-overlay {
+      opacity: 1;
+    }
+    .image-input {
+      opacity: 0;
+      left: 0;
+      width: 150px;
+      height: 150px;
+      position: absolute;
+      cursor: pointer;
+    }
+  }
+
+    p {
+    font-size: 18px;
+    font-weight: 600;
+    text-align: center;
+    width: 150px;
+    padding-top: 15px;
+    margin: 0;
+    white-space: normal;
+    word-break: break-word;
+  }
+}
+
+.row-collapse-btn svg {
+  transition: transform 0.2s ease;
+  transform: rotate(0deg);
+}
+
+.row-collapse-btn[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+
+.collapse {
+  display: block !important;
+  max-height: 0;
+  overflow: hidden;
+}
+
+.collapse-inner {
+  padding: 0 16px;
+  opacity: 0;
+  transition: padding 0.1s ease, opacity 0.25s ease;
+}
+
+.collapse.show {
+  max-height: 1000px;
+}
+
+.collapse.show .collapse-inner {
+  padding: 16px;
+  opacity: 1;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.product-color-badge {
+  .color-badge {
+    padding: 9px 13px;
+    color: #fff;
+  }
+
+  .color-red {
+    background-color: #dc3545;
+  }
+
+  .color-new-red {
+    background-color: #df0b20;
+  }
+
+  .color-green {
+    background-color: #198754;
+  }
+
+  .color-new-green {
+    background-color: #057c45;
+  }
+
+  .color-blue {
+    background-color: #0d6efd;
+  }
+
+  .color-yellow {
+    background-color: #ffc107;
+    color: #000;
+  }
+
+  .color-no-color,
+  .color-6-point,
+  .color-9-point,
+  .color-12-point {
+    background-color: #6c757d;
+    color: #fff;
+  }
+
+  .color-colorful {
+    background: linear-gradient(
+      135deg,
+      #ff4d4f,
+      #ffa940,
+      #52c41a,
+      #1890ff,
+      #722ed1
+    );
+    color: #fff;
+  }
+}
+
+tr:has(.row-collapse-btn[aria-expanded="true"]) {
+  border-bottom: transparent;
+}
+
+.head-col {
+  user-select: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  font-weight: 600;
+
+  &:hover {
+    background-color: #fafafa;
+  }
+
+  &.head-active {
+    font-weight: 700;
+    color: #000;
+  }
+}
+
+.empty-state {
+  padding: 3rem 1rem;
+  text-align: center;
+  color: #999;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+
+  svg {
+    font-size: 4.25rem;
+    color: #ccc;
+  }
+
+  p {
+    margin: 0;
+    font-size: 1.95rem;
+    letter-spacing: 0.02em;
+  }
+}
+
+.stock-table-wrapper {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    color: #333;
+    thead {
+      background: #f9fafb;
+
+      th {
+        text-align: left;
+        padding: 12px 16px;
+        font-weight: 600;
+        color: #555;
+        border-bottom: 1px solid #e5e7eb;
+        white-space: nowrap;
+      }
+    }
+
+    tbody {
+      tr {
+        transition: background 0.2s ease;
+      }
+
+      .hoverable {
+        &:hover {
+          background: #f3f4f6;
+        }
+      }
+
+      td {
+        padding: 12px 16px;
+        border-bottom: 1px solid #f1f1f1;
+        vertical-align: middle;
+        white-space: nowrap;
+      }
+    }
+  }
+
+  .status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+
+    &.In-stock {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    &.Low-stock {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    &.Out-of-stock {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+  }
+}

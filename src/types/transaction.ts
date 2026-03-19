@@ -1,0 +1,35 @@
+export interface ITransactions {
+  id: number;
+  orderId: string;
+  buyer: string;
+  status: string;
+  createdAt: Date;
+  paymentType: string;
+  platform: string;
+  note: string;
+  items?: ITransactionItem[]
+}
+
+export interface ITransactionItem {
+  variantId: number;
+  productName: string;
+  size: string;
+  color: string;
+  quantity: number;
+}
+
+export interface IFilter {
+  status: string;
+  period: string;
+  platform: string;
+}
+
+export interface IImportSummary {
+  orderId: string,
+  buyer: string,
+  paymentTypeId: number,
+  shippingPostalCode: number,
+  platformId: number,
+  status: string,
+  note: string,
+}

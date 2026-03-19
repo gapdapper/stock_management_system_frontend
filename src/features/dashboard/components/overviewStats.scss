@@ -1,0 +1,78 @@
+.overview-stat {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.overview-stat > div {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 96px;
+}
+
+.overview-stat .total-order,
+.overview-stat .unit-sold,
+.overview-stat .avg-items {
+  font-size: 1.75rem;
+  font-weight: 400;
+  color: #111827;
+}
+
+.overview-stat .total-order::before {
+  content: "Total Orders";
+}
+
+.overview-stat .unit-sold::before {
+  content: "Units Sold";
+}
+
+.overview-stat .avg-items::before {
+  content: "Avg Items / Order";
+}
+
+.overview-stat > div::before {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: #808080;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 768px) {
+  .overview-stat {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dashboard-period {
+  width: 70%;
+  margin-bottom: 1rem;
+  height: 110px;
+
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+
+  .period-label {
+    font-size: 0.75rem;
+    color: #808080;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .period-range {
+    align-items: center;
+    font-size: 1.85rem;
+    font-weight: 400;
+    color: #374151;
+  }
+}

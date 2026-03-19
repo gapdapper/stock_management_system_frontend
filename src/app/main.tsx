@@ -5,7 +5,8 @@ import "./index.scss";
 import StockManagement from "./routes/StockManagement.tsx";
 import Login from "./routes/auth/login.tsx";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import * as bootstrap from "bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 /* import all the icons in Free Solid, Free Regular, and Brands styles */
 import { fas } from "@fortawesome/free-solid-svg-icons";

@@ -1,4 +1,4 @@
-import LoadingSpinner from "@/components/loadingSpinner";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import Table from "@/features/SalesTracker/components/Table";
 import { useEffect, useState } from "react";
 import type { IFilter, ITransactions } from "@/types/transaction";

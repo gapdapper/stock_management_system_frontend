@@ -12,7 +12,7 @@ import {
   faMagnifyingGlass,
   faCloudArrowUp,
 } from "@fortawesome/free-solid-svg-icons";
-import PlaceHolder from "../../../assets/placeholder.svg?react";
+import PlaceHolder from "../../../assets/placeholder.jpg"
 import Modal from "@/components/Modal";
 import ProductDetail from "./ProductDetail";
 import type { IProductData, IProductEditModalData } from "@/types/product";
@@ -229,7 +229,7 @@ export default function Table({
                                       className="product-img"
                                     />
                                   ) : (
-                                    <PlaceHolder />
+                                     <img src={PlaceHolder} alt="placeholder" />
                                   )}
                                   <div className="image-overlay">
                                     <FontAwesomeIcon

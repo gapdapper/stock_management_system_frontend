@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { getUploadLog } from "@/features/importFile/api/ImportService";
+import { getUploadLog } from "@/features/importFile-temp/api/ImportService";
 
 type ImportStatusState = {
   hasImportedToday: boolean;

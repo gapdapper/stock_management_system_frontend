@@ -1,5 +1,5 @@
 import Toast, { showToast } from "@/components/Toast";
-import { importFile } from "@/features/importFile/api/ImportService";
+import { importFile } from "@/features/importFile-temp/api/ImportService";
 import { useImportStatusStore } from "@/stores/importStatus";
 import "@/features/importFile/components/FileImport.scss";
 import SuccessModal from "@/components/SuccessModal";

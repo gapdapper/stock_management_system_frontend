@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleMinus, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import type {
   IProductData,
-  IRestockSumamry,
+  IRestockSummary,
   IWaitingProduct,
 } from "@/types/product";
 import { useEffect, useMemo, useState } from "react";
@@ -19,8 +19,8 @@ export default function Restock() {
   const [waitingList, setWaitingList] = useState<IWaitingProduct[]>([]);
   const [productData, setProductData] = useState<IProductData[]>([]);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [showErrorMsg, setShowErrorMsg] = useState(false);
-  const [summary, setSummary] = useState<IRestockSumamry[]>([]);
+  const [showError, setShowError] = useState(false);
+  const [summary, setSummary] = useState<IRestockSummary[]>([]);
 
   let navigate = useNavigate();
 
@@ -42,7 +42,7 @@ export default function Restock() {
     fetchProductData();
   }, []);
 
-  const addProductTemplate = () => {
+  const addProductCard = () => {
     setWaitingList((prev) => [
       ...prev,
       {
@@ -132,7 +132,6 @@ export default function Restock() {
       setSummary(summaryData);
       setWaitingList([]);
       setShowSuccess(true);
-      console.log(summaryData);
     } catch (error) {
       throw new Error("Failed to restock the product: " + error);
     }
@@ -146,10 +145,10 @@ export default function Restock() {
     );
 
     if(!isFormValid){
-      setShowErrorMsg(true);
+      setShowError(true);
       return;
     }
-    setShowErrorMsg(false);
+    setShowError(false);
     await restockItem();
   }
 
@@ -159,14 +158,14 @@ export default function Restock() {
 
   const clearWaitingList = () => {
     setWaitingList([]);
-    setShowErrorMsg(false);
+    setShowError(false);
   };
 
   const handleRestockAgain = () => {
     setShowSuccess(false);
   };
 
-  const buildSummary = (): IRestockSumamry[] => {
+  const buildSummary = (): IRestockSummary[] => {
     const grouped = new Map<number, IWaitingProduct>();
 
     waitingList.forEach((item) => {
@@ -218,7 +217,7 @@ export default function Restock() {
               : undefined;
             const size = product?.variants.find((v) => v.size === item.size);
             return (
-              <div className={`product-card ${showErrorMsg && !isItemComplete(item) ? "error" : ""}`} key={item.variantId || index}>
+              <div className={`product-card ${showError && !isItemComplete(item) ? "error" : ""}`} key={item.variantId || index}>
                 <p className="product-number">{index + 1}.</p>
                 <div className="product-info">
                   <label htmlFor="product-name-dropdown">Product name</label>
@@ -307,7 +306,7 @@ export default function Restock() {
         <div
           className="product-adding-card"
           onClick={() => {
-            addProductTemplate();
+            addProductCard();
           }}
         >
           <a className="add-product-btn">+ Add a product</a>

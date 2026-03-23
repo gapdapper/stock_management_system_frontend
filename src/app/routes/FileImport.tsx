@@ -5,6 +5,7 @@ import "@/features/ImportFile/components/FileImport.scss";
 import SuccessModal from "@/components/SuccessModal";
 import { useState } from "react";
 import type { IImportSummary } from "@/types/transaction";
+import { platformMapper } from "@/utils/product";
 
 export default function FileImport() {
   const ALLOWED_EXTENSIONS = ["csv", "xlsx"];
@@ -102,7 +103,7 @@ export default function FileImport() {
                 importSummary.map((item, i) => (
                   <div className="transaction-summary-item" key={i}>
                     <span className="transaction-id">
-                      {item.orderId} - {item.buyer}
+                      {item.orderId} - {item.buyer} from {platformMapper(item.platformId)}
                     </span>
                     <span className="status"> {item.status}</span>
                   </div>
@@ -115,12 +116,7 @@ export default function FileImport() {
             </div>
             {importSummary && importSummary.length != 0 && (
               <p className="summary-footer">
-                {importSummary.length} Transactions Imported From{" "}
-                {importSummary.every((val) => val.platformId === 1)
-                  ? "Shopee"
-                  : importSummary.every((val) => val.platformId === 2)
-                    ? "Lazada"
-                    : "TikTok Shop"}
+                {importSummary.length} Transactions Imported
               </p>
             )}
           </div>

@@ -21,3 +21,16 @@ export const validateFileSize = (file: File) => {
   }
   return file
 } 
+
+export const platformMapper = (id: number) => {
+  switch (id) {
+    case 1:
+      return "Shopee";
+    case 2:
+      return "Lazada";
+    case 3:
+      return "TikTok Shop";
+    default:
+      return "N/A";
+  }
+}

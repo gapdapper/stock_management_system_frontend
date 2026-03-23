@@ -220,14 +220,14 @@ export default function Restock() {
               <div className={`product-card ${showError && !isItemComplete(item) ? "error" : ""}`} key={item.variantId || index}>
                 <p className="product-number">{index + 1}.</p>
                 <div className="product-info">
-                  <label htmlFor="product-name-dropdown">Product name</label>
-                  <label htmlFor="product-size-dropdown">Product size</label>
-                  <label htmlFor="product-color-dropdown">Product color</label>
-                  <label htmlFor="product-qty-input">Quantity</label>
+                  <label htmlFor={`product-name-dropdown-${index}`}>Product name</label>
+                  <label htmlFor={`product-size-dropdown-${index}`}>Product size</label>
+                  <label htmlFor={`product-color-dropdown-${index}`}>Product color</label>
+                  <label htmlFor={`product-qty-input-${index}`}>Quantity</label>
                   <select
-                    name="product-name-dropdown"
-                    id="product-name-dropdown"
-                    className="product-name-dropdown"
+                    name={`product-name-dropdown-${index}`}
+                    id={`product-name-dropdown-${index}`}
+                    className={`product-name-dropdown-${index}`}
                     value={item.productId ?? ""}
                     onChange={(e) =>
                       handleProductSelect(Number(e.target.value), index)
@@ -244,9 +244,9 @@ export default function Restock() {
                     ))}
                   </select>
                   <select
-                    name="product-size-dropdown"
-                    id="product-size-dropdown"
-                    className="product-size-dropdown"
+                    name={`product-size-dropdown-${index}`}
+                    id={`product-size-dropdown-${index}`}
+                    className={`product-size-dropdown-${index}`}
                     value={item.size ?? ""}
                     disabled={!item.productName}
                     onChange={(e) => {
@@ -263,9 +263,9 @@ export default function Restock() {
                     ))}
                   </select>
                   <select
-                    name="product-color-dropdown"
-                    id="product-color-dropdown"
-                    className="product-color-dropdown"
+                    name={`product-color-dropdown-${index}`}
+                    id={`product-color-dropdown-${index}`}
+                    className={`product-color-dropdown-${index}`}
                     value={item.color ?? ""}
                     disabled={!item.size}
                     onChange={(e) => {
@@ -283,8 +283,8 @@ export default function Restock() {
                   </select>
                   <input
                     type="number"
-                    id="product-qty-input"
-                    name="product-qty-input"
+                    id={`product-qty-input-${index}`}
+                    name={`product-qty-input-${index}`}
                     value={item.stock ?? 0}
                     disabled={!item.color}
                     onChange={(e) => {

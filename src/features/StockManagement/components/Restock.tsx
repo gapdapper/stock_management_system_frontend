@@ -109,14 +109,16 @@ export default function Restock() {
   };
 
   const handleQtyChange = (qty: number, index: number) => {
+    const safeQty = Math.max(0, Math.min(9999, qty));
     setWaitingList((prev) => {
       const updated = [...prev];
       updated[index] = {
         ...updated[index],
-        stock: qty,
+        stock: safeQty,
       };
       return updated;
     });
+    console.log(waitingList)
   };
 
   const restockItem = async () => {
@@ -286,6 +288,7 @@ export default function Restock() {
                     id={`product-qty-input-${index}`}
                     name={`product-qty-input-${index}`}
                     value={item.stock ?? 0}
+                    min={0}
                     disabled={!item.color}
                     onChange={(e) => {
                       handleQtyChange(Number(e.target.value), index);

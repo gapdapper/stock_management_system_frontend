@@ -53,7 +53,6 @@ function Navbar() {
     try {
       await fetchImportStatus();
     } catch (error) {
-      console.log('this')
       showToast("Failed to get the status of daily file import. Please try again.", "error");
     }
   };
@@ -104,7 +103,6 @@ function Navbar() {
         setErrorMessage("This username was already taken");
         setIsNotDuplicate(false);
       } else {
-        setErrorMessage("");
         setIsNotDuplicate(true);
       }
     };
@@ -118,9 +116,12 @@ function Navbar() {
       password: password,
       role: selectedRole,
     };
-
-    await register(userPayload);
-    showToast("User created successfully.", "success");
+    try {
+      await register(userPayload);
+      showToast("User created successfully.", "success");
+    } catch (error) {
+      showToast("Failed to create new user. Please try again.", "error");
+    }
   };
 
   const handleCancelCreateUser = () => {

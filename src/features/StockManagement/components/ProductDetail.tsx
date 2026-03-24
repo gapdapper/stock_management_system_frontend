@@ -1,11 +1,14 @@
 import "./ProductDetail.scss";
-import PlaceHolder from "../../../assets/placeholder.jpg"
+import PlaceHolder from "../../../assets/placeholder.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleQuestion, faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCircleQuestion,
+  faCloudArrowUp,
+} from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useMemo, useRef } from "react";
 import Toast, { showToast } from "@/components/Toast";
 import { uploadProductImage } from "@/features/StockManagement/api/StockManagementService";
-import { validateFileSize } from "@/utils/product";
+import { validateFileFormat, validateFileSize } from "@/utils/product";
 import type { IProductEditModalData } from "@/types/product";
 
 type ProductDetailProp = {
@@ -34,16 +37,21 @@ export default function ProductDetail({
   }, [data]);
 
   const submitVariantImage = async (file: File) => {
-    const validatedFile = validateFileSize(file);
+    const validatedSize = validateFileSize(file);
+    const validatedFormat = validateFileFormat(file);
     try {
-      if (!validatedFile) {
+      if (!validatedSize) {
         showToast(
           "The selected image exceeds the file size limit. (5 MB)",
           "error",
         );
         return;
       }
-      await uploadProductImage("variant", data.variantId, validatedFile);
+      if (!validatedFormat) {
+        showToast("Unsupported file format.", "error");
+        return;
+      }
+      await uploadProductImage("variant", data.variantId, validatedSize);
       showToast("Product Variant Image Updated Successfully.", "success");
       await onRefresh();
     } catch (error) {

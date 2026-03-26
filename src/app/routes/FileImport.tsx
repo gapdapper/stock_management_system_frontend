@@ -27,6 +27,10 @@ export default function FileImport() {
       showToast("Only CSV/XLSX files under 5MB are allowed", "error");
       return;
     }
+    if (files.length > 10) {
+      showToast("Maximum 10 files allowed per upload.", "error");
+      return;
+    }
     try {
       const formData = new FormData();
 
@@ -39,7 +43,7 @@ export default function FileImport() {
       await updateImportStatus();
       setShowSuccess(true);
     } catch (error) {
-      showToast("Import failed", "error");
+      showToast("Failed to import transaction file.", "error");
     }
   };
 
@@ -103,7 +107,8 @@ export default function FileImport() {
                 importSummary.map((item, i) => (
                   <div className="transaction-summary-item" key={i}>
                     <span className="transaction-id">
-                      {item.orderId} - {item.buyer} from {platformMapper(item.platformId)}
+                      {item.orderId} - {item.buyer} from{" "}
+                      {platformMapper(item.platformId)}
                     </span>
                     <span className="status"> {item.status}</span>
                   </div>

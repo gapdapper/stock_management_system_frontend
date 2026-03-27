@@ -12,15 +12,14 @@ import {
   faMagnifyingGlass,
   faCloudArrowUp,
 } from "@fortawesome/free-solid-svg-icons";
-import PlaceHolder from "../../../assets/placeholder.jpg"
+import PlaceHolder from "../../../assets/placeholder.jpg";
 import Modal from "@/components/Modal";
 import ProductDetail from "./ProductDetail";
 import type { IProductData, IProductEditModalData } from "@/types/product";
 import { editProductVariant } from "../api/StockManagementService";
 import Toast, { showToast } from "@/components/Toast";
-import { validateFileSize } from "@/utils/product";
+import { validateFileFormat, validateFileSize } from "@/utils/product";
 import { uploadProductImage } from "../api/StockManagementService";
-
 
 type TableProps = {
   data?: IProductData[];
@@ -82,16 +81,21 @@ export default function Table({
   };
 
   const submitproductImage = async (productId: number, file: File) => {
-    const validatedFile = validateFileSize(file);
+    const validatedSize = validateFileSize(file);
+    const validatedFormat = validateFileFormat(file);
     try {
-      if (!validatedFile) {
+      if (!validatedSize) {
         showToast(
           "The selected image exceeds the file size limit. (5 MB)",
           "error",
         );
         return;
       }
-      await uploadProductImage("product", productId, validatedFile);
+      if (!validatedFormat) {
+        showToast("Unsupported file format.", "error");
+        return;
+      }
+      await uploadProductImage("product", productId, validatedSize);
       showToast("Product Image Updated Successfully.", "success");
       await onRefresh();
     } catch (error) {
@@ -229,7 +233,7 @@ export default function Table({
                                       className="product-img"
                                     />
                                   ) : (
-                                     <img src={PlaceHolder} alt="placeholder" />
+                                    <img src={PlaceHolder} alt="placeholder" />
                                   )}
                                   <div className="image-overlay">
                                     <FontAwesomeIcon

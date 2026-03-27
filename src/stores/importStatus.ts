@@ -27,8 +27,8 @@ export const useImportStatusStore = create<ImportStatusState>((set) => ({
         lastImportAt: log.uploadAt,
       });
     } catch (error) {
-      console.error("Failed to fetch import status", error);
       set({ hasImportedToday: false, lastImportAt: null });
+      throw error;
     }
   },
 }));

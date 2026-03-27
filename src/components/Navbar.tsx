@@ -36,7 +36,7 @@ function useDebounce(cb: string, delay: number) {
 function Navbar() {
   const user = useAuthStore((s) => s.user);
   const hasImportedToday = useImportStatusStore((s) => s.hasImportedToday);
-
+  const fetchImportStatus = useImportStatusStore((s) => s.fetchImportStatus);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -47,6 +47,18 @@ function Navbar() {
   const debouncedUsername = useDebounce(username, 500);
 
   const location = useLocation();
+
+  useEffect(() => {
+  const load = async () => {
+    try {
+      await fetchImportStatus();
+    } catch (error) {
+      showToast("Failed to get the status of daily file import. Please try again.", "error");
+    }
+  };
+
+  load();
+}, []);
 
   const handleLogout = () => {
     try {
@@ -91,7 +103,6 @@ function Navbar() {
         setErrorMessage("This username was already taken");
         setIsNotDuplicate(false);
       } else {
-        setErrorMessage("");
         setIsNotDuplicate(true);
       }
     };
@@ -105,9 +116,12 @@ function Navbar() {
       password: password,
       role: selectedRole,
     };
-
-    await register(userPayload);
-    showToast("User created successfully.", "success");
+    try {
+      await register(userPayload);
+      showToast("User created successfully.", "success");
+    } catch (error) {
+      showToast("Failed to create new user. Please try again.", "error");
+    }
   };
 
   const handleCancelCreateUser = () => {

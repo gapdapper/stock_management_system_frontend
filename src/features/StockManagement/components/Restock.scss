@@ -41,7 +41,7 @@
     display: grid;
     background-color: #fff;
     padding: 10px 16px 16px 16px;
-    grid-template-columns: 40px 20fr auto;
+    grid-template-columns: 40px minmax(0, 20fr) auto;
     border-radius: 12px;
     box-shadow:
       rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
@@ -55,9 +55,10 @@
     }
     .product-info {
       display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
       grid-template-rows: 2fr 4fr;
       column-gap: 12px;
+      min-width: 0;
       label {
         color: grey;
         font-size: 14px;

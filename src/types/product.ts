@@ -60,7 +60,7 @@ export interface IProductEditModalData {
   variantImageUrl: string;
 }
 
-export interface IRestockSumamry {
+export interface IRestockSummary {
   productName: string;
   size: string;
   color: string;

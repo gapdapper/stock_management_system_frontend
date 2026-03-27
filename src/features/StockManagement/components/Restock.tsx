@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleMinus, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import type {
   IProductData,
-  IRestockSumamry,
+  IRestockSummary,
   IWaitingProduct,
 } from "@/types/product";
 import { useEffect, useMemo, useState } from "react";
@@ -19,8 +19,8 @@ export default function Restock() {
   const [waitingList, setWaitingList] = useState<IWaitingProduct[]>([]);
   const [productData, setProductData] = useState<IProductData[]>([]);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [showErrorMsg, setShowErrorMsg] = useState(false);
-  const [summary, setSummary] = useState<IRestockSumamry[]>([]);
+  const [showError, setShowError] = useState(false);
+  const [summary, setSummary] = useState<IRestockSummary[]>([]);
 
   let navigate = useNavigate();
 
@@ -42,7 +42,7 @@ export default function Restock() {
     fetchProductData();
   }, []);
 
-  const addProductTemplate = () => {
+  const addProductCard = () => {
     setWaitingList((prev) => [
       ...prev,
       {
@@ -109,11 +109,12 @@ export default function Restock() {
   };
 
   const handleQtyChange = (qty: number, index: number) => {
+    const safeQty = Math.max(0, Math.min(9999, qty));
     setWaitingList((prev) => {
       const updated = [...prev];
       updated[index] = {
         ...updated[index],
-        stock: qty,
+        stock: safeQty,
       };
       return updated;
     });
@@ -132,26 +133,25 @@ export default function Restock() {
       setSummary(summaryData);
       setWaitingList([]);
       setShowSuccess(true);
-      console.log(summaryData);
     } catch (error) {
       throw new Error("Failed to restock the product: " + error);
     }
   };
 
   const handleSubmit = async () => {
-      const isFormValid =
-    waitingList.length > 0 &&
-    waitingList.every(
-      (item) => item.productId && item.size && item.color && item.stock > 0,
-    );
+    const isFormValid =
+      waitingList.length > 0 &&
+      waitingList.every(
+        (item) => item.productId && item.size && item.color && item.stock > 0,
+      );
 
-    if(!isFormValid){
-      setShowErrorMsg(true);
+    if (!isFormValid) {
+      setShowError(true);
       return;
     }
-    setShowErrorMsg(false);
+    setShowError(false);
     await restockItem();
-  }
+  };
 
   const isItemComplete = (item: IWaitingProduct) => {
     return item.productId && item.size && item.color && item.stock > 0;
@@ -159,14 +159,14 @@ export default function Restock() {
 
   const clearWaitingList = () => {
     setWaitingList([]);
-    setShowErrorMsg(false);
+    setShowError(false);
   };
 
   const handleRestockAgain = () => {
     setShowSuccess(false);
   };
 
-  const buildSummary = (): IRestockSumamry[] => {
+  const buildSummary = (): IRestockSummary[] => {
     const grouped = new Map<number, IWaitingProduct>();
 
     waitingList.forEach((item) => {
@@ -203,13 +203,19 @@ export default function Restock() {
 
   return (
     <div>
-      <h3 className="restock-header"><span className="breadcrumb-link" onClick={() => navigate("/")}>Stock Management</span> <FontAwesomeIcon icon={faAngleRight} className="breadcrumb-seperator"/> Restock</h3>
+      <h3 className="restock-header">
+        <span className="breadcrumb-link" onClick={() => navigate("/")}>
+          Stock Management
+        </span>{" "}
+        <FontAwesomeIcon icon={faAngleRight} className="breadcrumb-seperator" />{" "}
+        Restock
+      </h3>
       <div className="restock-container">
         <div className="product-list-header">
-        <h5>Product List</h5>
-        <p className="product-list-description">
-          Add products, choose size and color, then enter quantity.
-        </p>
+          <h5>Product List</h5>
+          <p className="product-list-description">
+            Add products, choose size and color, then enter quantity.
+          </p>
         </div>
         {waitingList.length != 0 &&
           waitingList.map((item, index) => {
@@ -218,17 +224,26 @@ export default function Restock() {
               : undefined;
             const size = product?.variants.find((v) => v.size === item.size);
             return (
-              <div className={`product-card ${showErrorMsg && !isItemComplete(item) ? "error" : ""}`} key={item.variantId || index}>
+              <div
+                className={`product-card ${showError && !isItemComplete(item) ? "error" : ""}`}
+                key={item.variantId || index}
+              >
                 <p className="product-number">{index + 1}.</p>
                 <div className="product-info">
-                  <label htmlFor="product-name-dropdown">Product name</label>
-                  <label htmlFor="product-size-dropdown">Product size</label>
-                  <label htmlFor="product-color-dropdown">Product color</label>
-                  <label htmlFor="product-qty-input">Quantity</label>
+                  <label htmlFor={`product-name-dropdown-${index}`}>
+                    Product name
+                  </label>
+                  <label htmlFor={`product-size-dropdown-${index}`}>
+                    Product size
+                  </label>
+                  <label htmlFor={`product-color-dropdown-${index}`}>
+                    Product color
+                  </label>
+                  <label htmlFor={`product-qty-input-${index}`}>Quantity</label>
                   <select
-                    name="product-name-dropdown"
-                    id="product-name-dropdown"
-                    className="product-name-dropdown"
+                    name={`product-name-dropdown-${index}`}
+                    id={`product-name-dropdown-${index}`}
+                    className={`product-name-dropdown-${index}`}
                     value={item.productId ?? ""}
                     onChange={(e) =>
                       handleProductSelect(Number(e.target.value), index)
@@ -238,16 +253,23 @@ export default function Restock() {
                       Select a product
                     </option>
 
-                    {productData?.map((p) => (
-                      <option key={p.id} value={p.id}>
-                        {p.productName}
-                      </option>
-                    ))}
+                    {productData
+                      ?.slice()
+                      .sort((a, b) =>
+                        a.productName.localeCompare(b.productName, undefined, {
+                          numeric: true,
+                        }),
+                      )
+                      .map((p) => (
+                        <option key={p.id} value={p.id}>
+                          {p.productName}
+                        </option>
+                      ))}
                   </select>
                   <select
-                    name="product-size-dropdown"
-                    id="product-size-dropdown"
-                    className="product-size-dropdown"
+                    name={`product-size-dropdown-${index}`}
+                    id={`product-size-dropdown-${index}`}
+                    className={`product-size-dropdown-${index}`}
                     value={item.size ?? ""}
                     disabled={!item.productName}
                     onChange={(e) => {
@@ -264,9 +286,9 @@ export default function Restock() {
                     ))}
                   </select>
                   <select
-                    name="product-color-dropdown"
-                    id="product-color-dropdown"
-                    className="product-color-dropdown"
+                    name={`product-color-dropdown-${index}`}
+                    id={`product-color-dropdown-${index}`}
+                    className={`product-color-dropdown-${index}`}
                     value={item.color ?? ""}
                     disabled={!item.size}
                     onChange={(e) => {
@@ -284,9 +306,10 @@ export default function Restock() {
                   </select>
                   <input
                     type="number"
-                    id="product-qty-input"
-                    name="product-qty-input"
+                    id={`product-qty-input-${index}`}
+                    name={`product-qty-input-${index}`}
                     value={item.stock ?? 0}
+                    min={0}
                     disabled={!item.color}
                     onChange={(e) => {
                       handleQtyChange(Number(e.target.value), index);
@@ -307,7 +330,7 @@ export default function Restock() {
         <div
           className="product-adding-card"
           onClick={() => {
-            addProductTemplate();
+            addProductCard();
           }}
         >
           <a className="add-product-btn">+ Add a product</a>
@@ -315,7 +338,12 @@ export default function Restock() {
 
         <div className="restock-summary">
           <div className="summary-info">
-            {waitingList.length != 0 && (<p><span className="total-product">Total Product:</span> {waitingList.length}</p>)}
+            {waitingList.length != 0 && (
+              <p>
+                <span className="total-product">Total Product:</span>{" "}
+                {waitingList.length}
+              </p>
+            )}
           </div>
           <div className="summary-btn">
             <button
@@ -352,7 +380,9 @@ export default function Restock() {
               {summary.map((item, i) => (
                 <div className="product-summary-item" key={i}>
                   <div className="product-info">
-                    <span className="product-name">{item.productName} x{item.afterQty - item.beforeQty}</span>
+                    <span className="product-name">
+                      {item.productName} x{item.afterQty - item.beforeQty}
+                    </span>
                     <span className="variant">
                       {item.size} / {item.color}
                     </span>

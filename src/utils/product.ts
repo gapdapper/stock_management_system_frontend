@@ -21,3 +21,21 @@ export const validateFileSize = (file: File) => {
   }
   return file
 } 
+
+export const validateFileFormat = (file: File) => {
+  const allowedTypes = ["image/png", "image/jpeg"];
+  return allowedTypes.includes(file.type);
+};
+
+export const platformMapper = (id: number) => {
+  switch (id) {
+    case 1:
+      return "Shopee";
+    case 2:
+      return "Lazada";
+    case 3:
+      return "TikTok Shop";
+    default:
+      return "N/A";
+  }
+}

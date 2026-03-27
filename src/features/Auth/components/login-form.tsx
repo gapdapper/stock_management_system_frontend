@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { login } from "@/features/Auth/api/AuthService";
 import { useAuthStore } from "@/stores/authSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -15,6 +15,10 @@ function LoginForm() {
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!navigator.onLine) {
+      alert("Login failed. Please try again.");
+      return;
+    }
     setLoading(true);
     try {
       const accessToken = await login(username.trim(), password.trim());
@@ -26,60 +30,75 @@ function LoginForm() {
     }
   };
 
-  if (!isShowForgetPassword) return (
-    <div className="login-container">
-      <div className="form-icon">
-      <FontAwesomeIcon icon={faCubes} />
-      </div>
-      <h4 className="mb-0">Sign In</h4>
-      <p>Stock Management System</p>
-      <form action="" className="form" onSubmit={handleLogin}>
-        <label htmlFor="username" className="mb-1 fw-semibold">
-          Username
-        </label>
-        <input
-          type="text"
-          id="username"
-          name="username"
-          placeholder="Enter your username"
-          minLength={4}
-          maxLength={20}
-          className="form-control mb-3"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <div className="password-label">
-        <label htmlFor="password" className="mb-1 fw-semibold">
-          Password
-        </label>
-          {/* <a className="forget-password-btn" onClick={() => {setIsShowForgetPassword(!isShowForgetPassword)}}>
+  const isValid = useMemo(() => {
+    const usernameRegex = /^[a-zA-Z0-9]+$/;
+
+    return (
+      usernameRegex.test(username) &&
+      username.length >= 4 &&
+      username.length <= 20 &&
+      password.length >= 8 &&
+      password.length <= 20
+    );
+  }, [username, password]);
+
+  if (!isShowForgetPassword)
+    return (
+      <div className="login-container">
+        <div className="form-icon">
+          <FontAwesomeIcon icon={faCubes} />
+        </div>
+        <h4 className="mb-0">Sign In</h4>
+        <p>Stock Management System</p>
+        <form action="" className="form" onSubmit={handleLogin}>
+          <label htmlFor="username" className="mb-1 fw-semibold">
+            Username
+          </label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            placeholder="Enter your username"
+            minLength={4}
+            maxLength={20}
+            className="form-control mb-3"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <div className="password-label">
+            <label htmlFor="password" className="mb-1 fw-semibold">
+              Password
+            </label>
+            {/* <a className="forget-password-btn" onClick={() => {setIsShowForgetPassword(!isShowForgetPassword)}}>
             Forget password?
           </a> */}
-        </div>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          placeholder="Enter your password"
-          minLength={8}
-          maxLength={20}
-          className="form-control mb-4"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button className="btn btn-primary" disabled={loading || !username || !password}>
-          {loading ? "Logging in..." : "Login"}
-        </button>
-      </form>
+          </div>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Enter your password"
+            minLength={8}
+            maxLength={20}
+            className="form-control mb-4"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button
+            className="btn btn-primary"
+            disabled={loading || !username || !password || !isValid}
+          >
+            {loading ? "Logging in..." : "Login"}
+          </button>
+        </form>
       </div>
-
-  );
-
-  else { return (
+    );
+  else {
+    return (
       <div className="forget-password-container">
-      <div className="form-icon">
-      <FontAwesomeIcon icon={faKey} />
-      </div>
+        <div className="form-icon">
+          <FontAwesomeIcon icon={faKey} />
+        </div>
         <h4 className="mb-2">Reset Password</h4>
         <label htmlFor="username" className="fw-semibold">
           Email Address
@@ -96,9 +115,15 @@ function LoginForm() {
           onChange={(e) => setEmail(e.target.value)}
         />
         <button className="btn btn-primary">Send an email</button>
-        <a onClick={() => {setIsShowForgetPassword(!isShowForgetPassword)}}>⟵ Back to Login</a>
+        <a
+          onClick={() => {
+            setIsShowForgetPassword(!isShowForgetPassword);
+          }}
+        >
+          ⟵ Back to Login
+        </a>
       </div>
-  )
+    );
   }
 }
 

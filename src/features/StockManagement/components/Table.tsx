@@ -288,10 +288,11 @@ export default function Table({
                                           <td>{s.minStock}</td>
                                           <td>
                                             <span
-                                              className={`status-badge ${item.status?.replaceAll(
-                                                " ",
-                                                "-",
-                                              )}`}
+                                              className={`status-badge ${s.stock <= s.minStock
+                                                ? s.stock == 0
+                                                  ? "Out-of-stock"
+                                                  : "Low-stock"
+                                                : "In-stock"}`}
                                             >
                                               {s.stock <= s.minStock
                                                 ? s.stock == 0

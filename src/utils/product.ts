@@ -3,11 +3,15 @@ import type { IProductData } from "@/types/product";
 export const getProductStatus = (variants: IProductData["variants"]) => {
   const allSubVariants = variants.flatMap(v => v.sub);
 
-  if (allSubVariants.some(s => s.stock <= 0)) {
+  const filtered = allSubVariants.filter(
+    s => !(s.stock === 0 && s.minStock === 0)
+  );
+
+  if (filtered.some(s => s.stock <= 0)) {
     return "Out of stock";
   }
 
-  if (allSubVariants.some(s => s.stock < s.minStock)) {
+  if (filtered.some(s => s.minStock > 0 && s.stock < s.minStock)) {
     return "Low stock";
   }
 

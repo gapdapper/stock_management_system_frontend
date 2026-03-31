@@ -30,7 +30,7 @@ export default function Table({ data }: Prop) {
               key={item.id}
               className="data-row"
               onClick={() =>
-                navigate(`/sales/${item.orderId.replace(" ", "")}`)
+                navigate(`/sales/${item.id}`)
               }
             >
               <td className="order-id">{item.orderId}</td>

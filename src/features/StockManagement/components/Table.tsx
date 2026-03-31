@@ -288,16 +288,16 @@ export default function Table({
                                           <td>{s.minStock}</td>
                                           <td>
                                             <span
-                                              className={`status-badge ${s.stock <= s.minStock
+                                              className={`status-badge ${s.stock == 0 && s.minStock == 0 ? "Out-of-stock" : s.stock < s.minStock
                                                 ? s.stock == 0
                                                   ? "Out-of-stock"
                                                   : "Low-stock"
                                                 : "In-stock"}`}
                                             >
-                                              {s.stock <= s.minStock
+                                              {s.stock == 0 && s.minStock == 0 ? "Out-of-stock" : s.stock < s.minStock
                                                 ? s.stock == 0
-                                                  ? "Out of stock"
-                                                  : "Low stock"
+                                                  ? "Out-of-stock"
+                                                  : "Low-stock"
                                                 : "In-stock"}
                                             </span>
                                           </td>

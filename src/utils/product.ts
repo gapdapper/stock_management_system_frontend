@@ -1,13 +1,24 @@
 import type { IProductData } from "@/types/product";
 
 export const getProductStatus = (variants: IProductData["variants"]) => {
-  const allSubVariants = variants.flatMap(v => v.sub);
+  const allSubVariants = variants.flatMap((v) => v.sub);
 
-  if (allSubVariants.some(s => s.stock <= 0)) {
+  const isAllZeroZero = allSubVariants.every(
+    (s) => s.stock === 0 && s.minStock === 0,
+  );
+  if (isAllZeroZero) {
     return "Out of stock";
   }
 
-  if (allSubVariants.some(s => s.stock < s.minStock)) {
+  const filtered = allSubVariants.filter(
+    (s) => !(s.stock === 0 && s.minStock === 0),
+  );
+
+  if (filtered.some((s) => s.stock <= 0)) {
+    return "Out of stock";
+  }
+
+  if (filtered.some((s) => s.minStock > 0 && s.stock < s.minStock)) {
     return "Low stock";
   }
 
@@ -19,8 +30,8 @@ export const validateFileSize = (file: File) => {
   if (file.size > maxFileSizeInBytes) {
     return null;
   }
-  return file
-} 
+  return file;
+};
 
 export const validateFileFormat = (file: File) => {
   const allowedTypes = ["image/png", "image/jpeg"];
@@ -38,4 +49,4 @@ export const platformMapper = (id: number) => {
     default:
       return "N/A";
   }
-}
+};

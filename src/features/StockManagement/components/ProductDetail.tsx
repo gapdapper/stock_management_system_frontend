@@ -108,14 +108,14 @@ export default function ProductDetail({
             <div className="status-badge col-12 mt-0">
               <span
                 className={`status-badge ${
-                  data.qty <= data.minStock
+                  data.qty < data.minStock
                     ? data.qty == 0
                       ? "out-of-stock"
                       : "low-stock"
                     : "in-stock"
                 }`}
               >
-                {data.qty <= data.minStock
+                {data.qty < data.minStock
                   ? data.qty == 0
                     ? "Out of stock"
                     : "Low stock"

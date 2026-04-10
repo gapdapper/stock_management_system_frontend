@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import "./Toast.scss";
 import { createPortal } from "react-dom";
 
@@ -11,8 +11,13 @@ type ToastState = {
 };
 
 let triggerToast: ((msg: string, type?: ToastType) => void) | null = null;
+let queue: { message: string; type: ToastType }[] = [];
 
 export const showToast = (message: string, type: ToastType = "info") => {
+  if (!triggerToast) {
+    queue.push({ message, type });
+    return;
+  }
   triggerToast?.(message, type);
 };
 
@@ -23,7 +28,7 @@ export default function Toast() {
     visible: false,
   });
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     triggerToast = (message, type = "info") => {
       setToast({ message, type, visible: true });
 
@@ -32,6 +37,9 @@ export default function Toast() {
       }, 2500);
     };
 
+    queue.forEach((t) => triggerToast?.(t.message, t.type));
+    queue = [];
+
     return () => {
       triggerToast = null;
     };
@@ -39,10 +47,8 @@ export default function Toast() {
 
   if (!toast.visible) return null;
 
-return createPortal(
-  <div className={`toast-float ${toast.type}`}>
-    {toast.message}
-  </div>,
-  document.body
-);
+  return createPortal(
+    <div className={`toast-float ${toast.type}`}>{toast.message}</div>,
+    document.body,
+  );
 }

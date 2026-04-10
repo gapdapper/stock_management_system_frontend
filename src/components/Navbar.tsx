@@ -60,11 +60,11 @@ function Navbar() {
   load();
 }, []);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     try {
-      logout();
+      await logout();
     } catch (error) {
-      console.error("Logout error:", error);
+      showToast("Logout failed. Please try again.", "error")
     }
   };
 
@@ -312,7 +312,6 @@ function Navbar() {
           <p className="input-error-msg">{errorMessage}</p>
         </div>
       </Modal>
-      <Toast />
     </>
   );
 }

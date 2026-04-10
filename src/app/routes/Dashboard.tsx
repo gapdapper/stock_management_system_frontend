@@ -15,6 +15,8 @@ import { useEffect, useMemo, useState } from "react";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { normalizeDonutData } from "@/utils/dashboard";
 import "@/features/Dashboard/Dashboard.scss";
+import Toast, { showToast } from "@/components/Toast";
+
 
 export default function Dashboard() {
   // states
@@ -46,7 +48,7 @@ export default function Dashboard() {
       const dashboardData = await getDashboardOverview(month);
       setRawData(dashboardData);
     } catch (error) {
-      console.error("Failed to fetch product data");
+      showToast("Unable to load sales data. Please try again later.", "error")
     } finally {
       setIsLoadingDashboard(false);
     }
@@ -57,7 +59,7 @@ export default function Dashboard() {
       const availableMonthData = await getAvailableMonths();
       setAvailableMonth(availableMonthData);
     } catch (error) {
-      console.error("Failed to fetch available months data");
+      showToast("Unable to load sales data. Please try again later.", "error")
     } finally {
       setIsLoadingMonths(false);
     }
@@ -190,6 +192,7 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
+        <Toast />
       </div>
     );
   }

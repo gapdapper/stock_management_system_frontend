@@ -15,26 +15,27 @@ button {
   position: relative;
 
   .image-wrapper {
-    svg, img {
+    svg,
+    img {
       width: 150px;
       height: 150px;
     }
-  
+
     .image-overlay {
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 150px;
-    height: 150px;
-    top: 0;
-    background: rgba(0, 0, 0, 0.45);
-    opacity: 0;
-    transition: .5s ease;
-    svg {
-      width: 86px;
-      height: 86px;
-    }
+      position: absolute;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 150px;
+      height: 150px;
+      top: 0;
+      background: rgba(0, 0, 0, 0.45);
+      opacity: 0;
+      transition: 0.5s ease;
+      svg {
+        width: 86px;
+        height: 86px;
+      }
     }
     &:hover .image-overlay {
       opacity: 1;
@@ -49,7 +50,7 @@ button {
     }
   }
 
-    p {
+  p {
     font-size: 18px;
     font-weight: 600;
     text-align: center;
@@ -79,7 +80,9 @@ button {
 .collapse-inner {
   padding: 0 16px;
   opacity: 0;
-  transition: padding 0.1s ease, opacity 0.25s ease;
+  transition:
+    padding 0.1s ease,
+    opacity 0.25s ease;
 }
 
 .collapse.show {
@@ -125,6 +128,17 @@ button {
   .color-yellow {
     background-color: #ffc107;
     color: #000;
+  }
+
+  .color-red-white {
+    background-color: #dc3545;
+    color: #fff;
+    border: 1px solid #dc3545;
+  }
+
+  .color-black-white {
+    background-color: #000;
+    color: #fff;
   }
 
   .color-no-color,

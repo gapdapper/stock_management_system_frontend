@@ -17,7 +17,7 @@ import Modal from "./Modal";
 import { useEffect, useState } from "react";
 import { register } from "@/features/Auth/api/AuthService";
 import { checkAvailableUsernames } from "@/features/Auth/api/AuthService";
-import Toast, { showToast } from "@/components/Toast";
+import { showToast } from "@/components/Toast";
 
 function useDebounce(cb: string, delay: number) {
   const [debounceValue, setDebounceValue] = useState(cb);
@@ -60,11 +60,11 @@ function Navbar() {
   load();
 }, []);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     try {
-      logout();
+      await logout();
     } catch (error) {
-      console.error("Logout error:", error);
+      showToast("Logout failed. Please try again.", "error")
     }
   };
 
@@ -312,7 +312,6 @@ function Navbar() {
           <p className="input-error-msg">{errorMessage}</p>
         </div>
       </Modal>
-      <Toast />
     </>
   );
 }

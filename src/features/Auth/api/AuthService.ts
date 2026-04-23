@@ -21,10 +21,11 @@ export const logout = async () => {
   const { clearToken } = useAuthStore.getState();
   try {
     await axiosInstance.post('/auth/logout', {}, { withCredentials: true });
-  } catch {
-    console.error('Logout failed');
-  }
-  clearToken();
+    clearToken();
+    return { success: true };
+  } catch (error) {
+     return { success: false };
+  } 
 }
 
 export const getMe = async () => {

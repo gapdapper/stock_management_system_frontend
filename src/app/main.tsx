@@ -22,12 +22,15 @@ import SalesRecord from "./routes/SalesTracker.tsx";
 import SalesDetail from "@/features/SalesTracker/components/SalesDetail.tsx";
 import Restock from "@/features/StockManagement/components/Restock.tsx";
 import FileImport from "./routes/FileImport.tsx";
+import Toast from "@/components/Toast.tsx";
 
 library.add(fas, far, fab);
 
 createRoot(document.getElementById("root")!).render(
   <AuthProvider>
     <AuthSync />
+      <Toast />
+
     <BrowserRouter>
       <Routes>
         {/* Public */}

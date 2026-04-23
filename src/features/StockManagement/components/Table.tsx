@@ -51,7 +51,7 @@ export default function Table({
       showToast("Edit Success!", "success");
       await onRefresh();
     } catch (error) {
-      console.error("Edit product variant failed", error);
+      showToast("Failed to update the product data.", "error");
     }
   };
 

@@ -17,7 +17,7 @@ import Modal from "./Modal";
 import { useEffect, useState } from "react";
 import { register } from "@/features/Auth/api/AuthService";
 import { checkAvailableUsernames } from "@/features/Auth/api/AuthService";
-import Toast, { showToast } from "@/components/Toast";
+import { showToast } from "@/components/Toast";
 
 function useDebounce(cb: string, delay: number) {
   const [debounceValue, setDebounceValue] = useState(cb);

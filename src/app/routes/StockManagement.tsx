@@ -1,92 +1,33 @@
 import Table from "@/features/StockManagement/components/Table";
-import { getProductsWithVariant } from "@/features/StockManagement/api/StockManagementService";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { IProductData } from "@/types/product";
-import { getProductStatus } from "@/utils/product";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import "@/features/StockManagement/StockManagement.scss";
 import { useNavigate } from "react-router";
+import useFetchStockData from "@/features/StockManagement/hooks/useFetchStockData";
+import useStockTableControls from "@/features/StockManagement/hooks/useStockTableControls";
 
 function StockManagement() {
-  const [rawData, setRawData] = useState<IProductData[]>([]);
-  const [sortField, setSortField] = useState<keyof IProductData>("productName");
-  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
-  const [filter, setFilter] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 20;
   const headerRef = useRef<HTMLDivElement>(null);
   let navigate = useNavigate();
 
-  // #region data fetching
-  const fetchProductData = async () => {
-    try {
-      const data = await getProductsWithVariant();
-      const mappedData = data.products.map((product: IProductData) => {
-        return { ...product, status: getProductStatus(product.variants) };
-      });
-      setRawData(mappedData);
-      return mappedData;
-    } catch (error) {
-      console.error("Failed to fetch product data");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const { rawData, isLoading, fetchProductData } = useFetchStockData();
 
-  useEffect(() => {
-    fetchProductData();
-  }, []);
-  // #endregion
+  const {
+    filter,
+    sortDirection,
+    filteredData,
+    sortedData,
+    handleFilterChange,
+    handleSortChange,
+  } = useStockTableControls(rawData);
 
-  // #region sort&filter
-  const filteredData = useMemo(() => {
-    if (!filter.trim()) return rawData;
-
-    const keyword = filter.trim().toLowerCase();
-    return rawData.filter((item) =>
-      item.productName.toLowerCase().includes(keyword),
-    );
-  }, [rawData, filter]);
 
   useEffect(() => {
     setCurrentPage(1);
   }, [filter]);
-
-  const sortedData = useMemo(() => {
-    const data = [...filteredData];
-
-    return data.sort((a, b) => {
-      const aVal = a[sortField];
-      const bVal = b[sortField];
-
-      if (typeof aVal === "string" && typeof bVal === "string") {
-        return sortDirection === "asc"
-          ? aVal.localeCompare(bVal, undefined, { numeric: true, sensitivity: "base" })
-          : bVal.localeCompare(aVal, undefined, { numeric: true, sensitivity: "base" });
-      }
-
-      if (typeof aVal === "number" && typeof bVal === "number") {
-        return sortDirection === "asc" ? aVal - bVal : bVal - aVal;
-      }
-
-      return 0;
-    });
-  }, [filteredData, sortField, sortDirection]);
-
-  const handleSortChange = (field: keyof IProductData) => {
-    if (field === sortField) {
-      setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
-    } else {
-      setSortField(field);
-      setSortDirection("asc");
-    }
-  };
-
-  const handleFilterChange = (value: string) => {
-    setFilter(value);
-  };
-  // #endregion
 
   // #region pagination
   const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
@@ -116,7 +57,7 @@ function StockManagement() {
     return sortedData.slice(startIndex, startIndex + ITEMS_PER_PAGE);
   }, [sortedData, currentPage]);
 
-    // #endregion
+  // #endregion
 
   if (isLoading) {
     return (
@@ -142,7 +83,9 @@ function StockManagement() {
             <button
               className="btn-restock"
               type="button"
-              onClick={() => {navigate('/restock')}}
+              onClick={() => {
+                navigate("/restock");
+              }}
             >
               Restock
             </button>
@@ -153,44 +96,45 @@ function StockManagement() {
           onRefresh={fetchProductData}
           currentSortDirection={sortDirection}
           onSort={(field: keyof IProductData) => {
-            handleSortChange(field)
+            handleSortChange(field);
           }}
         />
-        {paginatedData.length > 0 && <div className="pagination-minimal d-flex justify-content-start align-items-center gap-2 mt-4 mb-4">
-          <button
-            className="btn btn-sm btn-outline-secondary"
-            disabled={currentPage === 1}
-            onClick={() => goToPage(currentPage - 1)}
-          >
-            ← Prev
-          </button>
+        {paginatedData.length > 0 && (
+          <div className="pagination-minimal d-flex justify-content-start align-items-center gap-2 mt-4 mb-4">
+            <button
+              className="btn btn-sm btn-outline-secondary"
+              disabled={currentPage === 1}
+              onClick={() => goToPage(currentPage - 1)}
+            >
+              ← Prev
+            </button>
 
-          {Array.from({ length: totalPages }).map((_, idx) => {
-            const page = idx + 1;
-            const isActive = page === currentPage;
+            {Array.from({ length: totalPages }).map((_, idx) => {
+              const page = idx + 1;
+              const isActive = page === currentPage;
 
-            return (
-              <button
-                key={page}
-                className={`btn btn-sm ${
-                  isActive ? "btn-dark" : "btn-outline-secondary"
-                }`}
-                onClick={() => goToPage(page)}
-              >
-                {page}
-              </button>
-            );
-          })}
+              return (
+                <button
+                  key={page}
+                  className={`btn btn-sm ${
+                    isActive ? "btn-dark" : "btn-outline-secondary"
+                  }`}
+                  onClick={() => goToPage(page)}
+                >
+                  {page}
+                </button>
+              );
+            })}
 
-          <button
-            className="btn btn-sm btn-outline-secondary"
-            disabled={currentPage === totalPages}
-            onClick={() => goToPage(currentPage + 1)}
-          >
-            Next →
-          </button>
-        </div>}
-        
+            <button
+              className="btn btn-sm btn-outline-secondary"
+              disabled={currentPage === totalPages}
+              onClick={() => goToPage(currentPage + 1)}
+            >
+              Next →
+            </button>
+          </div>
+        )}
       </>
     );
   }

@@ -1,132 +1,25 @@
 import OverviewStats from "@/features/Dashboard/components/OverviewStats";
 import BarChartSection from "@/features/Dashboard/components/BarChartSection";
 import SalesBreakdownDonut from "@/features/Dashboard/components/SalesBreakdownDonut";
-import {
-  getAvailableMonths,
-  getDashboardOverview,
-} from "@/features/Dashboard/api/DashboardService";
-import type {
-  IChartData,
-  IDashboardOverview,
-  IDateRange,
-  IMonthOption,
-} from "@/types/dashboard";
-import { useEffect, useMemo, useState } from "react";
 import LoadingSpinner from "@/components/LoadingSpinner";
-import { normalizeDonutData } from "@/utils/dashboard";
 import "@/features/Dashboard/Dashboard.scss";
-import Toast, { showToast } from "@/components/Toast";
-
+import Toast from "@/components/Toast";
+import useFetchAvailableMonth from "@/features/Dashboard/hooks/useFetchAvailableMonth";
+import useDashboardData from "@/features/Dashboard/hooks/useDashboardData";
 
 export default function Dashboard() {
-  // states
-  const [rawData, setRawData] = useState<IDashboardOverview | null>(null);
-  const [dateRange, setDateRange] = useState<IDateRange | null>(null);
-  const [isLoadingMonths, setIsLoadingMonths] = useState<boolean>(true);
-  const [isLoadingDashboard, setIsLoadingDashboard] = useState<boolean>(true);
-  const [availableMonth, setAvailableMonth] = useState<string[]>([]);
-  const [selectedMonth, setSelectedMonth] = useState<string>("");
+  const { selectedMonth, isLoadingMonths, formattedMonth, handleMonthChange } =
+    useFetchAvailableMonth();
 
-  // derived states
-  const salesByStatus: IChartData[] = rawData
-    ? normalizeDonutData(rawData.salesByStatus, "status", "count")
-    : [];
-  const salesByPlatform: IChartData[] = rawData
-    ? normalizeDonutData(rawData.salesByPlatform, "platform", "total")
-    : [];
-  const topItems: IChartData[] = rawData
-    ? normalizeDonutData(rawData.topItems, "productName", "totalSold")
-    : [];
-  const currentMonth = selectedMonth
-    ? new Date(selectedMonth + "-01").toLocaleString("en-US", { month: "long" })
-    : new Date().toLocaleString("en-US", { month: "long" });
-
-  // #region data fetching
-  const fetchDashboardData = async (month: string) => {
-    try {
-      setIsLoadingDashboard(true);
-      const dashboardData = await getDashboardOverview(month);
-      setRawData(dashboardData);
-    } catch (error) {
-      showToast("Unable to load sales data. Please try again later.", "error")
-    } finally {
-      setIsLoadingDashboard(false);
-    }
-  };
-
-  const fetchAvailableMonthsData = async () => {
-    try {
-      const availableMonthData = await getAvailableMonths();
-      setAvailableMonth(availableMonthData);
-    } catch (error) {
-      showToast("Unable to load sales data. Please try again later.", "error")
-    } finally {
-      setIsLoadingMonths(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchAvailableMonthsData();
-  }, []);
-
-  const formattedMonth: IMonthOption[] = useMemo(() => {
-    let isIncludedCurrentMonth = false;
-    const today = new Date();
-    let formatted = availableMonth.map((monthStr) => {
-      const [year, month] = monthStr.split("-").map((val) => Number(val));
-      const newDate = new Date(year, month - 1);
-      if (year == today.getFullYear() && month == today.getMonth() + 1) {
-        isIncludedCurrentMonth = true;
-      }
-      return {
-        val: monthStr,
-        display: `${newDate.toLocaleString("default", { month: "long" })} - ${newDate.getFullYear()}`,
-      };
-    });
-
-    if (!isIncludedCurrentMonth) {
-      formatted.push({
-        val: `${today.getFullYear()}-${today.getMonth() + 1}`,
-        display: `${today.toLocaleString("default", { month: "long" })} - ${today.getFullYear()}`,
-      });
-    }
-
-    return formatted.sort((a, b) => {
-      const dateA = new Date(a.val + "-01");
-      const dateB = new Date(b.val + "-01");
-      return dateB.getTime() - dateA.getTime();
-    });
-  }, [availableMonth]);
-
-  useEffect(() => {
-    if (!formattedMonth.length) return;
-    handleMonthChange(formattedMonth[0].val);
-  }, [formattedMonth]);
-
-  useEffect(() => {
-    if (!selectedMonth) return;
-    fetchDashboardData(selectedMonth);
-    updatePeriod(selectedMonth);
-  }, [selectedMonth]);
-
-  const updatePeriod = (month: string) => {
-    const today = new Date();
-    const [year, monthNum] = month.split("-");
-    const start = new Date(`${year}-${monthNum}-1`);
-    const currentMonthRange = {
-      start: start,
-      end:
-        today.getMonth() == start.getMonth() &&
-        today.getFullYear() == start.getFullYear()
-          ? today
-          : new Date(start.getFullYear(), start.getMonth() + 1, 0),
-    };
-    setDateRange(currentMonthRange);
-  };
-
-  const handleMonthChange = (month: string) => {
-    setSelectedMonth(month);
-  };
+  const {
+    rawData,
+    dateRange,
+    isLoadingDashboard,
+    salesByStatus,
+    salesByPlatform,
+    topItems,
+    currentMonth,
+  } = useDashboardData(selectedMonth);
 
   if (isLoadingDashboard || isLoadingMonths) {
     return (

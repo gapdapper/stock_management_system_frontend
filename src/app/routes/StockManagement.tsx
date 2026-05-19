@@ -1,15 +1,14 @@
 import Table from "@/features/StockManagement/components/Table";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useRef } from "react";
 import type { IProductData } from "@/types/product";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import "@/features/StockManagement/StockManagement.scss";
 import { useNavigate } from "react-router";
 import useFetchStockData from "@/features/StockManagement/hooks/useFetchStockData";
 import useStockTableControls from "@/features/StockManagement/hooks/useStockTableControls";
+import usePagination from "@/hooks/usePagination";
 
 function StockManagement() {
-  const [currentPage, setCurrentPage] = useState(1);
-  const ITEMS_PER_PAGE = 20;
   const headerRef = useRef<HTMLDivElement>(null);
   let navigate = useNavigate();
 
@@ -18,46 +17,15 @@ function StockManagement() {
   const {
     filter,
     sortDirection,
-    filteredData,
     sortedData,
     handleFilterChange,
     handleSortChange,
   } = useStockTableControls(rawData);
 
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [filter]);
-
-  // #region pagination
-  const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
-
-  const goToPage = (page: number) => {
-    setCurrentPage(page);
-  };
-
-  const scrollToHeader = () => {
-    const header = headerRef.current;
-    const container = document.querySelector("main");
-
-    if (header && container) {
-      container.scrollTo({
-        top: header.offsetTop - 24,
-        behavior: "smooth",
-      });
-    }
-  };
-
-  useEffect(() => {
-    scrollToHeader();
-  }, [currentPage]);
-
-  const paginatedData = useMemo(() => {
-    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    return sortedData.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-  }, [sortedData, currentPage]);
-
-  // #endregion
+  const { paginatedData, totalPages, currentPage, goToPage } = usePagination(
+    sortedData,
+    headerRef,
+  );
 
   if (isLoading) {
     return (

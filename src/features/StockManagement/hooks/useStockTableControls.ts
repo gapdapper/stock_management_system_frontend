@@ -58,7 +58,6 @@ function useStockTableControls(rawData: IProductData[]) {
   return {
     filter,
     sortDirection,
-    filteredData,
     sortedData,
     handleFilterChange,
     handleSortChange,

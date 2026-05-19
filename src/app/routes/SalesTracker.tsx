@@ -1,37 +1,23 @@
 import LoadingSpinner from "@/components/LoadingSpinner";
 import Table from "@/features/SalesTracker/components/Table";
-import { useEffect, useState } from "react";
+import { useRef } from "react";
 import "@/features/SalesTracker/SalesTracker.scss";
 import useFetchTransactionData from "@/features/SalesTracker/hooks/useFetchTransactionData";
 import useFilterTransactionData from "@/features/SalesTracker/hooks/useFilterTransactionData";
+import usePagination from "@/hooks/usePagination";
 
 export default function SalesRecord() {
+  const headerRef = useRef<HTMLDivElement>(null);
+
   const { rawData, isLoading } = useFetchTransactionData();
 
   const { filterData, handleFilterSelected } =
     useFilterTransactionData(rawData);
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const ITEMS_PER_PAGE = 20;
-  const totalPages = Math.ceil(filterData.length / ITEMS_PER_PAGE);
-
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const paginatedData = filterData.slice(
-    startIndex,
-    startIndex + ITEMS_PER_PAGE,
+  const { paginatedData, totalPages, currentPage, goToPage } = usePagination(
+    filterData,
+    headerRef,
   );
-
-  const goToPage = (page: number) => {
-    setCurrentPage(page);
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  };
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [filterData]);
 
   if (isLoading) {
     return (
@@ -41,7 +27,7 @@ export default function SalesRecord() {
     );
   } else {
     return (
-      <div className="sales-tracker-container">
+      <div ref={headerRef} className="sales-tracker-container">
         <div className="headers mb-3">
           <div className="d-flex justify-content-between align-items-start align-items-md-center gap-3 flex-column flex-md-row">
             <h1 className="stock-title">Sales Tracker</h1>

@@ -1,19 +1,16 @@
 import LoadingSpinner from "@/components/LoadingSpinner";
 import Table from "@/features/SalesTracker/components/Table";
 import { useEffect, useState } from "react";
-import type { IFilter, ITransactions } from "@/types/transaction";
-import { getTransactions } from "@/features/SalesTracker/api/SalesTrackerService";
 import "@/features/SalesTracker/SalesTracker.scss";
+import useFetchTransactionData from "@/features/SalesTracker/hooks/useFetchTransactionData";
+import useFilterTransactionData from "@/features/SalesTracker/hooks/useFilterTransactionData";
 
 export default function SalesRecord() {
-  const [rawData, setRawData] = useState<ITransactions[]>([]);
-  const [filterData, setFilterData] = useState<ITransactions[]>([]);
-  const [filter, setFilter] = useState<IFilter>({
-    platform: "all",
-    status: "all",
-    period: "all",
-  });
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { rawData, isLoading } = useFetchTransactionData();
+
+  const { filterData, handleFilterSelected } =
+    useFilterTransactionData(rawData);
+
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 20;
   const totalPages = Math.ceil(filterData.length / ITEMS_PER_PAGE);
@@ -24,70 +21,6 @@ export default function SalesRecord() {
     startIndex + ITEMS_PER_PAGE,
   );
 
-  const fetchTransactionsData = async () => {
-    try {
-      const data = await getTransactions();
-      setRawData(data);
-    } catch (error) {
-      console.error("Failed to fetch product data");
-    } finally {
-      setIsLoading(false);
-      setCurrentPage(1);
-    }
-  };
-
-  useEffect(() => {
-    fetchTransactionsData();
-  }, []);
-
-  useEffect(() => {
-    let result = [...rawData];
-
-    // Status filter
-    if (filter.status !== "all") {
-      result = result.filter((item) => item.status === filter.status);
-    }
-
-    // Platform filter
-    if (filter.platform !== "all") {
-      result = result.filter((item) => item.platform === filter.platform);
-    }
-
-    // Date range filter
-    if (filter.period !== "all") {
-      const now = new Date();
-
-      result = result.filter((item) => {
-        const createdAt = new Date(item.createdAt);
-
-        switch (filter.period) {
-          case "today":
-            return createdAt.toDateString() === now.toDateString();
-
-          case "last-7-days":
-            const sevenDaysAgo = new Date();
-            sevenDaysAgo.setDate(now.getDate() - 7);
-            return createdAt >= sevenDaysAgo;
-
-          case "this-month":
-            return (
-              createdAt.getMonth() === now.getMonth() &&
-              createdAt.getFullYear() === now.getFullYear()
-            );
-
-          default:
-            return true;
-        }
-      });
-    }
-    updateFilteredData(result);
-    updatePage(1);
-  }, [rawData, filter]);
-
-  const updateFilteredData = (data: ITransactions[]) => {
-    setFilterData(data);
-  };
-
   const goToPage = (page: number) => {
     setCurrentPage(page);
     window.scrollTo({
@@ -96,16 +29,9 @@ export default function SalesRecord() {
     });
   };
 
-  const updatePage = (page: number) => {
-    setCurrentPage(page);
-  };
-
-  const handleFilterSelected = (key: keyof IFilter, val: string) => {
-    setFilter((prev: IFilter) => ({
-      ...prev,
-      [key]: val,
-    }));
-  };
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filterData]);
 
   if (isLoading) {
     return (
